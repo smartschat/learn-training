@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pronunciation Practice</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .score-board {
+            background: white;
+            border-radius: 15px;
+            padding: 15px 25px;
+            display: inline-flex;
+            gap: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .score-item {
+            text-align: center;
+        }
+
+        .score-item span {
+            display: block;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .score-item strong {
+            font-size: 1.5rem;
+            color: #333;
+        }
+
+        .correct strong { color: #28a745; }
+        .wrong strong { color: #dc3545; }
+
+        .category-select {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .category-select h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .category-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .category-btn {
+            padding: 10px 20px;
+            border: 2px solid #4facfe;
+            background: white;
+            color: #4facfe;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .category-btn:hover, .category-btn.active {
+            background: #4facfe;
+            color: white;
+        }
+
+        .quiz-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+
+        .question-type {
+            display: inline-block;
+            background: #e9ecef;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .question {
+            font-size: 1.4rem;
+            color: #333;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .word-display {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #4facfe;
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f0f9ff;
+            border-radius: 15px;
+        }
+
+        .phonetic {
+            font-size: 1.2rem;
+            color: #666;
+            font-family: 'Lucida Sans Unicode', 'Arial Unicode MS', sans-serif;
+        }
+
+        .sound-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            background: #4facfe;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            margin-left: 15px;
+            transition: all 0.3s;
+            vertical-align: middle;
+        }
+
+        .sound-btn:hover {
+            background: #3d8bd4;
+            transform: scale(1.1);
+        }
+
+        .answer-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .option-btn {
+            padding: 20px 25px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .option-btn:hover {
+            border-color: #4facfe;
+            background: #f0f9ff;
+        }
+
+        .option-btn.selected {
+            border-color: #4facfe;
+            background: #4facfe;
+            color: white;
+        }
+
+        .option-btn.correct {
+            border-color: #28a745;
+            background: #28a745;
+            color: white;
+        }
+
+        .option-btn.wrong {
+            border-color: #dc3545;
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-check {
+            background: #4facfe;
+            color: white;
+        }
+
+        .btn-check:hover {
+            background: #3d8bd4;
+        }
+
+        .btn-next {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-next:hover {
+            background: #218838;
+        }
+
+        .btn-skip {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-skip:hover {
+            background: #5a6268;
+        }
+
+        .feedback {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .feedback.wrong {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4facfe, #00f2fe);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .streak {
+            text-align: center;
+            margin-top: 10px;
+            color: #ffc107;
+            font-weight: bold;
+        }
+
+        .celebration {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 4rem;
+            animation: pop 0.5s ease;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        @keyframes pop {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+            50% { transform: translate(-50%, -50%) scale(1.2); }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+        }
+
+        .grammar-tip {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .grammar-tip h3 {
+            color: #4facfe;
+            margin-bottom: 10px;
+        }
+
+        .grammar-tip ul {
+            margin-left: 20px;
+            color: #555;
+        }
+
+        .grammar-tip li {
+            margin-bottom: 8px;
+        }
+
+        .grammar-tip code {
+            background: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #e83e8c;
+            font-family: 'Lucida Sans Unicode', 'Arial Unicode MS', sans-serif;
+        }
+
+        .example-words {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 5px;
+        }
+
+        .example-word {
+            background: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            color: #333;
+        }
+
+        .sound-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .sound-box {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .sound-box h4 {
+            color: #4facfe;
+            margin-bottom: 8px;
+            font-size: 1.3rem;
+        }
+
+        .sound-box .examples {
+            font-size: 0.95rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Pronunciation</h1>
+            <div class="score-board">
+                <div class="score-item correct">
+                    <span>Richtig</span>
+                    <strong id="correct-score">0</strong>
+                </div>
+                <div class="score-item wrong">
+                    <span>Falsch</span>
+                    <strong id="wrong-score">0</strong>
+                </div>
+                <div class="score-item">
+                    <span>Fragen</span>
+                    <strong id="total-questions">0</strong>
+                </div>
+            </div>
+        </header>
+
+        <div class="category-select">
+            <h2>Kategorie wählen:</h2>
+            <div class="category-buttons">
+                <button class="category-btn active" data-category="all">Alle</button>
+                <button class="category-btn" data-category="long-u">Langes /uː/</button>
+                <button class="category-btn" data-category="not-long-u">Kein /uː/</button>
+            </div>
+        </div>
+
+        <div class="grammar-tip" id="grammar-tip">
+            <h3>Der lange /uː/ Laut</h3>
+            <div class="sound-comparison">
+                <div class="sound-box">
+                    <h4>/uː/</h4>
+                    <p>Langer "u" Laut</p>
+                    <div class="examples">school, food, moon, blue</div>
+                </div>
+                <div class="sound-box">
+                    <h4>andere Laute</h4>
+                    <p>z.B. /əʊ/, /ʌ/, /ʊ/</p>
+                    <div class="examples">go, but, book, home</div>
+                </div>
+            </div>
+            <ul>
+                <li><code>/uː/</code> = langer "u" Laut (wie deutsches "u" in "Schule")</li>
+                <li>Oft geschrieben als: <strong>oo</strong>, <strong>ue</strong>, <strong>ew</strong>, <strong>o</strong></li>
+                <li>Achtung: <strong>oo</strong> ist manchmal kurz: book, look, good /ʊ/</li>
+            </ul>
+        </div>
+
+        <div class="quiz-card" id="quiz-card">
+            <div class="question-type" id="question-type">Welchen Laut hörst du?</div>
+            <div class="question" id="question">Klicke auf "Nächste Frage" um zu starten!</div>
+
+            <div id="input-area">
+                <!-- Dynamic content will be inserted here -->
+            </div>
+
+            <div class="feedback" id="feedback"></div>
+
+            <div class="btn-row">
+                <button class="btn btn-skip" id="btn-skip" onclick="skipQuestion()">Überspringen</button>
+                <button class="btn btn-check" id="btn-check" onclick="checkAnswer()">Prüfen</button>
+                <button class="btn btn-next" id="btn-next" onclick="nextQuestion()" style="display: none;">Nächste Frage</button>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+            </div>
+            <div class="streak" id="streak"></div>
+        </div>
+    </div>
+
+    <script>
+        // Words with long /uː/ sound
+        const longUWords = [
+            { word: 'school', phonetic: '/skuːl/', german: 'Schule' },
+            { word: 'food', phonetic: '/fuːd/', german: 'Essen' },
+            { word: 'moon', phonetic: '/muːn/', german: 'Mond' },
+            { word: 'room', phonetic: '/ruːm/', german: 'Zimmer' },
+            { word: 'cool', phonetic: '/kuːl/', german: 'cool' },
+            { word: 'pool', phonetic: '/puːl/', german: 'Pool' },
+            { word: 'too', phonetic: '/tuː/', german: 'auch/zu' },
+            { word: 'two', phonetic: '/tuː/', german: 'zwei' },
+            { word: 'blue', phonetic: '/bluː/', german: 'blau' },
+            { word: 'true', phonetic: '/truː/', german: 'wahr' },
+            { word: 'glue', phonetic: '/ɡluː/', german: 'Kleber' },
+            { word: 'new', phonetic: '/njuː/', german: 'neu' },
+            { word: 'knew', phonetic: '/njuː/', german: 'wusste' },
+            { word: 'flew', phonetic: '/fluː/', german: 'flog' },
+            { word: 'do', phonetic: '/duː/', german: 'tun' },
+            { word: 'who', phonetic: '/huː/', german: 'wer' },
+            { word: 'you', phonetic: '/juː/', german: 'du' },
+            { word: 'shoe', phonetic: '/ʃuː/', german: 'Schuh' },
+            { word: 'zoo', phonetic: '/zuː/', german: 'Zoo' },
+            { word: 'soon', phonetic: '/suːn/', german: 'bald' },
+            { word: 'spoon', phonetic: '/spuːn/', german: 'Löffel' },
+            { word: 'noon', phonetic: '/nuːn/', german: 'Mittag' },
+            { word: 'tooth', phonetic: '/tuːθ/', german: 'Zahn' },
+            { word: 'roof', phonetic: '/ruːf/', german: 'Dach' },
+            { word: 'fruit', phonetic: '/fruːt/', german: 'Frucht' },
+            { word: 'juice', phonetic: '/dʒuːs/', german: 'Saft' },
+            { word: 'rule', phonetic: '/ruːl/', german: 'Regel' },
+            { word: 'June', phonetic: '/dʒuːn/', german: 'Juni' },
+            { word: 'move', phonetic: '/muːv/', german: 'bewegen' },
+            { word: 'prove', phonetic: '/pruːv/', german: 'beweisen' },
+        ];
+
+        // Words WITHOUT long /uː/ sound (common confusions)
+        const notLongUWords = [
+            { word: 'go', phonetic: '/ɡəʊ/', german: 'gehen', sound: '/əʊ/' },
+            { word: 'no', phonetic: '/nəʊ/', german: 'nein', sound: '/əʊ/' },
+            { word: 'so', phonetic: '/səʊ/', german: 'so', sound: '/əʊ/' },
+            { word: 'home', phonetic: '/həʊm/', german: 'Zuhause', sound: '/əʊ/' },
+            { word: 'phone', phonetic: '/fəʊn/', german: 'Telefon', sound: '/əʊ/' },
+            { word: 'know', phonetic: '/nəʊ/', german: 'wissen', sound: '/əʊ/' },
+            { word: 'show', phonetic: '/ʃəʊ/', german: 'zeigen', sound: '/əʊ/' },
+            { word: 'grow', phonetic: '/ɡrəʊ/', german: 'wachsen', sound: '/əʊ/' },
+            { word: 'slow', phonetic: '/sləʊ/', german: 'langsam', sound: '/əʊ/' },
+            { word: 'snow', phonetic: '/snəʊ/', german: 'Schnee', sound: '/əʊ/' },
+            { word: 'book', phonetic: '/bʊk/', german: 'Buch', sound: '/ʊ/' },
+            { word: 'look', phonetic: '/lʊk/', german: 'schauen', sound: '/ʊ/' },
+            { word: 'good', phonetic: '/ɡʊd/', german: 'gut', sound: '/ʊ/' },
+            { word: 'wood', phonetic: '/wʊd/', german: 'Holz', sound: '/ʊ/' },
+            { word: 'foot', phonetic: '/fʊt/', german: 'Fuß', sound: '/ʊ/' },
+            { word: 'cook', phonetic: '/kʊk/', german: 'kochen', sound: '/ʊ/' },
+            { word: 'put', phonetic: '/pʊt/', german: 'legen', sound: '/ʊ/' },
+            { word: 'pull', phonetic: '/pʊl/', german: 'ziehen', sound: '/ʊ/' },
+            { word: 'full', phonetic: '/fʊl/', german: 'voll', sound: '/ʊ/' },
+            { word: 'but', phonetic: '/bʌt/', german: 'aber', sound: '/ʌ/' },
+            { word: 'cup', phonetic: '/kʌp/', german: 'Tasse', sound: '/ʌ/' },
+            { word: 'bus', phonetic: '/bʌs/', german: 'Bus', sound: '/ʌ/' },
+            { word: 'run', phonetic: '/rʌn/', german: 'laufen', sound: '/ʌ/' },
+            { word: 'sun', phonetic: '/sʌn/', german: 'Sonne', sound: '/ʌ/' },
+            { word: 'fun', phonetic: '/fʌn/', german: 'Spaß', sound: '/ʌ/' },
+            { word: 'come', phonetic: '/kʌm/', german: 'kommen', sound: '/ʌ/' },
+            { word: 'some', phonetic: '/sʌm/', german: 'einige', sound: '/ʌ/' },
+            { word: 'love', phonetic: '/lʌv/', german: 'Liebe', sound: '/ʌ/' },
+            { word: 'mother', phonetic: '/ˈmʌðə/', german: 'Mutter', sound: '/ʌ/' },
+            { word: 'brother', phonetic: '/ˈbrʌðə/', german: 'Bruder', sound: '/ʌ/' },
+        ];
+
+        // Question database
+        const questions = {
+            'long-u': longUWords.map(w => ({
+                type: 'identify',
+                word: w.word,
+                phonetic: w.phonetic,
+                german: w.german,
+                isLongU: true,
+                hint: `${w.word} hat den langen /uː/ Laut`
+            })),
+            'not-long-u': notLongUWords.map(w => ({
+                type: 'identify',
+                word: w.word,
+                phonetic: w.phonetic,
+                german: w.german,
+                isLongU: false,
+                actualSound: w.sound,
+                hint: `${w.word} hat den ${w.sound} Laut, nicht /uː/`
+            }))
+        };
+
+        // Add mixed comparison questions
+        questions.all = [
+            ...questions['long-u'],
+            ...questions['not-long-u'],
+            // Comparison questions: which word has /uː/?
+            { type: 'compare', words: ['school', 'go'], correct: 0, hint: 'school = /skuːl/, go = /ɡəʊ/' },
+            { type: 'compare', words: ['book', 'food'], correct: 1, hint: 'book = /bʊk/ (kurz), food = /fuːd/ (lang)' },
+            { type: 'compare', words: ['moon', 'home'], correct: 0, hint: 'moon = /muːn/, home = /həʊm/' },
+            { type: 'compare', words: ['good', 'room'], correct: 1, hint: 'good = /ɡʊd/ (kurz), room = /ruːm/ (lang)' },
+            { type: 'compare', words: ['blue', 'know'], correct: 0, hint: 'blue = /bluː/, know = /nəʊ/' },
+            { type: 'compare', words: ['look', 'cool'], correct: 1, hint: 'look = /lʊk/ (kurz), cool = /kuːl/ (lang)' },
+            { type: 'compare', words: ['too', 'no'], correct: 0, hint: 'too = /tuː/, no = /nəʊ/' },
+            { type: 'compare', words: ['but', 'fruit'], correct: 1, hint: 'but = /bʌt/, fruit = /fruːt/' },
+            { type: 'compare', words: ['shoe', 'show'], correct: 0, hint: 'shoe = /ʃuː/, show = /ʃəʊ/' },
+            { type: 'compare', words: ['sun', 'soon'], correct: 1, hint: 'sun = /sʌn/, soon = /suːn/' },
+            { type: 'compare', words: ['new', 'snow'], correct: 0, hint: 'new = /njuː/, snow = /snəʊ/' },
+            { type: 'compare', words: ['foot', 'tooth'], correct: 1, hint: 'foot = /fʊt/ (kurz), tooth = /tuːθ/ (lang)' },
+            // Group questions: which words have /uː/?
+            { type: 'group', words: ['pool', 'pull', 'cool', 'full'], correctIndices: [0, 2], hint: 'pool und cool haben /uː/, pull und full haben /ʊ/' },
+            { type: 'group', words: ['food', 'good', 'mood', 'wood'], correctIndices: [0, 2], hint: 'food und mood haben /uː/, good und wood haben /ʊ/' },
+            { type: 'group', words: ['moon', 'soon', 'book', 'look'], correctIndices: [0, 1], hint: 'moon und soon haben /uː/, book und look haben /ʊ/' },
+        ];
+
+        let currentQuestion = null;
+        let currentCategory = 'all';
+        let score = { correct: 0, wrong: 0, total: 0 };
+        let streak = 0;
+        let answeredQuestions = [];
+
+        // Category button handling
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentCategory = btn.dataset.category;
+                answeredQuestions = [];
+                updateGrammarTip();
+                nextQuestion();
+            });
+        });
+
+        function updateGrammarTip() {
+            const tips = {
+                all: `<h3>Der lange /uː/ Laut</h3>
+                    <div class="sound-comparison">
+                        <div class="sound-box">
+                            <h4>/uː/</h4>
+                            <p>Langer "u" Laut</p>
+                            <div class="examples">school, food, moon, blue</div>
+                        </div>
+                        <div class="sound-box">
+                            <h4>andere Laute</h4>
+                            <p>z.B. /əʊ/, /ʌ/, /ʊ/</p>
+                            <div class="examples">go, but, book, home</div>
+                        </div>
+                    </div>
+                    <ul>
+                        <li><code>/uː/</code> = langer "u" Laut (wie deutsches "u" in "Schule")</li>
+                        <li>Oft geschrieben als: <strong>oo</strong>, <strong>ue</strong>, <strong>ew</strong>, <strong>o</strong></li>
+                        <li>Achtung: <strong>oo</strong> ist manchmal kurz: book, look, good /ʊ/</li>
+                    </ul>`,
+                'long-u': `<h3>Wörter mit /uː/</h3>
+                    <ul>
+                        <li><code>/uː/</code> = langer "u" Laut</li>
+                        <li><strong>oo</strong>: school, food, moon, cool, room</li>
+                        <li><strong>ue</strong>: blue, true, glue</li>
+                        <li><strong>ew</strong>: new, knew, flew</li>
+                        <li><strong>o</strong>: do, who, move</li>
+                        <li><strong>ou</strong>: you, soup, group</li>
+                        <li><strong>ui</strong>: fruit, juice</li>
+                    </ul>`,
+                'not-long-u': `<h3>Wörter OHNE /uː/</h3>
+                    <ul>
+                        <li><code>/əʊ/</code> (wie "oh"): go, no, home, phone, know</li>
+                        <li><code>/ʊ/</code> (kurzes u): book, look, good, put, foot</li>
+                        <li><code>/ʌ/</code> (wie "a" in "Mama"): but, cup, bus, come, love</li>
+                        <li><strong>Achtung:</strong> "oo" kann kurz sein: book ≠ boot!</li>
+                    </ul>`
+            };
+            document.getElementById('grammar-tip').innerHTML = tips[currentCategory];
+        }
+
+        function getQuestions() {
+            if (currentCategory === 'all') {
+                return questions.all;
+            }
+            return questions[currentCategory] || [];
+        }
+
+        function speakWord(word) {
+            const utterance = new SpeechSynthesisUtterance(word);
+            utterance.lang = 'en-GB';
+            utterance.rate = 0.8;
+            speechSynthesis.speak(utterance);
+        }
+
+        function nextQuestion() {
+            const allQuestions = getQuestions();
+
+            let available = allQuestions.filter(q => !answeredQuestions.includes(JSON.stringify(q)));
+
+            if (available.length === 0) {
+                answeredQuestions = [];
+                available = allQuestions;
+            }
+
+            currentQuestion = available[Math.floor(Math.random() * available.length)];
+            answeredQuestions.push(JSON.stringify(currentQuestion));
+
+            displayQuestion();
+
+            document.getElementById('feedback').classList.remove('show');
+            document.getElementById('btn-check').style.display = 'block';
+            document.getElementById('btn-next').style.display = 'none';
+            document.getElementById('btn-skip').style.display = 'block';
+        }
+
+        function displayQuestion() {
+            const inputArea = document.getElementById('input-area');
+            const questionEl = document.getElementById('question');
+            const typeEl = document.getElementById('question-type');
+
+            if (currentQuestion.type === 'identify') {
+                typeEl.textContent = 'Hat dieses Wort den /uː/ Laut?';
+                questionEl.innerHTML = `Hör dir das Wort an und entscheide:`;
+
+                inputArea.innerHTML = `
+                    <div class="word-display">
+                        ${currentQuestion.word}
+                        <button class="sound-btn" onclick="speakWord('${currentQuestion.word}')" title="Anhören">🔊</button>
+                    </div>
+                    <p style="text-align: center; color: #666; margin-bottom: 15px;">(${currentQuestion.german})</p>
+                    <div class="answer-options" style="flex-direction: row; gap: 15px;">
+                        <button class="option-btn" data-answer="yes" onclick="selectAnswer('yes')" style="flex: 1;">
+                            Ja, /uː/ 👍
+                        </button>
+                        <button class="option-btn" data-answer="no" onclick="selectAnswer('no')" style="flex: 1;">
+                            Nein, kein /uː/ 👎
+                        </button>
+                    </div>
+                `;
+
+                // Auto-play the word
+                setTimeout(() => speakWord(currentQuestion.word), 300);
+
+            } else if (currentQuestion.type === 'compare') {
+                typeEl.textContent = 'Welches Wort hat /uː/?';
+                questionEl.innerHTML = `Welches dieser Wörter hat den langen /uː/ Laut?`;
+
+                inputArea.innerHTML = `
+                    <div class="answer-options" style="flex-direction: row; gap: 15px;">
+                        ${currentQuestion.words.map((word, i) => `
+                            <button class="option-btn" data-index="${i}" onclick="selectOption(${i})" style="flex: 1;">
+                                ${word}
+                                <button class="sound-btn" onclick="event.stopPropagation(); speakWord('${word}')" style="margin-left: 10px; width: 35px; height: 35px; font-size: 1rem;">🔊</button>
+                            </button>
+                        `).join('')}
+                    </div>
+                `;
+
+            } else if (currentQuestion.type === 'group') {
+                typeEl.textContent = 'Welche Wörter haben /uː/?';
+                questionEl.innerHTML = `Wähle ALLE Wörter mit dem langen /uː/ Laut:`;
+
+                inputArea.innerHTML = `
+                    <div class="answer-options" style="flex-direction: row; flex-wrap: wrap; gap: 10px;">
+                        ${currentQuestion.words.map((word, i) => `
+                            <button class="option-btn" data-index="${i}" onclick="toggleOption(${i})" style="flex: 1 1 45%; min-width: 120px;">
+                                ${word}
+                                <button class="sound-btn" onclick="event.stopPropagation(); speakWord('${word}')" style="margin-left: 10px; width: 35px; height: 35px; font-size: 1rem;">🔊</button>
+                            </button>
+                        `).join('')}
+                    </div>
+                `;
+            }
+        }
+
+        function selectAnswer(answer) {
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                btn.classList.remove('selected');
+                if (btn.dataset.answer === answer) {
+                    btn.classList.add('selected');
+                }
+            });
+        }
+
+        function selectOption(index) {
+            document.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('selected'));
+            document.querySelector(`.option-btn[data-index="${index}"]`).classList.add('selected');
+        }
+
+        function toggleOption(index) {
+            const btn = document.querySelector(`.option-btn[data-index="${index}"]`);
+            btn.classList.toggle('selected');
+        }
+
+        function checkAnswer() {
+            let isCorrect = false;
+            let correctAnswer = '';
+
+            if (currentQuestion.type === 'identify') {
+                const selected = document.querySelector('.option-btn.selected');
+                if (!selected) {
+                    showFeedback(false, 'Bitte wähle eine Antwort!');
+                    return;
+                }
+                const userAnswer = selected.dataset.answer === 'yes';
+                isCorrect = userAnswer === currentQuestion.isLongU;
+
+                correctAnswer = currentQuestion.isLongU
+                    ? `Ja! "${currentQuestion.word}" ${currentQuestion.phonetic} hat /uː/`
+                    : `Nein! "${currentQuestion.word}" ${currentQuestion.phonetic} hat ${currentQuestion.actualSound || 'kein /uː/'}`;
+
+                document.querySelectorAll('.option-btn').forEach(btn => {
+                    const isYes = btn.dataset.answer === 'yes';
+                    if (isYes === currentQuestion.isLongU) {
+                        btn.classList.add('correct');
+                    } else if (btn.classList.contains('selected')) {
+                        btn.classList.add('wrong');
+                    }
+                    btn.disabled = true;
+                });
+
+            } else if (currentQuestion.type === 'compare') {
+                const selected = document.querySelector('.option-btn.selected');
+                if (!selected) {
+                    showFeedback(false, 'Bitte wähle eine Antwort!');
+                    return;
+                }
+                const userAnswer = parseInt(selected.dataset.index);
+                isCorrect = userAnswer === currentQuestion.correct;
+                correctAnswer = `"${currentQuestion.words[currentQuestion.correct]}" hat den /uː/ Laut`;
+
+                document.querySelectorAll('.option-btn').forEach(btn => {
+                    const idx = parseInt(btn.dataset.index);
+                    if (idx === currentQuestion.correct) {
+                        btn.classList.add('correct');
+                    } else if (btn.classList.contains('selected')) {
+                        btn.classList.add('wrong');
+                    }
+                    btn.disabled = true;
+                });
+
+            } else if (currentQuestion.type === 'group') {
+                const selected = Array.from(document.querySelectorAll('.option-btn.selected'))
+                    .map(btn => parseInt(btn.dataset.index));
+
+                if (selected.length === 0) {
+                    showFeedback(false, 'Bitte wähle mindestens ein Wort!');
+                    return;
+                }
+
+                const correctSet = new Set(currentQuestion.correctIndices);
+                const selectedSet = new Set(selected);
+
+                isCorrect = correctSet.size === selectedSet.size &&
+                    [...correctSet].every(i => selectedSet.has(i));
+
+                const correctWords = currentQuestion.correctIndices.map(i => currentQuestion.words[i]);
+                correctAnswer = `Die Wörter mit /uː/ sind: ${correctWords.join(', ')}`;
+
+                document.querySelectorAll('.option-btn').forEach(btn => {
+                    const idx = parseInt(btn.dataset.index);
+                    if (currentQuestion.correctIndices.includes(idx)) {
+                        btn.classList.add('correct');
+                    } else if (btn.classList.contains('selected')) {
+                        btn.classList.add('wrong');
+                    }
+                    btn.disabled = true;
+                });
+            }
+
+            if (isCorrect) {
+                score.correct++;
+                streak++;
+                showFeedback(true, 'Super! Das ist richtig!');
+                if (streak > 0 && streak % 5 === 0) {
+                    celebrate();
+                }
+            } else {
+                score.wrong++;
+                streak = 0;
+                let message = `Leider falsch. ${correctAnswer}`;
+                if (currentQuestion.hint) {
+                    message += `<br><br>Tipp: ${currentQuestion.hint}`;
+                }
+                showFeedback(false, message);
+            }
+
+            score.total++;
+            updateScore();
+
+            document.getElementById('btn-check').style.display = 'none';
+            document.getElementById('btn-next').style.display = 'block';
+            document.getElementById('btn-skip').style.display = 'none';
+        }
+
+        function skipQuestion() {
+            let correctAnswer = '';
+
+            if (currentQuestion.type === 'identify') {
+                correctAnswer = currentQuestion.isLongU
+                    ? `"${currentQuestion.word}" HAT den /uː/ Laut`
+                    : `"${currentQuestion.word}" hat KEINEN /uː/ Laut`;
+            } else if (currentQuestion.type === 'compare') {
+                correctAnswer = `"${currentQuestion.words[currentQuestion.correct]}" hat /uː/`;
+            } else if (currentQuestion.type === 'group') {
+                const correctWords = currentQuestion.correctIndices.map(i => currentQuestion.words[i]);
+                correctAnswer = `${correctWords.join(', ')} haben /uː/`;
+            }
+
+            showFeedback(false, `Übersprungen. ${correctAnswer}<br><br>Tipp: ${currentQuestion.hint || ''}`);
+
+            streak = 0;
+            updateScore();
+
+            document.getElementById('btn-check').style.display = 'none';
+            document.getElementById('btn-next').style.display = 'block';
+            document.getElementById('btn-skip').style.display = 'none';
+
+            // Disable all buttons
+            document.querySelectorAll('.option-btn').forEach(btn => btn.disabled = true);
+        }
+
+        function showFeedback(correct, message) {
+            const feedback = document.getElementById('feedback');
+            feedback.className = 'feedback show ' + (correct ? 'correct' : 'wrong');
+            feedback.innerHTML = message;
+        }
+
+        function updateScore() {
+            document.getElementById('correct-score').textContent = score.correct;
+            document.getElementById('wrong-score').textContent = score.wrong;
+            document.getElementById('total-questions').textContent = score.total;
+
+            const progress = score.total > 0 ? (score.correct / score.total * 100) : 0;
+            document.getElementById('progress-fill').style.width = progress + '%';
+
+            const streakEl = document.getElementById('streak');
+            if (streak >= 3) {
+                streakEl.textContent = `🔥 ${streak} richtig in Folge!`;
+            } else {
+                streakEl.textContent = '';
+            }
+        }
+
+        function celebrate() {
+            const emojis = ['🎉', '⭐', '🏆', '💪', '🌟'];
+            const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+            const celebration = document.createElement('div');
+            celebration.className = 'celebration';
+            celebration.textContent = emoji;
+            document.body.appendChild(celebration);
+            setTimeout(() => celebration.remove(), 500);
+        }
+
+        // Start with first question
+        nextQuestion();
+    </script>
+</body>
+</html>

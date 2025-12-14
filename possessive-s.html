@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Possessive 's Practice</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .score-board {
+            background: white;
+            border-radius: 15px;
+            padding: 15px 25px;
+            display: inline-flex;
+            gap: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .score-item {
+            text-align: center;
+        }
+
+        .score-item span {
+            display: block;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .score-item strong {
+            font-size: 1.5rem;
+            color: #333;
+        }
+
+        .correct strong { color: #28a745; }
+        .wrong strong { color: #dc3545; }
+
+        .category-select {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .category-select h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .category-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .category-btn {
+            padding: 10px 20px;
+            border: 2px solid #11998e;
+            background: white;
+            color: #11998e;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .category-btn:hover, .category-btn.active {
+            background: #11998e;
+            color: white;
+        }
+
+        .quiz-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+
+        .question-type {
+            display: inline-block;
+            background: #e9ecef;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .question {
+            font-size: 1.4rem;
+            color: #333;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .german-text {
+            color: #11998e;
+            font-weight: 600;
+        }
+
+        .english-text {
+            color: #38ef7d;
+            font-weight: 600;
+        }
+
+        .answer-input {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 1.1rem;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            transition: border-color 0.3s;
+        }
+
+        .answer-input:focus {
+            outline: none;
+            border-color: #11998e;
+        }
+
+        .answer-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .option-btn {
+            padding: 15px 20px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            text-align: left;
+            transition: all 0.3s;
+        }
+
+        .option-btn:hover {
+            border-color: #11998e;
+            background: #f0fff4;
+        }
+
+        .option-btn.selected {
+            border-color: #11998e;
+            background: #11998e;
+            color: white;
+        }
+
+        .option-btn.correct {
+            border-color: #28a745;
+            background: #28a745;
+            color: white;
+        }
+
+        .option-btn.wrong {
+            border-color: #dc3545;
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-check {
+            background: #11998e;
+            color: white;
+        }
+
+        .btn-check:hover {
+            background: #0d7a6e;
+        }
+
+        .btn-next {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-next:hover {
+            background: #218838;
+        }
+
+        .btn-skip {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-skip:hover {
+            background: #5a6268;
+        }
+
+        .feedback {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .feedback.wrong {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #11998e, #38ef7d);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .streak {
+            text-align: center;
+            margin-top: 10px;
+            color: #ffc107;
+            font-weight: bold;
+        }
+
+        .celebration {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 4rem;
+            animation: pop 0.5s ease;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        @keyframes pop {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+            50% { transform: translate(-50%, -50%) scale(1.2); }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+        }
+
+        .grammar-tip {
+            background: linear-gradient(135deg, #f0fff4 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .grammar-tip h3 {
+            color: #11998e;
+            margin-bottom: 10px;
+        }
+
+        .grammar-tip ul {
+            margin-left: 20px;
+            color: #555;
+        }
+
+        .grammar-tip li {
+            margin-bottom: 5px;
+        }
+
+        .grammar-tip code {
+            background: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #e83e8c;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: white;
+            text-decoration: none;
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Possessive 's Practice</h1>
+            <div class="score-board">
+                <div class="score-item correct">
+                    <span>Richtig</span>
+                    <strong id="correct-score">0</strong>
+                </div>
+                <div class="score-item wrong">
+                    <span>Falsch</span>
+                    <strong id="wrong-score">0</strong>
+                </div>
+                <div class="score-item">
+                    <span>Fragen</span>
+                    <strong id="total-questions">0</strong>
+                </div>
+            </div>
+        </header>
+
+        <div class="category-select">
+            <h2>Kategorie wählen:</h2>
+            <div class="category-buttons">
+                <button class="category-btn active" data-category="all">Alle</button>
+                <button class="category-btn" data-category="singular">Singular 's</button>
+                <button class="category-btn" data-category="plural">Plural s'</button>
+                <button class="category-btn" data-category="irregular">Unregelmäßig</button>
+                <button class="category-btn" data-category="translate">Übersetzen</button>
+                <button class="category-btn" data-category="s-or-of">s oder of?</button>
+            </div>
+        </div>
+
+        <div class="grammar-tip" id="grammar-tip">
+            <h3>Grammatik-Tipp</h3>
+            <ul>
+                <li><code>'s</code> zeigt Besitz an (Tom's book = Toms Buch)</li>
+                <li>Singular: Person + <code>'s</code> (the girl's bag)</li>
+                <li>Plural auf -s: Nur <code>'</code> (the boys' room)</li>
+                <li>Unregelmäßiger Plural: <code>'s</code> (the children's toys)</li>
+                <li>Bei Dingen oft <code>of</code> (the door of the house)</li>
+            </ul>
+        </div>
+
+        <div class="quiz-card" id="quiz-card">
+            <div class="question-type" id="question-type">Wähle die richtige Form</div>
+            <div class="question" id="question">Klicke auf "Nächste Frage" um zu starten!</div>
+
+            <div id="input-area">
+                <!-- Dynamic content will be inserted here -->
+            </div>
+
+            <div class="feedback" id="feedback"></div>
+
+            <div class="btn-row">
+                <button class="btn btn-skip" id="btn-skip" onclick="skipQuestion()">Überspringen</button>
+                <button class="btn btn-check" id="btn-check" onclick="checkAnswer()">Prüfen</button>
+                <button class="btn btn-next" id="btn-next" onclick="nextQuestion()" style="display: none;">Nächste Frage</button>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+            </div>
+            <div class="streak" id="streak"></div>
+        </div>
+    </div>
+
+    <script>
+        // Question database
+        const questions = {
+            singular: [
+                // Basic singular possessive
+                { type: 'choice', question: "Das Buch von Tom = ___", options: ["Tom's book", "Toms book", "Tom book's", "Toms' book"], correct: 0, hint: "Singular: Name + 's" },
+                { type: 'choice', question: "Die Tasche des Mädchens = ___", options: ["the girl's bag", "the girls bag", "the girls' bag", "the girl bag's"], correct: 0, hint: "Singular: the + Person + 's + Ding" },
+                { type: 'choice', question: "Das Auto meines Vaters = ___", options: ["my father's car", "my fathers car", "my fathers' car", "my father car's"], correct: 0, hint: "Singular: my + Person + 's + Ding" },
+                { type: 'choice', question: "Der Hund meiner Schwester = ___", options: ["my sister's dog", "my sisters dog", "my sisters' dog", "my sister dog's"], correct: 0, hint: "Singular: my + Person + 's + Ding" },
+                { type: 'fill', sentence: "Das ist ___ Handy. (Lisa)", answer: "Lisa's", hint: "Name + 's" },
+                { type: 'fill', sentence: "___ Zimmer ist groß. (Max)", answer: "Max's", hint: "Name + 's (auch bei Namen auf -s!)" },
+                { type: 'fill', sentence: "Das ist ___ Fahrrad. (mein Bruder = my brother)", answer: "my brother's", hint: "my brother + 's" },
+                { type: 'translate', from: 'de', german: "Annas Katze", english: "Anna's cat", hint: "Name + 's + Ding" },
+                { type: 'translate', from: 'de', german: "Das Haus meiner Mutter", english: "my mother's house", hint: "my mother + 's + house" },
+                { type: 'translate', from: 'de', german: "Der Lehrer meiner Klasse", english: "my class's teacher", hint: "my class + 's + teacher" },
+            ],
+            plural: [
+                // Plural possessive (regular -s plurals)
+                { type: 'choice', question: "Das Zimmer der Jungen (boys) = ___", options: ["the boys' room", "the boy's room", "the boys's room", "the boies' room"], correct: 0, hint: "Plural auf -s: nur Apostroph" },
+                { type: 'choice', question: "Die Spielzeuge der Katzen = ___", options: ["the cats' toys", "the cat's toys", "the cats's toys", "the cates' toys"], correct: 0, hint: "Plural auf -s: nur Apostroph" },
+                { type: 'choice', question: "Das Auto meiner Eltern = ___", options: ["my parents' car", "my parent's car", "my parents's car", "my parentes' car"], correct: 0, hint: "parents = Plural, also nur '" },
+                { type: 'choice', question: "Die Bücher der Schüler = ___", options: ["the students' books", "the student's books", "the students's books", "the studentes' books"], correct: 0, hint: "students = Plural auf -s" },
+                { type: 'fill', sentence: "Das ist das ___ Klassenzimmer. (die Mädchen = girls)", answer: "girls'", hint: "Plural auf -s: nur '" },
+                { type: 'fill', sentence: "___ Haus ist groß. (meine Großeltern = my grandparents)", answer: "My grandparents'", altAnswer: "my grandparents'", hint: "Plural: grandparents + '" },
+                { type: 'translate', from: 'de', german: "Die Schuhe der Spieler", english: "the players' shoes", hint: "players = Plural, also nur '" },
+                { type: 'translate', from: 'de', german: "Das Büro der Lehrer", english: "the teachers' office", hint: "teachers = Plural auf -s" },
+            ],
+            irregular: [
+                // Irregular plurals take 's
+                { type: 'choice', question: "Die Spielzeuge der Kinder = ___", options: ["the children's toys", "the childrens toys", "the childrens' toys", "the children toys"], correct: 0, hint: "children = unregelmäßiger Plural, also 's" },
+                { type: 'choice', question: "Die Kleidung der Männer = ___", options: ["the men's clothes", "the mens clothes", "the mens' clothes", "the man's clothes"], correct: 0, hint: "men = unregelmäßiger Plural, also 's" },
+                { type: 'choice', question: "Die Schuhe der Frauen = ___", options: ["the women's shoes", "the womens shoes", "the womens' shoes", "the woman's shoes"], correct: 0, hint: "women = unregelmäßiger Plural, also 's" },
+                { type: 'choice', question: "Die Käse der Mäuse = ___", options: ["the mice's cheese", "the mices cheese", "the mices' cheese", "the mouse's cheese"], correct: 0, hint: "mice = unregelmäßiger Plural, also 's" },
+                { type: 'fill', sentence: "___ Zähne sind weiß. (the people)", answer: "The people's", altAnswer: "the people's", hint: "people = unregelmäßiger Plural" },
+                { type: 'fill', sentence: "Das ist der ___ Bereich. (the men)", answer: "men's", hint: "men = unregelmäßiger Plural, also 's" },
+                { type: 'translate', from: 'de', german: "Die Bücher der Kinder", english: "the children's books", hint: "children + 's" },
+                { type: 'translate', from: 'de', german: "Die Abteilung der Frauen", english: "the women's department", hint: "women + 's" },
+            ],
+            translate: [
+                // Translation exercises (mixed)
+                { type: 'translate', from: 'de', german: "Marias Hund", english: "Maria's dog", hint: "Name + 's" },
+                { type: 'translate', from: 'de', german: "Das Fahrrad meines Freundes", english: "my friend's bike", altEnglish: "my friend's bicycle", hint: "my friend + 's" },
+                { type: 'translate', from: 'de', german: "Die Schule meiner Kinder", english: "my children's school", hint: "children = unregelmäßig, also 's" },
+                { type: 'translate', from: 'de', german: "Der Name des Hundes", english: "the dog's name", hint: "Tiere bekommen auch 's" },
+                { type: 'translate', from: 'de', german: "Das Zimmer meiner Brüder", english: "my brothers' room", hint: "brothers = Plural auf -s" },
+                { type: 'translate', from: 'en', german: "Peters Schule", english: "Peter's school", hint: "Name + 's" },
+                { type: 'translate', from: 'en', german: "Die Spielzeuge der Babys", english: "the babies' toys", hint: "babies = Plural auf -s" },
+                { type: 'translate', from: 'en', german: "Das Auto meiner Eltern", english: "my parents' car", hint: "parents = Plural" },
+                { type: 'translate', from: 'de', german: "Julias Geburtstag", english: "Julia's birthday", hint: "Name + 's" },
+                { type: 'translate', from: 'de', german: "Die Taschen der Schülerinnen", english: "the girls' bags", altEnglish: "the students' bags", hint: "Plural auf -s = nur '" },
+            ],
+            's-or-of': [
+                // When to use 's vs of
+                { type: 'choice', question: "Die Tür des Hauses = ___", options: ["the door of the house", "the house's door", "the houses door", "the houses' door"], correct: 0, hint: "Bei Sachen/Gebäuden: of the + Ding" },
+                { type: 'choice', question: "Das Ende des Films = ___", options: ["the end of the film", "the film's end", "the films end", "the films' end"], correct: 0, hint: "Bei Sachen: of the + Ding" },
+                { type: 'choice', question: "Das Dach des Autos = ___", options: ["the roof of the car", "the car's roof", "the cars roof", "the cars' roof"], correct: 0, hint: "Bei Fahrzeugen oft: of the" },
+                { type: 'choice', question: "Sarahs Bruder = ___", options: ["Sarah's brother", "the brother of Sarah", "Sarahs brother", "Sarah brother"], correct: 0, hint: "Bei Personen: 's" },
+                { type: 'choice', question: "Die Hauptstadt von Deutschland = ___", options: ["the capital of Germany", "Germany's capital", "Germanys capital", "Germanies' capital"], correct: 0, hint: "Bei Ländern: of + Land (oder 's möglich)" },
+                { type: 'choice', question: "Der Schwanz der Katze = ___", options: ["the cat's tail", "the tail of the cat", "the cats tail", "the cats' tail"], correct: 0, hint: "Bei Tieren: 's" },
+                { type: 'choice', question: "Der Anfang der Geschichte = ___", options: ["the beginning of the story", "the story's beginning", "the storys beginning", "the stories' beginning"], correct: 0, hint: "Bei abstrakten Dingen: of the" },
+                { type: 'choice', question: "Mein Onkels Haus = ___", options: ["my uncle's house", "the house of my uncle", "my uncles house", "my uncles' house"], correct: 0, hint: "Bei Personen: 's" },
+                { type: 'fill', sentence: "The legs ___ the table are broken. (of/table's)", answer: "of", hint: "Bei Möbeln: of" },
+                { type: 'fill', sentence: "That is ___. (James + Auto)", answer: "James's car", altAnswer: "James' car", hint: "Bei Namen auf -s: 's oder nur '" },
+            ]
+        };
+
+        let currentQuestion = null;
+        let currentCategory = 'all';
+        let score = { correct: 0, wrong: 0, total: 0 };
+        let streak = 0;
+        let answeredQuestions = [];
+
+        // Category button handling
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentCategory = btn.dataset.category;
+                answeredQuestions = [];
+                updateGrammarTip();
+                nextQuestion();
+            });
+        });
+
+        function updateGrammarTip() {
+            const tips = {
+                all: `<h3>Grammatik-Tipps: Possessive 's</h3>
+                    <ul>
+                        <li><code>'s</code> zeigt Besitz an (Tom's book = Toms Buch)</li>
+                        <li>Singular: Person + <code>'s</code> (the girl's bag)</li>
+                        <li>Plural auf -s: Nur <code>'</code> (the boys' room)</li>
+                        <li>Unregelmäßiger Plural: <code>'s</code> (the children's toys)</li>
+                        <li>Bei Dingen oft <code>of</code> (the door of the house)</li>
+                    </ul>`,
+                singular: `<h3>Singular: 's</h3>
+                    <ul>
+                        <li>Bei einer Person/einem Tier: <code>'s</code></li>
+                        <li>Beispiel: the girl<code>'s</code> bag</li>
+                        <li>Auch bei Namen auf -s: James<code>'s</code> oder James<code>'</code></li>
+                        <li>Wortstellung: Besitzer + 's + Besitz</li>
+                    </ul>`,
+                plural: `<h3>Plural auf -s: nur '</h3>
+                    <ul>
+                        <li>Wenn der Plural auf -s endet: nur <code>'</code></li>
+                        <li>boys → the boys<code>'</code> room</li>
+                        <li>students → the students<code>'</code> books</li>
+                        <li>parents → my parents<code>'</code> car</li>
+                    </ul>`,
+                irregular: `<h3>Unregelmäßiger Plural: 's</h3>
+                    <ul>
+                        <li>Wenn der Plural NICHT auf -s endet: <code>'s</code></li>
+                        <li>children → the children<code>'s</code> toys</li>
+                        <li>men → the men<code>'s</code> room</li>
+                        <li>women → the women<code>'s</code> shoes</li>
+                        <li>people → the people<code>'s</code> choice</li>
+                    </ul>`,
+                translate: `<h3>Übersetzen</h3>
+                    <ul>
+                        <li>Im Deutschen: "von" oder Genitiv</li>
+                        <li>Toms Buch = Tom<code>'s</code> book</li>
+                        <li>Das Buch der Kinder = the children<code>'s</code> book</li>
+                        <li>Das Zimmer der Jungen = the boys<code>'</code> room</li>
+                    </ul>`,
+                's-or-of': `<h3>'s oder of?</h3>
+                    <ul>
+                        <li><code>'s</code> bei: Personen, Tieren, Zeit</li>
+                        <li><code>of</code> bei: Sachen, Gebäuden, Abstraktem</li>
+                        <li>the girl<code>'s</code> name (Person)</li>
+                        <li>the door <code>of</code> the house (Sache)</li>
+                        <li>the cat<code>'s</code> tail (Tier)</li>
+                        <li>the end <code>of</code> the film (abstrakt)</li>
+                    </ul>`
+            };
+            document.getElementById('grammar-tip').innerHTML = tips[currentCategory];
+        }
+
+        function getQuestions() {
+            if (currentCategory === 'all') {
+                return Object.values(questions).flat();
+            }
+            return questions[currentCategory] || [];
+        }
+
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        function nextQuestion() {
+            const allQuestions = getQuestions();
+
+            // Filter out recently answered questions
+            let available = allQuestions.filter((q, i) => !answeredQuestions.includes(JSON.stringify(q)));
+
+            if (available.length === 0) {
+                answeredQuestions = [];
+                available = allQuestions;
+            }
+
+            currentQuestion = available[Math.floor(Math.random() * available.length)];
+            answeredQuestions.push(JSON.stringify(currentQuestion));
+
+            displayQuestion();
+
+            document.getElementById('feedback').classList.remove('show');
+            document.getElementById('btn-check').style.display = 'block';
+            document.getElementById('btn-next').style.display = 'none';
+            document.getElementById('btn-skip').style.display = 'block';
+        }
+
+        function displayQuestion() {
+            const inputArea = document.getElementById('input-area');
+            const questionEl = document.getElementById('question');
+            const typeEl = document.getElementById('question-type');
+
+            if (currentQuestion.type === 'translate') {
+                if (currentQuestion.from === 'de') {
+                    typeEl.textContent = 'Übersetze ins Englische';
+                    questionEl.innerHTML = `<span class="german-text">${currentQuestion.german}</span>`;
+                } else {
+                    typeEl.textContent = 'Übersetze ins Deutsche';
+                    questionEl.innerHTML = `<span class="english-text">${currentQuestion.english}</span>`;
+                }
+                inputArea.innerHTML = `<input type="text" class="answer-input" id="answer-input" placeholder="Deine Übersetzung..." autocomplete="off">`;
+                document.getElementById('answer-input').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') checkAnswer();
+                });
+                document.getElementById('answer-input').focus();
+            } else if (currentQuestion.type === 'choice') {
+                typeEl.textContent = 'Multiple Choice';
+                questionEl.textContent = currentQuestion.question;
+                let optionsHtml = '<div class="answer-options">';
+                currentQuestion.options.forEach((opt, i) => {
+                    optionsHtml += `<button class="option-btn" data-index="${i}" onclick="selectOption(${i})">${opt}</button>`;
+                });
+                optionsHtml += '</div>';
+                inputArea.innerHTML = optionsHtml;
+            } else if (currentQuestion.type === 'fill') {
+                typeEl.textContent = 'Lückentext';
+                questionEl.innerHTML = currentQuestion.sentence.replace('___', '<span style="border-bottom: 2px solid #11998e; padding: 0 20px;">___</span>');
+                inputArea.innerHTML = `<input type="text" class="answer-input" id="answer-input" placeholder="Fülle die Lücke..." autocomplete="off">`;
+                document.getElementById('answer-input').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') checkAnswer();
+                });
+                document.getElementById('answer-input').focus();
+            }
+        }
+
+        function selectOption(index) {
+            document.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('selected'));
+            document.querySelector(`.option-btn[data-index="${index}"]`).classList.add('selected');
+        }
+
+        function normalizeAnswer(str) {
+            return str.toLowerCase()
+                .replace(/[.,!?]/g, '')
+                .replace(/\s+/g, ' ')
+                .replace(/[']/g, "'")  // Normalize different apostrophe types
+                .trim();
+        }
+
+        function checkAnswer() {
+            let isCorrect = false;
+            let userAnswer = '';
+            let correctAnswer = '';
+
+            if (currentQuestion.type === 'translate') {
+                userAnswer = document.getElementById('answer-input').value;
+                if (currentQuestion.from === 'de') {
+                    correctAnswer = currentQuestion.english;
+                    isCorrect = normalizeAnswer(userAnswer) === normalizeAnswer(currentQuestion.english);
+                    if (!isCorrect && currentQuestion.altEnglish) {
+                        isCorrect = normalizeAnswer(userAnswer) === normalizeAnswer(currentQuestion.altEnglish);
+                    }
+                } else {
+                    correctAnswer = currentQuestion.german;
+                    isCorrect = normalizeAnswer(userAnswer) === normalizeAnswer(currentQuestion.german);
+                }
+            } else if (currentQuestion.type === 'choice') {
+                const selected = document.querySelector('.option-btn.selected');
+                if (!selected) {
+                    showFeedback(false, 'Bitte wähle eine Antwort!');
+                    return;
+                }
+                userAnswer = parseInt(selected.dataset.index);
+                correctAnswer = currentQuestion.options[currentQuestion.correct];
+                isCorrect = userAnswer === currentQuestion.correct;
+
+                // Show correct/wrong on buttons
+                document.querySelectorAll('.option-btn').forEach(btn => {
+                    const idx = parseInt(btn.dataset.index);
+                    if (idx === currentQuestion.correct) {
+                        btn.classList.add('correct');
+                    } else if (idx === userAnswer && !isCorrect) {
+                        btn.classList.add('wrong');
+                    }
+                    btn.disabled = true;
+                });
+            } else if (currentQuestion.type === 'fill') {
+                userAnswer = document.getElementById('answer-input').value;
+                correctAnswer = currentQuestion.answer;
+                isCorrect = normalizeAnswer(userAnswer) === normalizeAnswer(currentQuestion.answer);
+                if (!isCorrect && currentQuestion.altAnswer) {
+                    isCorrect = normalizeAnswer(userAnswer) === normalizeAnswer(currentQuestion.altAnswer);
+                }
+            }
+
+            if (isCorrect) {
+                score.correct++;
+                streak++;
+                showFeedback(true, 'Super! Das ist richtig!');
+                if (streak > 0 && streak % 5 === 0) {
+                    celebrate();
+                }
+            } else {
+                score.wrong++;
+                streak = 0;
+                let message = `Leider falsch. Die richtige Antwort ist: <strong>${correctAnswer}</strong>`;
+                if (currentQuestion.hint) {
+                    message += `<br><br>Tipp: ${currentQuestion.hint}`;
+                }
+                showFeedback(false, message);
+            }
+
+            score.total++;
+            updateScore();
+
+            document.getElementById('btn-check').style.display = 'none';
+            document.getElementById('btn-next').style.display = 'block';
+            document.getElementById('btn-skip').style.display = 'none';
+
+            const input = document.getElementById('answer-input');
+            if (input) input.disabled = true;
+        }
+
+        function skipQuestion() {
+            let correctAnswer = '';
+            if (currentQuestion.type === 'translate') {
+                correctAnswer = currentQuestion.from === 'de' ? currentQuestion.english : currentQuestion.german;
+            } else if (currentQuestion.type === 'choice') {
+                correctAnswer = currentQuestion.options[currentQuestion.correct];
+            } else if (currentQuestion.type === 'fill') {
+                correctAnswer = currentQuestion.answer;
+            }
+
+            showFeedback(false, `Übersprungen. Die Antwort wäre: <strong>${correctAnswer}</strong><br><br>Tipp: ${currentQuestion.hint || 'Keine Tipps verfügbar'}`);
+
+            streak = 0;
+            updateScore();
+
+            document.getElementById('btn-check').style.display = 'none';
+            document.getElementById('btn-next').style.display = 'block';
+            document.getElementById('btn-skip').style.display = 'none';
+
+            const input = document.getElementById('answer-input');
+            if (input) input.disabled = true;
+        }
+
+        function showFeedback(correct, message) {
+            const feedback = document.getElementById('feedback');
+            feedback.className = 'feedback show ' + (correct ? 'correct' : 'wrong');
+            feedback.innerHTML = message;
+        }
+
+        function updateScore() {
+            document.getElementById('correct-score').textContent = score.correct;
+            document.getElementById('wrong-score').textContent = score.wrong;
+            document.getElementById('total-questions').textContent = score.total;
+
+            const progress = score.total > 0 ? (score.correct / score.total * 100) : 0;
+            document.getElementById('progress-fill').style.width = progress + '%';
+
+            const streakEl = document.getElementById('streak');
+            if (streak >= 3) {
+                streakEl.textContent = `🔥 ${streak} richtig in Folge!`;
+            } else {
+                streakEl.textContent = '';
+            }
+        }
+
+        function celebrate() {
+            const emojis = ['🎉', '⭐', '🏆', '💪', '🌟'];
+            const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+            const celebration = document.createElement('div');
+            celebration.className = 'celebration';
+            celebration.textContent = emoji;
+            document.body.appendChild(celebration);
+            setTimeout(() => celebration.remove(), 500);
+        }
+
+        // Start with first question
+        nextQuestion();
+    </script>
+</body>
+</html>

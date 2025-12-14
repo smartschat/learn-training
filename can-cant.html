@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Can / Can't Practice</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .score-board {
+            background: white;
+            border-radius: 15px;
+            padding: 15px 25px;
+            display: inline-flex;
+            gap: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .score-item {
+            text-align: center;
+        }
+
+        .score-item span {
+            display: block;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .score-item strong {
+            font-size: 1.5rem;
+            color: #333;
+        }
+
+        .correct strong { color: #28a745; }
+        .wrong strong { color: #dc3545; }
+
+        .category-select {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .category-select h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .category-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .category-btn {
+            padding: 10px 20px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .category-btn:hover, .category-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .quiz-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+
+        .question-type {
+            display: inline-block;
+            background: #e9ecef;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .question {
+            font-size: 1.4rem;
+            color: #333;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .german-text {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .english-text {
+            color: #28a745;
+            font-weight: 600;
+        }
+
+        .answer-input {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 1.1rem;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            transition: border-color 0.3s;
+        }
+
+        .answer-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .answer-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .option-btn {
+            padding: 15px 20px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            text-align: left;
+            transition: all 0.3s;
+        }
+
+        .option-btn:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .option-btn.selected {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        .option-btn.correct {
+            border-color: #28a745;
+            background: #28a745;
+            color: white;
+        }
+
+        .option-btn.wrong {
+            border-color: #dc3545;
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-check {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-check:hover {
+            background: #5a6fd6;
+        }
+
+        .btn-next {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-next:hover {
+            background: #218838;
+        }
+
+        .btn-skip {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-skip:hover {
+            background: #5a6268;
+        }
+
+        .feedback {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .feedback.wrong {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .hint-box {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .hint-box h4 {
+            color: #856404;
+            margin-bottom: 8px;
+        }
+
+        .hint-box p {
+            color: #856404;
+            font-size: 0.95rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .streak {
+            text-align: center;
+            margin-top: 10px;
+            color: #ffc107;
+            font-weight: bold;
+        }
+
+        .celebration {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 4rem;
+            animation: pop 0.5s ease;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        @keyframes pop {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+            50% { transform: translate(-50%, -50%) scale(1.2); }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+        }
+
+        .grammar-tip {
+            background: linear-gradient(135deg, #f8f9ff 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .grammar-tip h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .grammar-tip ul {
+            margin-left: 20px;
+            color: #555;
+        }
+
+        .grammar-tip li {
+            margin-bottom: 5px;
+        }
+
+        .grammar-tip code {
+            background: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #e83e8c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Can / Can't Practice</h1>
+            <div class="score-board">
+                <div class="score-item correct">
+                    <span>Richtig</span>
+                    <strong id="correct-score">0</strong>
+                </div>
+                <div class="score-item wrong">
+                    <span>Falsch</span>
+                    <strong id="wrong-score">0</strong>
+                </div>
+                <div class="score-item">
+                    <span>Fragen</span>
+                    <strong id="total-questions">0</strong>
+                </div>
+            </div>
+        </header>
+
+        <div class="category-select">
+            <h2>Kategorie wählen:</h2>
+            <div class="category-buttons">
+                <button class="category-btn active" data-category="all">Alle</button>
+                <button class="category-btn" data-category="statements">Aussagen</button>
+                <button class="category-btn" data-category="questions">Fragen</button>
+                <button class="category-btn" data-category="answers">Antworten</button>
+                <button class="category-btn" data-category="negation">Verneinung</button>
+                <button class="category-btn" data-category="word-order">Wortstellung</button>
+            </div>
+        </div>
+
+        <div class="grammar-tip" id="grammar-tip">
+            <h3>Grammatik-Tipp</h3>
+            <ul>
+                <li><code>can</code> = können (Fähigkeit/Möglichkeit)</li>
+                <li><code>can't</code> / <code>cannot</code> = nicht können</li>
+                <li>Frage: <code>Can</code> + Person + Verb? (Can you swim?)</li>
+                <li>Antwort: Yes, I can. / No, I can't.</li>
+                <li>Wortstellung: Person + <code>can</code> + Verb (I can play)</li>
+            </ul>
+        </div>
+
+        <div class="quiz-card" id="quiz-card">
+            <div class="question-type" id="question-type">Übersetze ins Englische</div>
+            <div class="question" id="question">Klicke auf "Nächste Frage" um zu starten!</div>
+
+            <div id="input-area">
+                <!-- Dynamic content will be inserted here -->
+            </div>
+
+            <div class="feedback" id="feedback"></div>
+
+            <div class="btn-row">
+                <button class="btn btn-skip" id="btn-skip" onclick="skipQuestion()">Überspringen</button>
+                <button class="btn btn-check" id="btn-check" onclick="checkAnswer()">Prüfen</button>
+                <button class="btn btn-next" id="btn-next" onclick="nextQuestion()" style="display: none;">Nächste Frage</button>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+            </div>
+            <div class="streak" id="streak"></div>
+        </div>
+    </div>
+
+    <script>
+        // Question database
+        const questions = {
+            statements: [
+                // German to English - Statements
+                { type: 'translate', from: 'de', german: 'Ich kann schwimmen.', english: 'I can swim.', hint: 'Person + can + Verb' },
+                { type: 'translate', from: 'de', german: 'Sie kann gut singen.', english: 'She can sing well.', hint: 'well = gut (kommt am Ende)' },
+                { type: 'translate', from: 'de', german: 'Wir können Englisch sprechen.', english: 'We can speak English.', hint: 'Person + can + Verb + Objekt' },
+                { type: 'translate', from: 'de', german: 'Er kann schnell laufen.', english: 'He can run fast.', hint: 'fast = schnell' },
+                { type: 'translate', from: 'de', german: 'Sie können Gitarre spielen.', english: 'They can play the guitar.', hint: 'Instrumente mit "the"!' },
+                { type: 'translate', from: 'de', german: 'Mein Bruder kann kochen.', english: 'My brother can cook.', hint: 'My brother + can + Verb' },
+                // English to German - Statements
+                { type: 'translate', from: 'en', german: 'Ich kann Fahrrad fahren.', english: 'I can ride a bike.', hint: 'ride a bike = Fahrrad fahren' },
+                { type: 'translate', from: 'en', german: 'Sie kann tanzen.', english: 'She can dance.', hint: 'dance = tanzen' },
+                { type: 'translate', from: 'en', german: 'Der Hund kann Tricks machen.', english: 'The dog can do tricks.', hint: 'do tricks = Tricks machen' },
+            ],
+            questions: [
+                // Question formation
+                { type: 'translate', from: 'de', german: 'Kannst du schwimmen?', english: 'Can you swim?', hint: 'Frage: Can + Person + Verb?' },
+                { type: 'translate', from: 'de', german: 'Kann sie Klavier spielen?', english: 'Can she play the piano?', hint: 'Instrumente mit "the"!' },
+                { type: 'translate', from: 'de', german: 'Können wir hier parken?', english: 'Can we park here?', hint: 'here = hier' },
+                { type: 'translate', from: 'de', german: 'Kann er Deutsch sprechen?', english: 'Can he speak German?', hint: 'Sprachen ohne Artikel' },
+                { type: 'translate', from: 'en', german: 'Kannst du mir helfen?', english: 'Can you help me?', hint: 'help me = mir helfen' },
+                { type: 'translate', from: 'en', german: 'Kann ich das Fenster öffnen?', english: 'Can I open the window?', hint: 'open = öffnen' },
+                // Multiple choice for question formation
+                { type: 'choice', question: 'Wie fragt man "Kannst du kochen?"', options: ['Can you cook?', 'You can cook?', 'Do you can cook?', 'Can cook you?'], correct: 0, hint: 'Frage: Can + Person + Verb?' },
+                { type: 'choice', question: 'Wähle die richtige Frage für "Kann er laufen?"', options: ['Can he run?', 'He can run?', 'Does he can run?', 'Can run he?'], correct: 0, hint: 'Bei Fragen steht "can" VOR der Person' },
+            ],
+            answers: [
+                // Short answers
+                { type: 'choice', question: 'Can you swim? - Yes, ...', options: ['I can', 'I can swim', 'I do', 'I am'], correct: 0, hint: 'Kurze Antwort: Yes, + Person + can' },
+                { type: 'choice', question: 'Can she dance? - No, ...', options: ["she can't", "she can not dance", "she doesn't", "she isn't"], correct: 0, hint: "Kurze Antwort: No, + Person + can't" },
+                { type: 'choice', question: 'Can they play football? - Yes, ...', options: ['they can', 'they can play', 'they do', 'they are'], correct: 0, hint: 'Kurze Antwort ohne Verb am Ende!' },
+                { type: 'translate', from: 'de', german: 'Ja, ich kann.', english: 'Yes, I can.', hint: 'Kurze Antwort' },
+                { type: 'translate', from: 'de', german: 'Nein, sie kann nicht.', english: "No, she can't.", hint: "can't für Verneinung" },
+                { type: 'translate', from: 'de', german: 'Ja, wir können.', english: 'Yes, we can.', hint: 'Kurze Antwort' },
+                { type: 'fill', sentence: 'Can he swim? - No, he ___.', answer: "can't", hint: 'Verneinung von can' },
+                { type: 'fill', sentence: 'Can you help me? - Yes, I ___.', answer: 'can', hint: 'Bejahende kurze Antwort' },
+            ],
+            negation: [
+                // Can't / Cannot
+                { type: 'translate', from: 'de', german: 'Ich kann nicht schwimmen.', english: "I can't swim.", altEnglish: 'I cannot swim.', hint: "can't = cannot = nicht können" },
+                { type: 'translate', from: 'de', german: 'Sie kann nicht kochen.', english: "She can't cook.", altEnglish: 'She cannot cook.', hint: 'Person + can\'t + Verb' },
+                { type: 'translate', from: 'de', german: 'Wir können heute nicht kommen.', english: "We can't come today.", hint: 'today = heute' },
+                { type: 'translate', from: 'de', german: 'Er kann das nicht verstehen.', english: "He can't understand that.", hint: 'understand = verstehen' },
+                { type: 'translate', from: 'en', german: 'Ich kann nicht singen.', english: "I can't sing.", hint: 'sing = singen' },
+                { type: 'translate', from: 'en', german: 'Sie können nicht bleiben.', english: "They can't stay.", hint: 'stay = bleiben' },
+                { type: 'choice', question: "Wähle die richtige Verneinung: I ___ swim.", options: ["can't", "don't can", "not can", "can not to"], correct: 0, hint: "can + not = can't oder cannot" },
+                { type: 'fill', sentence: 'She ___ play tennis. (nicht können)', answer: "can't", hint: 'Verneinung' },
+            ],
+            'word-order': [
+                // Word order exercises
+                { type: 'order', words: ['I', 'can', 'swim', 'well'], correct: 'I can swim well.', hint: 'Person + can + Verb + Adverb' },
+                { type: 'order', words: ['Can', 'you', 'help', 'me', '?'], correct: 'Can you help me?', hint: 'Frage: Can + Person + Verb + Objekt?' },
+                { type: 'order', words: ['She', "can't", 'come', 'today'], correct: "She can't come today.", hint: "Person + can't + Verb + Zeit" },
+                { type: 'order', words: ['Can', 'he', 'play', 'the', 'guitar', '?'], correct: 'Can he play the guitar?', hint: 'Instrumente mit "the"' },
+                { type: 'order', words: ['We', 'can', 'speak', 'English'], correct: 'We can speak English.', hint: 'Person + can + Verb + Sprache' },
+                { type: 'order', words: ['My', 'sister', 'can', 'dance'], correct: 'My sister can dance.', hint: 'Subjekt + can + Verb' },
+                { type: 'choice', question: 'Richtige Wortstellung?', options: ['He can run fast.', 'He can fast run.', 'Can he fast run.', 'Fast he can run.'], correct: 0, hint: 'Adverb am Ende!' },
+                { type: 'choice', question: 'Richtige Wortstellung für eine Frage?', options: ['Can they swim?', 'They can swim?', 'Swim can they?', 'Can swim they?'], correct: 0, hint: 'Frage: Can + Person + Verb?' },
+            ]
+        };
+
+        let currentQuestion = null;
+        let currentCategory = 'all';
+        let score = { correct: 0, wrong: 0, total: 0 };
+        let streak = 0;
+        let answeredQuestions = [];
+
+        // Category button handling
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentCategory = btn.dataset.category;
+                answeredQuestions = [];
+                updateGrammarTip();
+                nextQuestion();
+            });
+        });
+
+        function updateGrammarTip() {
+            const tips = {
+                all: `<h3>Grammatik-Tipps</h3>
+                    <ul>
+                        <li><code>can</code> = können (Fähigkeit/Möglichkeit)</li>
+                        <li><code>can't</code> / <code>cannot</code> = nicht können</li>
+                        <li>Frage: <code>Can</code> + Person + Verb?</li>
+                        <li>Antwort: Yes, I can. / No, I can't.</li>
+                    </ul>`,
+                statements: `<h3>Aussagen mit can</h3>
+                    <ul>
+                        <li>Wortstellung: Person + <code>can</code> + Verb</li>
+                        <li>Beispiel: I <code>can</code> swim.</li>
+                        <li>Kein "to" nach can! (I can swim, NICHT: I can to swim)</li>
+                    </ul>`,
+                questions: `<h3>Fragen mit can</h3>
+                    <ul>
+                        <li>Wortstellung: <code>Can</code> + Person + Verb?</li>
+                        <li>Beispiel: <code>Can</code> you swim?</li>
+                        <li>Kein "do/does" nötig!</li>
+                    </ul>`,
+                answers: `<h3>Kurzantworten</h3>
+                    <ul>
+                        <li>Ja: Yes, + Person + <code>can</code>.</li>
+                        <li>Nein: No, + Person + <code>can't</code>.</li>
+                        <li>Das Verb wird NICHT wiederholt!</li>
+                    </ul>`,
+                negation: `<h3>Verneinung mit can't</h3>
+                    <ul>
+                        <li><code>can't</code> = <code>cannot</code> (zusammen!)</li>
+                        <li>Wortstellung: Person + <code>can't</code> + Verb</li>
+                        <li>Beispiel: I <code>can't</code> swim.</li>
+                    </ul>`,
+                'word-order': `<h3>Wortstellung</h3>
+                    <ul>
+                        <li>Aussage: Person + can + Verb + Rest</li>
+                        <li>Frage: Can + Person + Verb + Rest?</li>
+                        <li>Verneinung: Person + can't + Verb + Rest</li>
+                        <li>Adverbien (well, fast) am Ende!</li>
+                    </ul>`
+            };
+            document.getElementById('grammar-tip').innerHTML = tips[currentCategory];
+        }
+
+        function getQuestions() {
+            if (currentCategory === 'all') {
+                return Object.values(questions).flat();
+            }
+            return questions[currentCategory] || [];
+        }
+
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        function nextQuestion() {
+            const allQuestions = getQuestions();
+
+            // Filter out recently answered questions
+            let available = allQuestions.filter((q, i) => !answeredQuestions.includes(JSON.stringify(q)));
+
+            if (available.length === 0) {
+                answeredQuestions = [];
+                available = allQuestions;
+            }
+
+            currentQuestion = available[Math.floor(Math.random() * available.length)];
+            answeredQuestions.push(JSON.stringify(currentQuestion));
+
+            displayQuestion();
+
+            document.getElementById('feedback').classList.remove('show');
+            document.getElementById('btn-check').style.display = 'block';
+            document.getElementById('btn-next').style.display = 'none';
+            document.getElementById('btn-skip').style.display = 'block';
+        }
+
+        function displayQuestion() {
+            const inputArea = document.getElementById('input-area');
+            const questionEl = document.getElementById('question');
+            const typeEl = document.getElementById('question-type');
+
+            if (currentQuestion.type === 'translate') {
+                if (currentQuestion.from === 'de') {
+                    typeEl.textContent = 'Übersetze ins Englische';
+                    questionEl.innerHTML = `<span class="german-text">${currentQuestion.german}</span>`;
+                } else {
+                    typeEl.textContent = 'Übersetze ins Deutsche';
+                    questionEl.innerHTML = `<span class="english-text">${currentQuestion.english}</span>`;
+                }
+                inputArea.innerHTML = `<input type="text" class="answer-input" id="answer-input" placeholder="Deine Übersetzung..." autocomplete="off">`;
+                document.getElementById('answer-input').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') checkAnswer();
+                });
+                document.getElementById('answer-input').focus();
+            } else if (currentQuestion.type === 'choice') {
+                typeEl.textContent = 'Multiple Choice';
+                questionEl.textContent = currentQuestion.question;
+                let optionsHtml = '<div class="answer-options">';
+                currentQuestion.options.forEach((opt, i) => {
+                    optionsHtml += `<button class="option-btn" data-index="${i}" onclick="selectOption(${i})">${opt}</button>`;
+                });
+                optionsHtml += '</div>';
+                inputArea.innerHTML = optionsHtml;
+            } else if (currentQuestion.type === 'fill') {
+                typeEl.textContent = 'Lückentext';
+                questionEl.innerHTML = currentQuestion.sentence.replace('___', '<span style="border-bottom: 2px solid #667eea; padding: 0 20px;">___</span>');
+                inputArea.innerHTML = `<input type="text" class="answer-input" id="answer-input" placeholder="Fülle die Lücke..." autocomplete="off">`;
+                document.getElementById('answer-input').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') checkAnswer();
+                });
+                document.getElementById('answer-input').focus();
+            } else if (currentQuestion.type === 'order') {
+                typeEl.textContent = 'Wörter ordnen';
+                questionEl.textContent = 'Bringe die Wörter in die richtige Reihenfolge:';
+                const shuffled = shuffleArray(currentQuestion.words);
+                let wordsHtml = '<div class="answer-options" style="flex-direction: row; flex-wrap: wrap;">';
+                shuffled.forEach((word, i) => {
+                    wordsHtml += `<button class="option-btn" style="flex: 0 0 auto;" onclick="addWord(this)">${word}</button>`;
+                });
+                wordsHtml += '</div>';
+                wordsHtml += '<input type="text" class="answer-input" id="answer-input" placeholder="Klicke auf die Wörter oder tippe..." autocomplete="off">';
+                inputArea.innerHTML = wordsHtml;
+                document.getElementById('answer-input').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') checkAnswer();
+                });
+            }
+        }
+
+        function selectOption(index) {
+            document.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('selected'));
+            document.querySelector(`.option-btn[data-index="${index}"]`).classList.add('selected');
+        }
+
+        function addWord(btn) {
+            const input = document.getElementById('answer-input');
+            const word = btn.textContent;
+            if (input.value) {
+                input.value += ' ' + word;
+            } else {
+                input.value = word;
+            }
+            btn.style.opacity = '0.5';
+            btn.disabled = true;
+        }
+
+        function normalizeAnswer(str) {
+            return str.toLowerCase()
+                .replace(/[.,!?]/g, '')
+                .replace(/\s+/g, ' ')
+                .trim();
+        }
+
+        function checkAnswer() {
+            let isCorrect = false;
+            let userAnswer = '';
+            let correctAnswer = '';
+
+            if (currentQuestion.type === 'translate') {
+                userAnswer = document.getElementById('answer-input').value;
+                if (currentQuestion.from === 'de') {
+                    correctAnswer = currentQuestion.english;
+                    isCorrect = normalizeAnswer(userAnswer) === normalizeAnswer(currentQuestion.english);
+                    if (!isCorrect && currentQuestion.altEnglish) {
+                        isCorrect = normalizeAnswer(userAnswer) === normalizeAnswer(currentQuestion.altEnglish);
+                    }
+                } else {
+                    correctAnswer = currentQuestion.german;
+                    isCorrect = normalizeAnswer(userAnswer) === normalizeAnswer(currentQuestion.german);
+                }
+            } else if (currentQuestion.type === 'choice') {
+                const selected = document.querySelector('.option-btn.selected');
+                if (!selected) {
+                    showFeedback(false, 'Bitte wähle eine Antwort!');
+                    return;
+                }
+                userAnswer = parseInt(selected.dataset.index);
+                correctAnswer = currentQuestion.options[currentQuestion.correct];
+                isCorrect = userAnswer === currentQuestion.correct;
+
+                // Show correct/wrong on buttons
+                document.querySelectorAll('.option-btn').forEach(btn => {
+                    const idx = parseInt(btn.dataset.index);
+                    if (idx === currentQuestion.correct) {
+                        btn.classList.add('correct');
+                    } else if (idx === userAnswer && !isCorrect) {
+                        btn.classList.add('wrong');
+                    }
+                    btn.disabled = true;
+                });
+            } else if (currentQuestion.type === 'fill') {
+                userAnswer = document.getElementById('answer-input').value;
+                correctAnswer = currentQuestion.answer;
+                isCorrect = normalizeAnswer(userAnswer) === normalizeAnswer(currentQuestion.answer);
+            } else if (currentQuestion.type === 'order') {
+                userAnswer = document.getElementById('answer-input').value;
+                correctAnswer = currentQuestion.correct;
+                // Allow with or without final punctuation
+                const normalizedUser = normalizeAnswer(userAnswer);
+                const normalizedCorrect = normalizeAnswer(currentQuestion.correct);
+                isCorrect = normalizedUser === normalizedCorrect;
+            }
+
+            if (isCorrect) {
+                score.correct++;
+                streak++;
+                showFeedback(true, 'Super! Das ist richtig!');
+                if (streak > 0 && streak % 5 === 0) {
+                    celebrate();
+                }
+            } else {
+                score.wrong++;
+                streak = 0;
+                let message = `Leider falsch. Die richtige Antwort ist: <strong>${correctAnswer}</strong>`;
+                if (currentQuestion.hint) {
+                    message += `<br><br>Tipp: ${currentQuestion.hint}`;
+                }
+                showFeedback(false, message);
+            }
+
+            score.total++;
+            updateScore();
+
+            document.getElementById('btn-check').style.display = 'none';
+            document.getElementById('btn-next').style.display = 'block';
+            document.getElementById('btn-skip').style.display = 'none';
+
+            const input = document.getElementById('answer-input');
+            if (input) input.disabled = true;
+        }
+
+        function skipQuestion() {
+            let correctAnswer = '';
+            if (currentQuestion.type === 'translate') {
+                correctAnswer = currentQuestion.from === 'de' ? currentQuestion.english : currentQuestion.german;
+            } else if (currentQuestion.type === 'choice') {
+                correctAnswer = currentQuestion.options[currentQuestion.correct];
+            } else if (currentQuestion.type === 'fill') {
+                correctAnswer = currentQuestion.answer;
+            } else if (currentQuestion.type === 'order') {
+                correctAnswer = currentQuestion.correct;
+            }
+
+            showFeedback(false, `Übersprungen. Die Antwort wäre: <strong>${correctAnswer}</strong><br><br>Tipp: ${currentQuestion.hint || 'Keine Tipps verfügbar'}`);
+
+            streak = 0;
+            updateScore();
+
+            document.getElementById('btn-check').style.display = 'none';
+            document.getElementById('btn-next').style.display = 'block';
+            document.getElementById('btn-skip').style.display = 'none';
+
+            const input = document.getElementById('answer-input');
+            if (input) input.disabled = true;
+        }
+
+        function showFeedback(correct, message) {
+            const feedback = document.getElementById('feedback');
+            feedback.className = 'feedback show ' + (correct ? 'correct' : 'wrong');
+            feedback.innerHTML = message;
+        }
+
+        function updateScore() {
+            document.getElementById('correct-score').textContent = score.correct;
+            document.getElementById('wrong-score').textContent = score.wrong;
+            document.getElementById('total-questions').textContent = score.total;
+
+            const progress = score.total > 0 ? (score.correct / score.total * 100) : 0;
+            document.getElementById('progress-fill').style.width = progress + '%';
+
+            const streakEl = document.getElementById('streak');
+            if (streak >= 3) {
+                streakEl.textContent = `🔥 ${streak} richtig in Folge!`;
+            } else {
+                streakEl.textContent = '';
+            }
+        }
+
+        function celebrate() {
+            const emojis = ['🎉', '⭐', '🏆', '💪', '🌟'];
+            const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+            const celebration = document.createElement('div');
+            celebration.className = 'celebration';
+            celebration.textContent = emoji;
+            document.body.appendChild(celebration);
+            setTimeout(() => celebration.remove(), 500);
+        }
+
+        // Start with first question
+        nextQuestion();
+    </script>
+</body>
+</html>

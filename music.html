@@ -1,0 +1,1371 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Musik Training</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 750px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .score-board {
+            background: white;
+            border-radius: 15px;
+            padding: 15px 25px;
+            display: inline-flex;
+            gap: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .score-item {
+            text-align: center;
+        }
+
+        .score-item span {
+            display: block;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .score-item strong {
+            font-size: 1.5rem;
+            color: #333;
+        }
+
+        .correct strong { color: #28a745; }
+        .wrong strong { color: #dc3545; }
+
+        .category-select {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .category-select h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .category-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .category-btn {
+            padding: 10px 20px;
+            border: 2px solid #ff9a9e;
+            background: white;
+            color: #ff9a9e;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .category-btn:hover, .category-btn.active {
+            background: #ff9a9e;
+            color: white;
+        }
+
+        .quiz-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+
+        .question-type {
+            display: inline-block;
+            background: #e9ecef;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .question {
+            font-size: 1.3rem;
+            color: #333;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .visual-display {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+            min-height: 180px;
+        }
+
+        .hand-sign {
+            width: 150px;
+            height: 180px;
+        }
+
+        .answer-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+            justify-content: center;
+        }
+
+        .option-btn {
+            padding: 15px 25px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .option-btn:hover {
+            border-color: #ff9a9e;
+            background: #fff5f5;
+        }
+
+        .option-btn.selected {
+            border-color: #ff9a9e;
+            background: #ff9a9e;
+            color: white;
+        }
+
+        .option-btn.correct {
+            border-color: #28a745;
+            background: #28a745;
+            color: white;
+        }
+
+        .option-btn.wrong {
+            border-color: #dc3545;
+            background: #dc3545;
+            color: white;
+        }
+
+        .option-btn.hand-option {
+            padding: 10px;
+            min-width: 100px;
+        }
+
+        .option-btn.hand-option svg {
+            width: 80px;
+            height: 100px;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-check {
+            background: #ff9a9e;
+            color: white;
+        }
+
+        .btn-check:hover {
+            background: #e88a8e;
+        }
+
+        .btn-next {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-next:hover {
+            background: #218838;
+        }
+
+        .btn-skip {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-skip:hover {
+            background: #5a6268;
+        }
+
+        .feedback {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .feedback.wrong {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff9a9e, #fecfef);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .streak {
+            text-align: center;
+            margin-top: 10px;
+            color: #ffc107;
+            font-weight: bold;
+        }
+
+        .celebration {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 4rem;
+            animation: pop 0.5s ease;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        @keyframes pop {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+            50% { transform: translate(-50%, -50%) scale(1.2); }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+        }
+
+        .grammar-tip {
+            background: linear-gradient(135deg, #fff5f5 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .grammar-tip h3 {
+            color: #ff9a9e;
+            margin-bottom: 10px;
+        }
+
+        .grammar-tip ul {
+            margin-left: 20px;
+            color: #555;
+        }
+
+        .grammar-tip li {
+            margin-bottom: 5px;
+        }
+
+        .grammar-tip code {
+            background: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #e83e8c;
+        }
+
+        /* Staff notation styles */
+        .staff-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .staff {
+            position: relative;
+            width: 300px;
+            height: 120px;
+        }
+
+        .staff-line {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: #333;
+        }
+
+        .note {
+            position: absolute;
+            width: 18px;
+            height: 14px;
+            background: #333;
+            border-radius: 50%;
+            transform: rotate(-15deg);
+        }
+
+        .note.hollow {
+            background: white;
+            border: 2px solid #333;
+        }
+
+        .note-stem {
+            position: absolute;
+            width: 2px;
+            height: 40px;
+            background: #333;
+        }
+
+        .note-flag {
+            position: absolute;
+            width: 12px;
+            height: 20px;
+        }
+
+        .ledger-line {
+            position: absolute;
+            width: 28px;
+            height: 2px;
+            background: #333;
+        }
+
+        /* Time signature styles */
+        .time-sig {
+            font-size: 2.5rem;
+            font-weight: bold;
+            font-family: 'Times New Roman', serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            line-height: 1;
+        }
+
+        /* Rest symbols */
+        .rest-symbol {
+            font-size: 3rem;
+            font-family: 'Noto Music', 'Bravura', serif;
+        }
+
+        .solfege-display {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #ff9a9e;
+            text-align: center;
+            padding: 20px;
+            background: #fff5f5;
+            border-radius: 15px;
+        }
+
+        .hand-signs-row {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Musik Training</h1>
+            <div class="score-board">
+                <div class="score-item correct">
+                    <span>Richtig</span>
+                    <strong id="correct-score">0</strong>
+                </div>
+                <div class="score-item wrong">
+                    <span>Falsch</span>
+                    <strong id="wrong-score">0</strong>
+                </div>
+                <div class="score-item">
+                    <span>Fragen</span>
+                    <strong id="total-questions">0</strong>
+                </div>
+            </div>
+        </header>
+
+        <div class="category-select">
+            <h2>Kategorie wählen:</h2>
+            <div class="category-buttons">
+                <button class="category-btn active" data-category="all">Alle</button>
+                <button class="category-btn" data-category="handsigns">Handzeichen</button>
+                <button class="category-btn" data-category="notes">Noten lesen</button>
+                <button class="category-btn" data-category="timesig">Taktarten</button>
+                <button class="category-btn" data-category="rests">Pausen</button>
+                <button class="category-btn" data-category="clefs">Notenschlüssel</button>
+            </div>
+        </div>
+
+        <div class="grammar-tip" id="grammar-tip">
+            <h3>Musik-Grundlagen</h3>
+            <ul>
+                <li>Solmisation: <code>Do Re Mi Fa So La Ti</code></li>
+                <li>Erhöhte Töne: <code>Fi</code> (erhöhtes Fa), <code>Si</code> (erhöhtes So)</li>
+                <li>Violinschlüssel zeigt wo das G liegt</li>
+            </ul>
+        </div>
+
+        <div class="quiz-card" id="quiz-card">
+            <div class="question-type" id="question-type">Handzeichen</div>
+            <div class="question" id="question">Klicke auf "Nächste Frage" um zu starten!</div>
+
+            <div id="input-area">
+            </div>
+
+            <div class="feedback" id="feedback"></div>
+
+            <div class="btn-row">
+                <button class="btn btn-skip" id="btn-skip" onclick="skipQuestion()">Überspringen</button>
+                <button class="btn btn-check" id="btn-check" onclick="checkAnswer()">Prüfen</button>
+                <button class="btn btn-next" id="btn-next" onclick="nextQuestion()" style="display: none;">Nächste Frage</button>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+            </div>
+            <div class="streak" id="streak"></div>
+        </div>
+    </div>
+
+    <script>
+        // SVG Hand Signs
+        const handSigns = {
+            'Do': `<svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+                <!-- Fist facing down -->
+                <ellipse cx="50" cy="60" rx="30" ry="25" fill="#fdbf6f" stroke="#333" stroke-width="2"/>
+                <ellipse cx="50" cy="50" rx="28" ry="12" fill="#fdbf6f" stroke="#333" stroke-width="2"/>
+                <path d="M25 55 Q20 60 25 70" fill="none" stroke="#333" stroke-width="2"/>
+                <path d="M35 48 Q35 55 35 65" fill="none" stroke="#333" stroke-width="1"/>
+                <path d="M50 45 Q50 55 50 68" fill="none" stroke="#333" stroke-width="1"/>
+                <path d="M65 48 Q65 55 65 65" fill="none" stroke="#333" stroke-width="1"/>
+                <text x="50" y="105" text-anchor="middle" font-size="14" fill="#333">Do</text>
+            </svg>`,
+
+            'Re': `<svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+                <!-- Flat hand angled up 45° -->
+                <g transform="rotate(-30 50 60)">
+                    <rect x="20" y="50" width="60" height="15" rx="5" fill="#fdbf6f" stroke="#333" stroke-width="2"/>
+                    <rect x="15" y="35" width="10" height="30" rx="3" fill="#fdbf6f" stroke="#333" stroke-width="2"/>
+                    <rect x="28" y="30" width="9" height="35" rx="3" fill="#fdbf6f" stroke="#333" stroke-width="2"/>
+                    <rect x="40" y="28" width="9" height="37" rx="3" fill="#fdbf6f" stroke="#333" stroke-width="2"/>
+                    <rect x="52" y="30" width="9" height="35" rx="3" fill="#fdbf6f" stroke="#333" stroke-width="2"/>
+                    <rect x="64" y="35" width="9" height="30" rx="3" fill="#fdbf6f" stroke="#333" stroke-width="2"/>
+                </g>
+                <text x="50" y="110" text-anchor="middle" font-size="14" fill="#333">Re</text>
+            </svg>`,
+
+            'Mi': `<svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+                <!-- Flat hand horizontal, palm down -->
+                <rect x="15" y="50" width="70" height="15" rx="5" fill="#fdbf6f" stroke="#333" stroke-width="2"/>
+                <rect x="10" y="35" width="10" height="30" rx="3" fill="#fdbf6f" stroke="#333" stroke-width="2"/>
+                <rect x="23" y="30" width="9" height="35" rx="3" fill="#fdbf6f" stroke="#333" stroke-width="2"/>
+                <rect x="35" y="28" width="9" height="37" rx="3" fill="#fdbf6f" stroke="#333" stroke-width="2"/>
+                <rect x="47" y="28" width="9" height="37" rx="3" fill="#fdbf6f" stroke="#333" stroke-width="2"/>
+                <rect x="59" y="30" width="9" height="35" rx="3" fill="#fdbf6f" stroke="#333" stroke-width="2"/>
+                <rect x="72" y="40" width="12" height="20" rx="3" fill="#fdbf6f" stroke="#333" stroke-width="2"/>
+                <text x="50" y="105" text-anchor="middle" font-size="14" fill="#333">Mi</text>
+            </svg>`,
+
+            'Fa': `<svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+                <!-- Thumb pointing down -->
+                <ellipse cx="50" cy="45" rx="25" ry="20" fill="#fdbf6f" stroke="#333" stroke-width="2"/>
+                <rect x="43" y="60" width="14" height="35" rx="5" fill="#fdbf6f" stroke="#333" stroke-width="2"/>
+                <ellipse cx="50" cy="95" rx="7" ry="5" fill="#fdbf6f" stroke="#333" stroke-width="2"/>
+                <path d="M30 35 Q25 45 30 55" fill="none" stroke="#333" stroke-width="1"/>
+                <path d="M40 32 Q38 45 40 55" fill="none" stroke="#333" stroke-width="1"/>
+                <path d="M55 32 Q57 45 55 55" fill="none" stroke="#333" stroke-width="1"/>
+                <path d="M65 35 Q70 45 65 55" fill="none" stroke="#333" stroke-width="1"/>
+                <text x="50" y="115" text-anchor="middle" font-size="14" fill="#333">Fa</text>
+            </svg>`,
+
+            'Fi': `<svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+                <!-- Thumbs up -->
+                <ellipse cx="50" cy="70" rx="22" ry="18" fill="#fdbf6f" stroke="#333" stroke-width="2"/>
+                <rect x="43" y="20" width="14" height="40" rx="5" fill="#fdbf6f" stroke="#333" stroke-width="2"/>
+                <ellipse cx="50" cy="20" rx="7" ry="5" fill="#fdbf6f" stroke="#333" stroke-width="2"/>
+                <path d="M32 60 Q28 70 32 80" fill="none" stroke="#333" stroke-width="1"/>
+                <path d="M40 58 Q38 70 40 82" fill="none" stroke="#333" stroke-width="1"/>
+                <path d="M55 58 Q57 70 55 82" fill="none" stroke="#333" stroke-width="1"/>
+                <path d="M63 60 Q67 70 63 80" fill="none" stroke="#333" stroke-width="1"/>
+                <text x="50" y="105" text-anchor="middle" font-size="14" fill="#333">Fi</text>
+            </svg>`,
+
+            'So': `<svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+                <!-- Flat hand sideways like salute -->
+                <g transform="rotate(-10 50 50)">
+                    <rect x="35" y="25" width="15" height="55" rx="5" fill="#fdbf6f" stroke="#333" stroke-width="2"/>
+                    <rect x="52" y="30" width="10" height="45" rx="3" fill="#fdbf6f" stroke="#333" stroke-width="2"/>
+                    <rect x="64" y="32" width="10" height="40" rx="3" fill="#fdbf6f" stroke="#333" stroke-width="2"/>
+                    <rect x="76" y="35" width="10" height="35" rx="3" fill="#fdbf6f" stroke="#333" stroke-width="2"/>
+                    <rect x="20" y="45" width="25" height="12" rx="4" fill="#fdbf6f" stroke="#333" stroke-width="2"/>
+                </g>
+                <text x="50" y="105" text-anchor="middle" font-size="14" fill="#333">So</text>
+            </svg>`,
+
+            'Si': `<svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+                <!-- Like So but fingers spread -->
+                <g transform="rotate(-10 50 50)">
+                    <rect x="30" y="25" width="12" height="50" rx="4" fill="#fdbf6f" stroke="#333" stroke-width="2"/>
+                    <rect x="46" y="28" width="10" height="45" rx="3" fill="#fdbf6f" stroke="#333" stroke-width="2"/>
+                    <rect x="60" y="30" width="10" height="40" rx="3" fill="#fdbf6f" stroke="#333" stroke-width="2"/>
+                    <rect x="74" y="33" width="10" height="35" rx="3" fill="#fdbf6f" stroke="#333" stroke-width="2"/>
+                    <rect x="15" y="45" width="25" height="12" rx="4" fill="#fdbf6f" stroke="#333" stroke-width="2"/>
+                </g>
+                <text x="50" y="105" text-anchor="middle" font-size="14" fill="#333">Si</text>
+            </svg>`,
+
+            'La': `<svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+                <!-- Relaxed hand hanging down -->
+                <ellipse cx="50" cy="30" rx="20" ry="15" fill="#fdbf6f" stroke="#333" stroke-width="2"/>
+                <path d="M35 40 Q30 60 35 80" stroke="#333" stroke-width="8" fill="none" stroke-linecap="round"/>
+                <path d="M45 42 Q42 65 47 85" stroke="#333" stroke-width="7" fill="none" stroke-linecap="round"/>
+                <path d="M55 42 Q58 65 53 85" stroke="#333" stroke-width="7" fill="none" stroke-linecap="round"/>
+                <path d="M65 40 Q70 60 65 80" stroke="#333" stroke-width="7" fill="none" stroke-linecap="round"/>
+                <path d="M35 40 Q30 60 35 80" stroke="#fdbf6f" stroke-width="5" fill="none" stroke-linecap="round"/>
+                <path d="M45 42 Q42 65 47 85" stroke="#fdbf6f" stroke-width="4" fill="none" stroke-linecap="round"/>
+                <path d="M55 42 Q58 65 53 85" stroke="#fdbf6f" stroke-width="4" fill="none" stroke-linecap="round"/>
+                <path d="M65 40 Q70 60 65 80" stroke="#fdbf6f" stroke-width="4" fill="none" stroke-linecap="round"/>
+                <text x="50" y="105" text-anchor="middle" font-size="14" fill="#333">La</text>
+            </svg>`,
+
+            'Ti': `<svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+                <!-- Pointing finger up -->
+                <ellipse cx="50" cy="75" rx="22" ry="18" fill="#fdbf6f" stroke="#333" stroke-width="2"/>
+                <rect x="45" y="15" width="10" height="50" rx="4" fill="#fdbf6f" stroke="#333" stroke-width="2"/>
+                <ellipse cx="50" cy="15" rx="5" ry="4" fill="#fdbf6f" stroke="#333" stroke-width="2"/>
+                <path d="M32 65 Q28 75 32 85" fill="none" stroke="#333" stroke-width="1"/>
+                <path d="M63 65 Q67 75 63 85" fill="none" stroke="#333" stroke-width="1"/>
+                <text x="50" y="108" text-anchor="middle" font-size="14" fill="#333">Ti</text>
+            </svg>`
+        };
+
+        // Treble clef SVG
+        const trebleClefSVG = `<svg viewBox="0 0 50 120" xmlns="http://www.w3.org/2000/svg">
+            <path d="M25 110
+                     Q15 100 20 85
+                     Q25 70 25 55
+                     Q25 40 20 30
+                     Q15 20 25 15
+                     Q35 10 35 25
+                     Q35 35 25 45
+                     Q15 55 20 70
+                     Q25 85 30 75
+                     Q35 65 30 55
+                     Q25 45 25 35
+                     Q25 25 30 20
+                     Q35 15 35 25"
+                  fill="none" stroke="#333" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="25" cy="90" r="5" fill="#333"/>
+        </svg>`;
+
+        // Bass clef SVG
+        const bassClefSVG = `<svg viewBox="0 0 50 120" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="18" cy="45" r="8" fill="#333"/>
+            <path d="M25 40 Q40 35 40 50 Q40 70 20 80" fill="none" stroke="#333" stroke-width="3"/>
+            <circle cx="42" cy="40" r="3" fill="#333"/>
+            <circle cx="42" cy="55" r="3" fill="#333"/>
+        </svg>`;
+
+        // Note values with German names
+        const noteValues = [
+            { name: 'Ganze Note', beats: 4, svg: 'whole' },
+            { name: 'Halbe Note', beats: 2, svg: 'half' },
+            { name: 'Viertelnote', beats: 1, svg: 'quarter' },
+            { name: 'Achtelnote', beats: 0.5, svg: 'eighth' },
+            { name: 'Sechzehntelnote', beats: 0.25, svg: 'sixteenth' }
+        ];
+
+        // Rest values
+        const restValues = [
+            { name: 'Ganze Pause', beats: 4, symbol: '𝄻' },
+            { name: 'Halbe Pause', beats: 2, symbol: '𝄼' },
+            { name: 'Viertelpause', beats: 1, symbol: '𝄽' },
+            { name: 'Achtelpause', beats: 0.5, symbol: '𝄾' },
+            { name: 'Sechzehntelpause', beats: 0.25, symbol: '𝄿' }
+        ];
+
+        // Time signatures
+        const timeSignatures = [
+            { top: 4, bottom: 4, name: 'Viervierteltakt', description: '4 Schläge pro Takt' },
+            { top: 3, bottom: 4, name: 'Dreivierteltakt', description: '3 Schläge pro Takt (Walzer)' },
+            { top: 2, bottom: 4, name: 'Zweivierteltakt', description: '2 Schläge pro Takt (Marsch)' },
+            { top: 6, bottom: 8, name: 'Sechsachteltakt', description: '6 Achtel pro Takt' }
+        ];
+
+        // Note positions on staff (treble clef)
+        const staffNotes = [
+            { note: 'C', solfege: 'Do', position: 0, ledger: true, octave: 4 },   // Middle C - below staff
+            { note: 'D', solfege: 'Re', position: 1, ledger: false, octave: 4 },
+            { note: 'E', solfege: 'Mi', position: 2, ledger: false, octave: 4 },
+            { note: 'F', solfege: 'Fa', position: 3, ledger: false, octave: 4 },
+            { note: 'G', solfege: 'So', position: 4, ledger: false, octave: 4 },
+            { note: 'A', solfege: 'La', position: 5, ledger: false, octave: 4 },
+            { note: 'B', solfege: 'Ti', position: 6, ledger: false, octave: 4 },
+            { note: 'C', solfege: 'Do', position: 7, ledger: false, octave: 5 },
+            { note: 'D', solfege: 'Re', position: 8, ledger: false, octave: 5 },
+            { note: 'E', solfege: 'Mi', position: 9, ledger: false, octave: 5 },
+            { note: 'F', solfege: 'Fa', position: 10, ledger: false, octave: 5 },
+            { note: 'G', solfege: 'So', position: 11, ledger: true, octave: 5 },
+        ];
+
+        // Generate staff with note SVG
+        function generateStaffWithNote(notePosition, showClef = true) {
+            const staffHeight = 80;
+            const lineSpacing = 15;
+            const noteY = 70 - (notePosition * (lineSpacing / 2));
+
+            let svg = `<svg viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg" style="width: 250px; height: 120px;">`;
+
+            // Draw staff lines
+            for (let i = 0; i < 5; i++) {
+                const y = 25 + (i * lineSpacing);
+                svg += `<line x1="30" y1="${y}" x2="190" y2="${y}" stroke="#333" stroke-width="1.5"/>`;
+            }
+
+            // Draw treble clef if needed
+            if (showClef) {
+                svg += `<g transform="translate(35, 5) scale(0.7)">
+                    <path d="M20 95 Q10 85 15 70 Q20 55 20 40 Q20 25 15 15 Q10 5 20 0 Q30 -5 30 10 Q30 20 20 30 Q10 40 15 55 Q20 70 25 60 Q30 50 25 40 Q20 30 20 20 Q20 10 25 5 Q30 0 30 10"
+                          fill="none" stroke="#333" stroke-width="2.5" stroke-linecap="round"/>
+                    <circle cx="20" cy="75" r="4" fill="#333"/>
+                </g>`;
+            }
+
+            // Draw ledger lines if needed
+            if (notePosition <= 0) {
+                // Middle C ledger line
+                svg += `<line x1="125" y1="${70}" x2="155" y2="${70}" stroke="#333" stroke-width="1.5"/>`;
+            }
+            if (notePosition >= 11) {
+                // High G ledger line
+                svg += `<line x1="125" y1="${70 - 11 * (lineSpacing/2)}" x2="155" y2="${70 - 11 * (lineSpacing/2)}" stroke="#333" stroke-width="1.5"/>`;
+            }
+
+            // Draw note
+            svg += `<ellipse cx="140" cy="${noteY}" rx="8" ry="6" fill="#333" transform="rotate(-15 140 ${noteY})"/>`;
+
+            // Draw stem
+            if (notePosition < 6) {
+                // Stem up
+                svg += `<line x1="147" y1="${noteY}" x2="147" y2="${noteY - 35}" stroke="#333" stroke-width="2"/>`;
+            } else {
+                // Stem down
+                svg += `<line x1="133" y1="${noteY}" x2="133" y2="${noteY + 35}" stroke="#333" stroke-width="2"/>`;
+            }
+
+            svg += `</svg>`;
+            return svg;
+        }
+
+        // Generate note value SVG
+        function generateNoteValueSVG(type) {
+            let svg = `<svg viewBox="0 0 60 80" xmlns="http://www.w3.org/2000/svg" style="width: 60px; height: 80px;">`;
+
+            switch(type) {
+                case 'whole':
+                    svg += `<ellipse cx="30" cy="40" rx="12" ry="8" fill="none" stroke="#333" stroke-width="3" transform="rotate(-15 30 40)"/>`;
+                    break;
+                case 'half':
+                    svg += `<ellipse cx="25" cy="50" rx="10" ry="7" fill="none" stroke="#333" stroke-width="3" transform="rotate(-15 25 50)"/>`;
+                    svg += `<line x1="34" y1="50" x2="34" y2="15" stroke="#333" stroke-width="2"/>`;
+                    break;
+                case 'quarter':
+                    svg += `<ellipse cx="25" cy="50" rx="10" ry="7" fill="#333" transform="rotate(-15 25 50)"/>`;
+                    svg += `<line x1="34" y1="50" x2="34" y2="15" stroke="#333" stroke-width="2"/>`;
+                    break;
+                case 'eighth':
+                    svg += `<ellipse cx="25" cy="50" rx="10" ry="7" fill="#333" transform="rotate(-15 25 50)"/>`;
+                    svg += `<line x1="34" y1="50" x2="34" y2="15" stroke="#333" stroke-width="2"/>`;
+                    svg += `<path d="M34 15 Q45 20 40 35" fill="none" stroke="#333" stroke-width="2"/>`;
+                    break;
+                case 'sixteenth':
+                    svg += `<ellipse cx="25" cy="55" rx="9" ry="6" fill="#333" transform="rotate(-15 25 55)"/>`;
+                    svg += `<line x1="33" y1="55" x2="33" y2="15" stroke="#333" stroke-width="2"/>`;
+                    svg += `<path d="M33 15 Q44 20 39 30" fill="none" stroke="#333" stroke-width="2"/>`;
+                    svg += `<path d="M33 25 Q44 30 39 40" fill="none" stroke="#333" stroke-width="2"/>`;
+                    break;
+            }
+
+            svg += `</svg>`;
+            return svg;
+        }
+
+        // Generate rest SVG
+        function generateRestSVG(type) {
+            let svg = `<svg viewBox="0 0 60 80" xmlns="http://www.w3.org/2000/svg" style="width: 60px; height: 80px;">`;
+
+            switch(type) {
+                case 'whole':
+                    svg += `<rect x="20" y="30" width="20" height="8" fill="#333"/>`;
+                    svg += `<line x1="15" y1="30" x2="45" y2="30" stroke="#333" stroke-width="2"/>`;
+                    break;
+                case 'half':
+                    svg += `<rect x="20" y="38" width="20" height="8" fill="#333"/>`;
+                    svg += `<line x1="15" y1="46" x2="45" y2="46" stroke="#333" stroke-width="2"/>`;
+                    break;
+                case 'quarter':
+                    svg += `<path d="M25 20 L35 35 L25 45 L35 55 Q30 60 25 55" fill="#333" stroke="#333" stroke-width="1"/>`;
+                    break;
+                case 'eighth':
+                    svg += `<circle cx="32" cy="30" r="5" fill="#333"/>`;
+                    svg += `<path d="M32 35 L25 55" stroke="#333" stroke-width="3"/>`;
+                    break;
+                case 'sixteenth':
+                    svg += `<circle cx="32" cy="25" r="4" fill="#333"/>`;
+                    svg += `<circle cx="32" cy="38" r="4" fill="#333"/>`;
+                    svg += `<path d="M32 29 L25 55" stroke="#333" stroke-width="3"/>`;
+                    svg += `<path d="M32 42 L27 52" stroke="#333" stroke-width="2"/>`;
+                    break;
+            }
+
+            svg += `</svg>`;
+            return svg;
+        }
+
+        // Generate time signature SVG
+        function generateTimeSigSVG(top, bottom) {
+            return `<svg viewBox="0 0 50 80" xmlns="http://www.w3.org/2000/svg" style="width: 60px; height: 90px;">
+                <text x="25" y="35" text-anchor="middle" font-size="30" font-weight="bold" font-family="serif">${top}</text>
+                <text x="25" y="68" text-anchor="middle" font-size="30" font-weight="bold" font-family="serif">${bottom}</text>
+            </svg>`;
+        }
+
+        // Question generators
+        const questions = {
+            handsigns: [],
+            notes: [],
+            timesig: [],
+            rests: [],
+            clefs: []
+        };
+
+        // Generate hand sign questions
+        const solfegeNotes = ['Do', 'Re', 'Mi', 'Fa', 'Fi', 'So', 'Si', 'La', 'Ti'];
+
+        solfegeNotes.forEach(note => {
+            // Show hand sign, name the note
+            questions.handsigns.push({
+                type: 'identify-handsign',
+                note: note,
+                question: 'Welche Note zeigt dieses Handzeichen?',
+                hint: `Das ist das Handzeichen für ${note}`
+            });
+
+            // Show note name, pick the hand sign
+            questions.handsigns.push({
+                type: 'pick-handsign',
+                note: note,
+                question: `Welches Handzeichen gehört zu "${note}"?`,
+                hint: `${note} hat ein bestimmtes Handzeichen`
+            });
+        });
+
+        // Generate note reading questions
+        staffNotes.forEach(noteInfo => {
+            questions.notes.push({
+                type: 'read-note',
+                noteInfo: noteInfo,
+                question: 'Welche Note ist das?',
+                hint: `Diese Note liegt auf/zwischen den Linien an Position ${noteInfo.position}`
+            });
+
+            questions.notes.push({
+                type: 'read-note-solfege',
+                noteInfo: noteInfo,
+                question: 'Wie heißt diese Note in Solmisation?',
+                hint: `${noteInfo.note} = ${noteInfo.solfege}`
+            });
+        });
+
+        // Generate time signature questions
+        timeSignatures.forEach(ts => {
+            questions.timesig.push({
+                type: 'identify-timesig',
+                timeSig: ts,
+                question: 'Wie heißt diese Taktart?',
+                hint: ts.description
+            });
+
+            questions.timesig.push({
+                type: 'beats-timesig',
+                timeSig: ts,
+                question: `Wie viele Schläge hat ein Takt im ${ts.top}/${ts.bottom}-Takt?`,
+                hint: `Die obere Zahl zeigt die Anzahl der Schläge`
+            });
+        });
+
+        // Generate rest questions
+        const restTypes = ['whole', 'half', 'quarter', 'eighth', 'sixteenth'];
+        const restNames = ['Ganze Pause', 'Halbe Pause', 'Viertelpause', 'Achtelpause', 'Sechzehntelpause'];
+
+        restTypes.forEach((type, i) => {
+            questions.rests.push({
+                type: 'identify-rest',
+                restType: type,
+                restName: restNames[i],
+                question: 'Wie heißt diese Pause?',
+                hint: `Diese Pause dauert ${restValues[i].beats} Schlag(e)`
+            });
+        });
+
+        // Generate clef questions
+        questions.clefs.push({
+            type: 'identify-clef',
+            clef: 'treble',
+            name: 'Violinschlüssel',
+            altName: 'G-Schlüssel',
+            question: 'Wie heißt dieser Notenschlüssel?',
+            hint: 'Er zeigt wo das G liegt'
+        });
+
+        questions.clefs.push({
+            type: 'identify-clef',
+            clef: 'bass',
+            name: 'Bassschlüssel',
+            altName: 'F-Schlüssel',
+            question: 'Wie heißt dieser Notenschlüssel?',
+            hint: 'Er zeigt wo das F liegt'
+        });
+
+        questions.clefs.push({
+            type: 'clef-note',
+            clef: 'treble',
+            question: 'Der Violinschlüssel zeigt, wo welche Note liegt?',
+            answer: 'G',
+            hint: 'Deshalb heißt er auch G-Schlüssel'
+        });
+
+        questions.clefs.push({
+            type: 'clef-note',
+            clef: 'bass',
+            question: 'Der Bassschlüssel zeigt, wo welche Note liegt?',
+            answer: 'F',
+            hint: 'Deshalb heißt er auch F-Schlüssel'
+        });
+
+        // Combine all questions
+        questions.all = [
+            ...questions.handsigns,
+            ...questions.notes,
+            ...questions.timesig,
+            ...questions.rests,
+            ...questions.clefs
+        ];
+
+        let currentQuestion = null;
+        let currentCategory = 'all';
+        let score = { correct: 0, wrong: 0, total: 0 };
+        let streak = 0;
+        let answeredQuestions = [];
+
+        // Category button handling
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentCategory = btn.dataset.category;
+                answeredQuestions = [];
+                updateGrammarTip();
+                nextQuestion();
+            });
+        });
+
+        function updateGrammarTip() {
+            const tips = {
+                all: `<h3>Musik-Grundlagen</h3>
+                    <ul>
+                        <li>Solmisation: <code>Do Re Mi Fa So La Ti</code></li>
+                        <li>Erhöhte Töne: <code>Fi</code> (erhöhtes Fa), <code>Si</code> (erhöhtes So)</li>
+                        <li>Violinschlüssel = G-Schlüssel, Bassschlüssel = F-Schlüssel</li>
+                    </ul>`,
+                handsigns: `<h3>Handzeichen (Kodály)</h3>
+                    <ul>
+                        <li><code>Do</code> - Faust nach unten</li>
+                        <li><code>Re</code> - Flache Hand schräg nach oben</li>
+                        <li><code>Mi</code> - Flache Hand horizontal</li>
+                        <li><code>Fa</code> - Daumen nach unten</li>
+                        <li><code>Fi</code> - Daumen nach oben</li>
+                        <li><code>So</code> - Hand seitlich (wie Gruß)</li>
+                        <li><code>Si</code> - Wie So, aber Finger gespreizt</li>
+                        <li><code>La</code> - Hand hängt entspannt</li>
+                        <li><code>Ti</code> - Zeigefinger nach oben</li>
+                    </ul>`,
+                notes: `<h3>Noten im Violinschlüssel</h3>
+                    <ul>
+                        <li>Linien von unten: E - G - H - D - F</li>
+                        <li>Zwischenräume: F - A - C - E</li>
+                        <li>Mittleres C liegt auf einer Hilfslinie unter dem System</li>
+                    </ul>`,
+                timesig: `<h3>Taktarten</h3>
+                    <ul>
+                        <li>Obere Zahl = Schläge pro Takt</li>
+                        <li>Untere Zahl = Notenwert für einen Schlag</li>
+                        <li>4/4 = vier Viertel pro Takt</li>
+                        <li>3/4 = drei Viertel pro Takt (Walzer)</li>
+                    </ul>`,
+                rests: `<h3>Pausenzeichen</h3>
+                    <ul>
+                        <li>Ganze Pause - hängt unter der Linie</li>
+                        <li>Halbe Pause - liegt auf der Linie</li>
+                        <li>Viertelpause - Zickzack-Form</li>
+                        <li>Achtelpause - mit einer Fahne</li>
+                        <li>Sechzehntelpause - mit zwei Fahnen</li>
+                    </ul>`,
+                clefs: `<h3>Notenschlüssel</h3>
+                    <ul>
+                        <li><code>Violinschlüssel</code> = G-Schlüssel (zeigt wo G liegt)</li>
+                        <li><code>Bassschlüssel</code> = F-Schlüssel (zeigt wo F liegt)</li>
+                        <li>Der Violinschlüssel umkreist die G-Linie</li>
+                        <li>Die zwei Punkte des Bassschlüssels umrahmen die F-Linie</li>
+                    </ul>`
+            };
+            document.getElementById('grammar-tip').innerHTML = tips[currentCategory];
+        }
+
+        function getQuestions() {
+            if (currentCategory === 'all') {
+                return questions.all;
+            }
+            return questions[currentCategory] || [];
+        }
+
+        function shuffle(array) {
+            const arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function nextQuestion() {
+            const allQuestions = getQuestions();
+
+            let available = allQuestions.filter(q => !answeredQuestions.includes(JSON.stringify(q)));
+
+            if (available.length === 0) {
+                answeredQuestions = [];
+                available = allQuestions;
+            }
+
+            currentQuestion = available[Math.floor(Math.random() * available.length)];
+            answeredQuestions.push(JSON.stringify(currentQuestion));
+
+            displayQuestion();
+
+            document.getElementById('feedback').classList.remove('show');
+            document.getElementById('btn-check').style.display = 'block';
+            document.getElementById('btn-next').style.display = 'none';
+            document.getElementById('btn-skip').style.display = 'block';
+        }
+
+        function displayQuestion() {
+            const inputArea = document.getElementById('input-area');
+            const questionEl = document.getElementById('question');
+            const typeEl = document.getElementById('question-type');
+
+            if (currentQuestion.type === 'identify-handsign') {
+                typeEl.textContent = 'Handzeichen erkennen';
+                questionEl.textContent = currentQuestion.question;
+
+                // Show the hand sign
+                const options = shuffle(solfegeNotes).slice(0, 4);
+                if (!options.includes(currentQuestion.note)) {
+                    options[0] = currentQuestion.note;
+                }
+                const shuffledOptions = shuffle(options);
+
+                inputArea.innerHTML = `
+                    <div class="visual-display">
+                        <div class="hand-sign">${handSigns[currentQuestion.note]}</div>
+                    </div>
+                    <div class="answer-options">
+                        ${shuffledOptions.map((note, i) => `
+                            <button class="option-btn" data-answer="${note}" onclick="selectAnswer('${note}')">${note}</button>
+                        `).join('')}
+                    </div>
+                `;
+
+            } else if (currentQuestion.type === 'pick-handsign') {
+                typeEl.textContent = 'Handzeichen wählen';
+                questionEl.textContent = currentQuestion.question;
+
+                const options = shuffle(solfegeNotes).slice(0, 4);
+                if (!options.includes(currentQuestion.note)) {
+                    options[0] = currentQuestion.note;
+                }
+                const shuffledOptions = shuffle(options);
+
+                inputArea.innerHTML = `
+                    <div class="solfege-display">${currentQuestion.note}</div>
+                    <div class="answer-options hand-signs-row" style="margin-top: 20px;">
+                        ${shuffledOptions.map((note, i) => `
+                            <button class="option-btn hand-option" data-answer="${note}" onclick="selectAnswer('${note}')">
+                                ${handSigns[note].replace(/<text[^>]*>.*?<\/text>/g, '')}
+                            </button>
+                        `).join('')}
+                    </div>
+                `;
+
+            } else if (currentQuestion.type === 'read-note') {
+                typeEl.textContent = 'Noten lesen';
+                questionEl.textContent = currentQuestion.question;
+
+                const noteNames = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+                const shuffledOptions = shuffle(noteNames).slice(0, 4);
+                if (!shuffledOptions.includes(currentQuestion.noteInfo.note)) {
+                    shuffledOptions[0] = currentQuestion.noteInfo.note;
+                }
+
+                inputArea.innerHTML = `
+                    <div class="visual-display">
+                        ${generateStaffWithNote(currentQuestion.noteInfo.position)}
+                    </div>
+                    <div class="answer-options">
+                        ${shuffle(shuffledOptions).map(note => `
+                            <button class="option-btn" data-answer="${note}" onclick="selectAnswer('${note}')">${note}</button>
+                        `).join('')}
+                    </div>
+                `;
+
+            } else if (currentQuestion.type === 'read-note-solfege') {
+                typeEl.textContent = 'Noten lesen (Solmisation)';
+                questionEl.textContent = currentQuestion.question;
+
+                const basicSolfege = ['Do', 'Re', 'Mi', 'Fa', 'So', 'La', 'Ti'];
+                const shuffledOptions = shuffle(basicSolfege).slice(0, 4);
+                if (!shuffledOptions.includes(currentQuestion.noteInfo.solfege)) {
+                    shuffledOptions[0] = currentQuestion.noteInfo.solfege;
+                }
+
+                inputArea.innerHTML = `
+                    <div class="visual-display">
+                        ${generateStaffWithNote(currentQuestion.noteInfo.position)}
+                    </div>
+                    <div class="answer-options">
+                        ${shuffle(shuffledOptions).map(note => `
+                            <button class="option-btn" data-answer="${note}" onclick="selectAnswer('${note}')">${note}</button>
+                        `).join('')}
+                    </div>
+                `;
+
+            } else if (currentQuestion.type === 'identify-timesig') {
+                typeEl.textContent = 'Taktart erkennen';
+                questionEl.textContent = currentQuestion.question;
+
+                const options = timeSignatures.map(ts => ts.name);
+                const shuffledOptions = shuffle(options);
+
+                inputArea.innerHTML = `
+                    <div class="visual-display">
+                        ${generateTimeSigSVG(currentQuestion.timeSig.top, currentQuestion.timeSig.bottom)}
+                    </div>
+                    <div class="answer-options">
+                        ${shuffledOptions.map(name => `
+                            <button class="option-btn" data-answer="${name}" onclick="selectAnswer('${name}')">${name}</button>
+                        `).join('')}
+                    </div>
+                `;
+
+            } else if (currentQuestion.type === 'beats-timesig') {
+                typeEl.textContent = 'Taktart verstehen';
+                questionEl.textContent = currentQuestion.question;
+
+                const correctBeats = currentQuestion.timeSig.top;
+                const options = shuffle([2, 3, 4, 6]).slice(0, 4);
+                if (!options.includes(correctBeats)) {
+                    options[0] = correctBeats;
+                }
+
+                inputArea.innerHTML = `
+                    <div class="visual-display">
+                        ${generateTimeSigSVG(currentQuestion.timeSig.top, currentQuestion.timeSig.bottom)}
+                    </div>
+                    <div class="answer-options">
+                        ${shuffle(options).map(num => `
+                            <button class="option-btn" data-answer="${num}" onclick="selectAnswer('${num}')">${num} Schläge</button>
+                        `).join('')}
+                    </div>
+                `;
+
+            } else if (currentQuestion.type === 'identify-rest') {
+                typeEl.textContent = 'Pausen erkennen';
+                questionEl.textContent = currentQuestion.question;
+
+                const shuffledOptions = shuffle(restNames);
+
+                inputArea.innerHTML = `
+                    <div class="visual-display">
+                        ${generateRestSVG(currentQuestion.restType)}
+                    </div>
+                    <div class="answer-options">
+                        ${shuffledOptions.map(name => `
+                            <button class="option-btn" data-answer="${name}" onclick="selectAnswer('${name}')">${name}</button>
+                        `).join('')}
+                    </div>
+                `;
+
+            } else if (currentQuestion.type === 'identify-clef') {
+                typeEl.textContent = 'Notenschlüssel erkennen';
+                questionEl.textContent = currentQuestion.question;
+
+                const clefSVG = currentQuestion.clef === 'treble' ? trebleClefSVG : bassClefSVG;
+                const options = ['Violinschlüssel', 'Bassschlüssel', 'G-Schlüssel', 'F-Schlüssel'];
+
+                inputArea.innerHTML = `
+                    <div class="visual-display">
+                        <div style="width: 80px; height: 120px;">${clefSVG}</div>
+                    </div>
+                    <div class="answer-options">
+                        ${shuffle(options).map(name => `
+                            <button class="option-btn" data-answer="${name}" onclick="selectAnswer('${name}')">${name}</button>
+                        `).join('')}
+                    </div>
+                `;
+
+            } else if (currentQuestion.type === 'clef-note') {
+                typeEl.textContent = 'Notenschlüssel verstehen';
+                questionEl.textContent = currentQuestion.question;
+
+                const clefSVG = currentQuestion.clef === 'treble' ? trebleClefSVG : bassClefSVG;
+                const options = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+
+                inputArea.innerHTML = `
+                    <div class="visual-display">
+                        <div style="width: 80px; height: 120px;">${clefSVG}</div>
+                    </div>
+                    <div class="answer-options">
+                        ${shuffle(options).map(note => `
+                            <button class="option-btn" data-answer="${note}" onclick="selectAnswer('${note}')">${note}</button>
+                        `).join('')}
+                    </div>
+                `;
+            }
+        }
+
+        function selectAnswer(answer) {
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                btn.classList.remove('selected');
+                if (btn.dataset.answer === answer || btn.dataset.answer === String(answer)) {
+                    btn.classList.add('selected');
+                }
+            });
+        }
+
+        function checkAnswer() {
+            const selected = document.querySelector('.option-btn.selected');
+            if (!selected) {
+                showFeedback(false, 'Bitte wähle eine Antwort!');
+                return;
+            }
+
+            let isCorrect = false;
+            let correctAnswer = '';
+            const userAnswer = selected.dataset.answer;
+
+            if (currentQuestion.type === 'identify-handsign' || currentQuestion.type === 'pick-handsign') {
+                isCorrect = userAnswer === currentQuestion.note;
+                correctAnswer = currentQuestion.note;
+
+            } else if (currentQuestion.type === 'read-note') {
+                isCorrect = userAnswer === currentQuestion.noteInfo.note;
+                correctAnswer = currentQuestion.noteInfo.note;
+
+            } else if (currentQuestion.type === 'read-note-solfege') {
+                isCorrect = userAnswer === currentQuestion.noteInfo.solfege;
+                correctAnswer = currentQuestion.noteInfo.solfege;
+
+            } else if (currentQuestion.type === 'identify-timesig') {
+                isCorrect = userAnswer === currentQuestion.timeSig.name;
+                correctAnswer = currentQuestion.timeSig.name;
+
+            } else if (currentQuestion.type === 'beats-timesig') {
+                isCorrect = parseInt(userAnswer) === currentQuestion.timeSig.top;
+                correctAnswer = `${currentQuestion.timeSig.top} Schläge`;
+
+            } else if (currentQuestion.type === 'identify-rest') {
+                isCorrect = userAnswer === currentQuestion.restName;
+                correctAnswer = currentQuestion.restName;
+
+            } else if (currentQuestion.type === 'identify-clef') {
+                isCorrect = userAnswer === currentQuestion.name || userAnswer === currentQuestion.altName;
+                correctAnswer = `${currentQuestion.name} (${currentQuestion.altName})`;
+
+            } else if (currentQuestion.type === 'clef-note') {
+                isCorrect = userAnswer === currentQuestion.answer;
+                correctAnswer = currentQuestion.answer;
+            }
+
+            // Show correct/wrong on buttons
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                const btnAnswer = btn.dataset.answer;
+                let isThisCorrect = false;
+
+                if (currentQuestion.type === 'identify-clef') {
+                    isThisCorrect = btnAnswer === currentQuestion.name || btnAnswer === currentQuestion.altName;
+                } else if (currentQuestion.type === 'beats-timesig') {
+                    isThisCorrect = parseInt(btnAnswer) === currentQuestion.timeSig.top;
+                } else if (currentQuestion.type === 'identify-handsign' || currentQuestion.type === 'pick-handsign') {
+                    isThisCorrect = btnAnswer === currentQuestion.note;
+                } else if (currentQuestion.type === 'read-note') {
+                    isThisCorrect = btnAnswer === currentQuestion.noteInfo.note;
+                } else if (currentQuestion.type === 'read-note-solfege') {
+                    isThisCorrect = btnAnswer === currentQuestion.noteInfo.solfege;
+                } else if (currentQuestion.type === 'identify-timesig') {
+                    isThisCorrect = btnAnswer === currentQuestion.timeSig.name;
+                } else if (currentQuestion.type === 'identify-rest') {
+                    isThisCorrect = btnAnswer === currentQuestion.restName;
+                } else if (currentQuestion.type === 'clef-note') {
+                    isThisCorrect = btnAnswer === currentQuestion.answer;
+                }
+
+                if (isThisCorrect) {
+                    btn.classList.add('correct');
+                } else if (btn.classList.contains('selected') && !isCorrect) {
+                    btn.classList.add('wrong');
+                }
+                btn.disabled = true;
+            });
+
+            if (isCorrect) {
+                score.correct++;
+                streak++;
+                showFeedback(true, 'Super! Das ist richtig!');
+                if (streak > 0 && streak % 5 === 0) {
+                    celebrate();
+                }
+            } else {
+                score.wrong++;
+                streak = 0;
+                let message = `Leider falsch. Die richtige Antwort ist: <strong>${correctAnswer}</strong>`;
+                if (currentQuestion.hint) {
+                    message += `<br><br>Tipp: ${currentQuestion.hint}`;
+                }
+                showFeedback(false, message);
+            }
+
+            score.total++;
+            updateScore();
+
+            document.getElementById('btn-check').style.display = 'none';
+            document.getElementById('btn-next').style.display = 'block';
+            document.getElementById('btn-skip').style.display = 'none';
+        }
+
+        function skipQuestion() {
+            let correctAnswer = '';
+
+            if (currentQuestion.type === 'identify-handsign' || currentQuestion.type === 'pick-handsign') {
+                correctAnswer = currentQuestion.note;
+            } else if (currentQuestion.type === 'read-note') {
+                correctAnswer = currentQuestion.noteInfo.note;
+            } else if (currentQuestion.type === 'read-note-solfege') {
+                correctAnswer = currentQuestion.noteInfo.solfege;
+            } else if (currentQuestion.type === 'identify-timesig') {
+                correctAnswer = currentQuestion.timeSig.name;
+            } else if (currentQuestion.type === 'beats-timesig') {
+                correctAnswer = `${currentQuestion.timeSig.top} Schläge`;
+            } else if (currentQuestion.type === 'identify-rest') {
+                correctAnswer = currentQuestion.restName;
+            } else if (currentQuestion.type === 'identify-clef') {
+                correctAnswer = `${currentQuestion.name} (${currentQuestion.altName})`;
+            } else if (currentQuestion.type === 'clef-note') {
+                correctAnswer = currentQuestion.answer;
+            }
+
+            showFeedback(false, `Übersprungen. Die Antwort wäre: <strong>${correctAnswer}</strong><br><br>Tipp: ${currentQuestion.hint || ''}`);
+
+            streak = 0;
+            updateScore();
+
+            document.getElementById('btn-check').style.display = 'none';
+            document.getElementById('btn-next').style.display = 'block';
+            document.getElementById('btn-skip').style.display = 'none';
+
+            document.querySelectorAll('.option-btn').forEach(btn => btn.disabled = true);
+        }
+
+        function showFeedback(correct, message) {
+            const feedback = document.getElementById('feedback');
+            feedback.className = 'feedback show ' + (correct ? 'correct' : 'wrong');
+            feedback.innerHTML = message;
+        }
+
+        function updateScore() {
+            document.getElementById('correct-score').textContent = score.correct;
+            document.getElementById('wrong-score').textContent = score.wrong;
+            document.getElementById('total-questions').textContent = score.total;
+
+            const progress = score.total > 0 ? (score.correct / score.total * 100) : 0;
+            document.getElementById('progress-fill').style.width = progress + '%';
+
+            const streakEl = document.getElementById('streak');
+            if (streak >= 3) {
+                streakEl.textContent = `🔥 ${streak} richtig in Folge!`;
+            } else {
+                streakEl.textContent = '';
+            }
+        }
+
+        function celebrate() {
+            const emojis = ['🎉', '⭐', '🏆', '💪', '🌟', '🎵', '🎶'];
+            const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+            const celebration = document.createElement('div');
+            celebration.className = 'celebration';
+            celebration.textContent = emoji;
+            document.body.appendChild(celebration);
+            setTimeout(() => celebration.remove(), 500);
+        }
+
+        // Start
+        nextQuestion();
+    </script>
+</body>
+</html>
