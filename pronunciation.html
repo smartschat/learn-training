@@ -311,13 +311,43 @@
         .grammar-tip {
             background: linear-gradient(135deg, #f0f9ff 0%, #e9ecef 100%);
             border-radius: 15px;
-            padding: 20px;
             margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .grammar-tip-header {
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+        }
+
+        .grammar-tip-header:hover {
+            background: rgba(0,0,0,0.03);
         }
 
         .grammar-tip h3 {
             color: #4facfe;
-            margin-bottom: 10px;
+            margin: 0;
+        }
+
+        .grammar-tip-toggle {
+            font-size: 1.2rem;
+            transition: transform 0.3s;
+        }
+
+        .grammar-tip.collapsed .grammar-tip-toggle {
+            transform: rotate(-90deg);
+        }
+
+        .grammar-tip-content {
+            padding: 0 20px 20px 20px;
+        }
+
+        .grammar-tip.collapsed .grammar-tip-content {
+            display: none;
         }
 
         .grammar-tip ul {
@@ -408,24 +438,29 @@
         </div>
 
         <div class="grammar-tip" id="grammar-tip">
-            <h3>Der lange /uː/ Laut</h3>
-            <div class="sound-comparison">
-                <div class="sound-box">
-                    <h4>/uː/</h4>
-                    <p>Langer "u" Laut</p>
-                    <div class="examples">school, food, moon, blue</div>
-                </div>
-                <div class="sound-box">
-                    <h4>andere Laute</h4>
-                    <p>z.B. /əʊ/, /ʌ/, /ʊ/</p>
-                    <div class="examples">go, but, book, home</div>
-                </div>
+            <div class="grammar-tip-header" onclick="toggleGrammarTip()">
+                <h3>Aussprache-Tipp</h3>
+                <span class="grammar-tip-toggle">▼</span>
             </div>
-            <ul>
-                <li><code>/uː/</code> = langer "u" Laut (wie deutsches "u" in "Schule")</li>
-                <li>Oft geschrieben als: <strong>oo</strong>, <strong>ue</strong>, <strong>ew</strong>, <strong>o</strong></li>
-                <li>Achtung: <strong>oo</strong> ist manchmal kurz: book, look, good /ʊ/</li>
-            </ul>
+            <div class="grammar-tip-content" id="grammar-tip-content">
+                <div class="sound-comparison">
+                    <div class="sound-box">
+                        <h4>/uː/</h4>
+                        <p>Langer "u" Laut</p>
+                        <div class="examples">school, food, moon, blue</div>
+                    </div>
+                    <div class="sound-box">
+                        <h4>andere Laute</h4>
+                        <p>z.B. /əʊ/, /ʌ/, /ʊ/</p>
+                        <div class="examples">go, but, book, home</div>
+                    </div>
+                </div>
+                <ul>
+                    <li><code>/uː/</code> = langer "u" Laut (wie deutsches "u" in "Schule")</li>
+                    <li>Oft geschrieben als: <strong>oo</strong>, <strong>ue</strong>, <strong>ew</strong>, <strong>o</strong></li>
+                    <li>Achtung: <strong>oo</strong> ist manchmal kurz: book, look, good /ʊ/</li>
+                </ul>
+            </div>
         </div>
 
         <div class="quiz-card" id="quiz-card">
@@ -584,8 +619,7 @@
 
         function updateGrammarTip() {
             const tips = {
-                all: `<h3>Der lange /uː/ Laut</h3>
-                    <div class="sound-comparison">
+                all: `<div class="sound-comparison">
                         <div class="sound-box">
                             <h4>/uː/</h4>
                             <p>Langer "u" Laut</p>
@@ -602,8 +636,7 @@
                         <li>Oft geschrieben als: <strong>oo</strong>, <strong>ue</strong>, <strong>ew</strong>, <strong>o</strong></li>
                         <li>Achtung: <strong>oo</strong> ist manchmal kurz: book, look, good /ʊ/</li>
                     </ul>`,
-                'long-u': `<h3>Wörter mit /uː/</h3>
-                    <ul>
+                'long-u': `<ul>
                         <li><code>/uː/</code> = langer "u" Laut</li>
                         <li><strong>oo</strong>: school, food, moon, cool, room</li>
                         <li><strong>ue</strong>: blue, true, glue</li>
@@ -612,15 +645,27 @@
                         <li><strong>ou</strong>: you, soup, group</li>
                         <li><strong>ui</strong>: fruit, juice</li>
                     </ul>`,
-                'not-long-u': `<h3>Wörter OHNE /uː/</h3>
-                    <ul>
+                'not-long-u': `<ul>
                         <li><code>/əʊ/</code> (wie "oh"): go, no, home, phone, know</li>
                         <li><code>/ʊ/</code> (kurzes u): book, look, good, put, foot</li>
                         <li><code>/ʌ/</code> (wie "a" in "Mama"): but, cup, bus, come, love</li>
                         <li><strong>Achtung:</strong> "oo" kann kurz sein: book ≠ boot!</li>
                     </ul>`
             };
-            document.getElementById('grammar-tip').innerHTML = tips[currentCategory];
+            document.getElementById('grammar-tip-content').innerHTML = tips[currentCategory];
+        }
+
+        function toggleGrammarTip() {
+            document.getElementById('grammar-tip').classList.toggle('collapsed');
+        }
+
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
         }
 
         function getQuestions() {
@@ -690,12 +735,16 @@
                 typeEl.textContent = 'Welches Wort hat /uː/?';
                 questionEl.innerHTML = `Welches dieser Wörter hat den langen /uː/ Laut?`;
 
+                // Shuffle words while tracking correct answer
+                const wordsWithIndex = currentQuestion.words.map((word, i) => ({ word, originalIndex: i }));
+                const shuffledWords = shuffleArray(wordsWithIndex);
+
                 inputArea.innerHTML = `
                     <div class="answer-options" style="flex-direction: row; gap: 15px;">
-                        ${currentQuestion.words.map((word, i) => `
-                            <button class="option-btn" data-index="${i}" onclick="selectOption(${i})" style="flex: 1;">
-                                ${word}
-                                <button class="sound-btn" onclick="event.stopPropagation(); speakWord('${word}')" style="margin-left: 10px; width: 35px; height: 35px; font-size: 1rem;">🔊</button>
+                        ${shuffledWords.map((item) => `
+                            <button class="option-btn" data-original-index="${item.originalIndex}" onclick="selectOption(this)" style="flex: 1;">
+                                ${item.word}
+                                <button class="sound-btn" onclick="event.stopPropagation(); speakWord('${item.word}')" style="margin-left: 10px; width: 35px; height: 35px; font-size: 1rem;">🔊</button>
                             </button>
                         `).join('')}
                     </div>
@@ -705,12 +754,16 @@
                 typeEl.textContent = 'Welche Wörter haben /uː/?';
                 questionEl.innerHTML = `Wähle ALLE Wörter mit dem langen /uː/ Laut:`;
 
+                // Shuffle words while tracking correct indices
+                const wordsWithIndex = currentQuestion.words.map((word, i) => ({ word, originalIndex: i }));
+                const shuffledWords = shuffleArray(wordsWithIndex);
+
                 inputArea.innerHTML = `
                     <div class="answer-options" style="flex-direction: row; flex-wrap: wrap; gap: 10px;">
-                        ${currentQuestion.words.map((word, i) => `
-                            <button class="option-btn" data-index="${i}" onclick="toggleOption(${i})" style="flex: 1 1 45%; min-width: 120px;">
-                                ${word}
-                                <button class="sound-btn" onclick="event.stopPropagation(); speakWord('${word}')" style="margin-left: 10px; width: 35px; height: 35px; font-size: 1rem;">🔊</button>
+                        ${shuffledWords.map((item) => `
+                            <button class="option-btn" data-original-index="${item.originalIndex}" onclick="toggleOption(this)" style="flex: 1 1 45%; min-width: 120px;">
+                                ${item.word}
+                                <button class="sound-btn" onclick="event.stopPropagation(); speakWord('${item.word}')" style="margin-left: 10px; width: 35px; height: 35px; font-size: 1rem;">🔊</button>
                             </button>
                         `).join('')}
                     </div>
@@ -727,13 +780,12 @@
             });
         }
 
-        function selectOption(index) {
-            document.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('selected'));
-            document.querySelector(`.option-btn[data-index="${index}"]`).classList.add('selected');
+        function selectOption(btn) {
+            document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
         }
 
-        function toggleOption(index) {
-            const btn = document.querySelector(`.option-btn[data-index="${index}"]`);
+        function toggleOption(btn) {
             btn.classList.toggle('selected');
         }
 
@@ -770,15 +822,15 @@
                     showFeedback(false, 'Bitte wähle eine Antwort!');
                     return;
                 }
-                const userAnswer = parseInt(selected.dataset.index);
+                const userAnswer = parseInt(selected.dataset.originalIndex);
                 isCorrect = userAnswer === currentQuestion.correct;
                 correctAnswer = `"${currentQuestion.words[currentQuestion.correct]}" hat den /uː/ Laut`;
 
                 document.querySelectorAll('.option-btn').forEach(btn => {
-                    const idx = parseInt(btn.dataset.index);
+                    const idx = parseInt(btn.dataset.originalIndex);
                     if (idx === currentQuestion.correct) {
                         btn.classList.add('correct');
-                    } else if (btn.classList.contains('selected')) {
+                    } else if (btn.classList.contains('selected') && !isCorrect) {
                         btn.classList.add('wrong');
                     }
                     btn.disabled = true;
@@ -786,7 +838,7 @@
 
             } else if (currentQuestion.type === 'group') {
                 const selected = Array.from(document.querySelectorAll('.option-btn.selected'))
-                    .map(btn => parseInt(btn.dataset.index));
+                    .map(btn => parseInt(btn.dataset.originalIndex));
 
                 if (selected.length === 0) {
                     showFeedback(false, 'Bitte wähle mindestens ein Wort!');
@@ -803,7 +855,7 @@
                 correctAnswer = `Die Wörter mit /uː/ sind: ${correctWords.join(', ')}`;
 
                 document.querySelectorAll('.option-btn').forEach(btn => {
-                    const idx = parseInt(btn.dataset.index);
+                    const idx = parseInt(btn.dataset.originalIndex);
                     if (currentQuestion.correctIndices.includes(idx)) {
                         btn.classList.add('correct');
                     } else if (btn.classList.contains('selected')) {

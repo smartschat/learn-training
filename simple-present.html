@@ -303,13 +303,43 @@
         .grammar-tip {
             background: linear-gradient(135deg, #fff5f6 0%, #e9ecef 100%);
             border-radius: 15px;
-            padding: 20px;
             margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .grammar-tip-header {
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+        }
+
+        .grammar-tip-header:hover {
+            background: rgba(0,0,0,0.03);
         }
 
         .grammar-tip h3 {
             color: #f5576c;
-            margin-bottom: 10px;
+            margin: 0;
+        }
+
+        .grammar-tip-toggle {
+            font-size: 1.2rem;
+            transition: transform 0.3s;
+        }
+
+        .grammar-tip.collapsed .grammar-tip-toggle {
+            transform: rotate(-90deg);
+        }
+
+        .grammar-tip-content {
+            padding: 0 20px 20px 20px;
+        }
+
+        .grammar-tip.collapsed .grammar-tip-content {
+            display: none;
         }
 
         .grammar-tip ul {
@@ -440,13 +470,18 @@
         </div>
 
         <div class="grammar-tip" id="grammar-tip">
-            <h3>Grammatik-Tipp</h3>
-            <ul>
-                <li>Simple Present = Gegenwart (was man regelmäßig tut)</li>
-                <li>I/you/we/they + <code>Grundform</code> (I play, they work)</li>
-                <li>He/she/it + <code>Verb + s</code> (he plays, she works)</li>
-                <li>Merksatz: <strong>He, she, it - das "s" muss mit!</strong></li>
-            </ul>
+            <div class="grammar-tip-header" onclick="toggleGrammarTip()">
+                <h3>Grammatik-Tipp</h3>
+                <span class="grammar-tip-toggle">▼</span>
+            </div>
+            <div class="grammar-tip-content" id="grammar-tip-content">
+                <ul>
+                    <li>Simple Present = Gegenwart (was man regelmäßig tut)</li>
+                    <li>I/you/we/they + <code>Grundform</code> (I play, they work)</li>
+                    <li>He/she/it + <code>Verb + s</code> (he plays, she works)</li>
+                    <li>Merksatz: <strong>He, she, it - das "s" muss mit!</strong></li>
+                </ul>
+            </div>
         </div>
 
         <div class="quiz-card" id="quiz-card">
@@ -640,8 +675,7 @@
 
         function updateGrammarTip() {
             const tips = {
-                all: `<h3>Simple Present - Übersicht</h3>
-                    <ul>
+                all: `<ul>
                         <li>I/you/we/they + <code>Grundform</code> (I play, they work)</li>
                         <li>He/she/it + <code>Verb + s</code> (he plays, she works)</li>
                         <li>Merksatz: <strong>He, she, it - das "s" muss mit!</strong></li>
@@ -649,46 +683,40 @@
                         <li>Verneinung: I/you/we/they + <code>don't</code> + Grundform</li>
                         <li>Verneinung: He/she/it + <code>doesn't</code> + Grundform</li>
                     </ul>`,
-                basic: `<h3>Grundformen (I/you/we/they)</h3>
-                    <ul>
+                basic: `<ul>
                         <li>Bei I, you, we, they: <code>Grundform</code> des Verbs</li>
                         <li>I <code>play</code> football.</li>
                         <li>You <code>speak</code> English.</li>
                         <li>We <code>live</code> in Berlin.</li>
                         <li>They <code>like</code> pizza.</li>
                     </ul>`,
-                'he-she-it': `<h3>He/She/It + s</h3>
-                    <ul>
+                'he-she-it': `<ul>
                         <li><strong>He, she, it - das "s" muss mit!</strong></li>
                         <li>He <code>plays</code> football.</li>
                         <li>She <code>speaks</code> English.</li>
                         <li>It <code>rains</code> a lot.</li>
                         <li>Auch bei Namen: Tom <code>plays</code> (Tom = he)</li>
                     </ul>`,
-                'y-ending': `<h3>Verben auf -y</h3>
-                    <ul>
+                'y-ending': `<ul>
                         <li><strong>Konsonant + y</strong> → <code>-ies</code></li>
                         <li>study → stud<code>ies</code>, fly → fl<code>ies</code>, cry → cr<code>ies</code></li>
                         <li><strong>Vokal + y</strong> → nur <code>-s</code></li>
                         <li>play → pla<code>ys</code>, stay → sta<code>ys</code>, say → sa<code>ys</code></li>
                     </ul>`,
-                special: `<h3>Sonderformen: have, go, do</h3>
-                    <table class="verb-table">
+                special: `<table class="verb-table">
                         <tr><th>Verb</th><th>I/you/we/they</th><th>he/she/it</th></tr>
                         <tr><td>have</td><td>have</td><td><strong>has</strong></td></tr>
                         <tr><td>go</td><td>go</td><td><strong>goes</strong></td></tr>
                         <tr><td>do</td><td>do</td><td><strong>does</strong></td></tr>
                     </table>`,
-                's-es-ies': `<h3>Wann -s, -es oder -ies?</h3>
-                    <ul>
+                's-es-ies': `<ul>
                         <li>Normalerweise: <code>-s</code> (plays, runs, eats)</li>
                         <li>Nach -s, -ss, -sh, -ch, -x, -o: <code>-es</code></li>
                         <li>watch → watch<code>es</code>, wash → wash<code>es</code></li>
                         <li>go → go<code>es</code>, do → do<code>es</code></li>
                         <li>Konsonant + y: <code>-ies</code> (study → studies)</li>
                     </ul>`,
-                negation: `<h3>Verneinung: don't / doesn't</h3>
-                    <ul>
+                negation: `<ul>
                         <li>I/you/we/they + <code>don't</code> + Grundform</li>
                         <li>He/she/it + <code>doesn't</code> + Grundform</li>
                         <li>I <code>don't</code> play. She <code>doesn't</code> play.</li>
@@ -696,15 +724,27 @@
                         <li>FALSCH: She doesn't play<s>s</s> ❌</li>
                         <li>RICHTIG: She doesn't play ✓</li>
                     </ul>`,
-                conjugate: `<h3>Konjugation üben</h3>
-                    <ul>
+                conjugate: `<ul>
                         <li>Fülle alle Formen des Verbs aus!</li>
                         <li>I/you/we/they → Grundform</li>
                         <li>he/she → Verb + s (oder Sonderform)</li>
                         <li>Denke an die Sonderregeln!</li>
                     </ul>`
             };
-            document.getElementById('grammar-tip').innerHTML = tips[currentCategory];
+            document.getElementById('grammar-tip-content').innerHTML = tips[currentCategory];
+        }
+
+        function toggleGrammarTip() {
+            document.getElementById('grammar-tip').classList.toggle('collapsed');
+        }
+
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
         }
 
         function getQuestions() {
@@ -756,9 +796,12 @@
             } else if (currentQuestion.type === 'choice') {
                 typeEl.textContent = 'Multiple Choice';
                 questionEl.textContent = currentQuestion.question;
+                // Shuffle options while tracking correct answer
+                const optionsWithIndex = currentQuestion.options.map((opt, i) => ({ text: opt, originalIndex: i }));
+                const shuffledOptions = shuffleArray(optionsWithIndex);
                 let optionsHtml = '<div class="answer-options">';
-                currentQuestion.options.forEach((opt, i) => {
-                    optionsHtml += `<button class="option-btn" data-index="${i}" onclick="selectOption(${i})">${opt}</button>`;
+                shuffledOptions.forEach((opt) => {
+                    optionsHtml += `<button class="option-btn" data-original-index="${opt.originalIndex}" onclick="selectOption(this)">${opt.text}</button>`;
                 });
                 optionsHtml += '</div>';
                 inputArea.innerHTML = optionsHtml;
@@ -803,9 +846,9 @@
             }
         }
 
-        function selectOption(index) {
-            document.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('selected'));
-            document.querySelector(`.option-btn[data-index="${index}"]`).classList.add('selected');
+        function selectOption(btn) {
+            document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
         }
 
         function normalizeAnswer(str) {
@@ -838,15 +881,15 @@
                     showFeedback(false, 'Bitte wähle eine Antwort!');
                     return;
                 }
-                userAnswer = parseInt(selected.dataset.index);
+                userAnswer = parseInt(selected.dataset.originalIndex);
                 correctAnswer = currentQuestion.options[currentQuestion.correct];
                 isCorrect = userAnswer === currentQuestion.correct;
 
                 document.querySelectorAll('.option-btn').forEach(btn => {
-                    const idx = parseInt(btn.dataset.index);
+                    const idx = parseInt(btn.dataset.originalIndex);
                     if (idx === currentQuestion.correct) {
                         btn.classList.add('correct');
-                    } else if (idx === userAnswer && !isCorrect) {
+                    } else if (btn.classList.contains('selected') && !isCorrect) {
                         btn.classList.add('wrong');
                     }
                     btn.disabled = true;

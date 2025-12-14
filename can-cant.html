@@ -315,13 +315,44 @@
         .grammar-tip {
             background: linear-gradient(135deg, #f8f9ff 0%, #e9ecef 100%);
             border-radius: 15px;
-            padding: 20px;
             margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .grammar-tip-header {
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+        }
+
+        .grammar-tip-header:hover {
+            background: rgba(0,0,0,0.03);
         }
 
         .grammar-tip h3 {
             color: #667eea;
-            margin-bottom: 10px;
+            margin: 0;
+        }
+
+        .grammar-tip-toggle {
+            font-size: 1.2rem;
+            transition: transform 0.3s;
+        }
+
+        .grammar-tip.collapsed .grammar-tip-toggle {
+            transform: rotate(-90deg);
+        }
+
+        .grammar-tip-content {
+            padding: 0 20px 20px 20px;
+            transition: all 0.3s ease;
+        }
+
+        .grammar-tip.collapsed .grammar-tip-content {
+            display: none;
         }
 
         .grammar-tip ul {
@@ -374,14 +405,19 @@
         </div>
 
         <div class="grammar-tip" id="grammar-tip">
-            <h3>Grammatik-Tipp</h3>
-            <ul>
-                <li><code>can</code> = können (Fähigkeit/Möglichkeit)</li>
-                <li><code>can't</code> / <code>cannot</code> = nicht können</li>
-                <li>Frage: <code>Can</code> + Person + Verb? (Can you swim?)</li>
-                <li>Antwort: Yes, I can. / No, I can't.</li>
-                <li>Wortstellung: Person + <code>can</code> + Verb (I can play)</li>
-            </ul>
+            <div class="grammar-tip-header" onclick="toggleGrammarTip()">
+                <h3>Grammatik-Tipp</h3>
+                <span class="grammar-tip-toggle">▼</span>
+            </div>
+            <div class="grammar-tip-content" id="grammar-tip-content">
+                <ul>
+                    <li><code>can</code> = können (Fähigkeit/Möglichkeit)</li>
+                    <li><code>can't</code> / <code>cannot</code> = nicht können</li>
+                    <li>Frage: <code>Can</code> + Person + Verb? (Can you swim?)</li>
+                    <li>Antwort: Yes, I can. / No, I can't.</li>
+                    <li>Wortstellung: Person + <code>can</code> + Verb (I can play)</li>
+                </ul>
+            </div>
         </div>
 
         <div class="quiz-card" id="quiz-card">
@@ -488,48 +524,46 @@
             });
         });
 
+        function toggleGrammarTip() {
+            document.getElementById('grammar-tip').classList.toggle('collapsed');
+        }
+
         function updateGrammarTip() {
             const tips = {
-                all: `<h3>Grammatik-Tipps</h3>
-                    <ul>
+                all: `<ul>
                         <li><code>can</code> = können (Fähigkeit/Möglichkeit)</li>
                         <li><code>can't</code> / <code>cannot</code> = nicht können</li>
                         <li>Frage: <code>Can</code> + Person + Verb?</li>
                         <li>Antwort: Yes, I can. / No, I can't.</li>
                     </ul>`,
-                statements: `<h3>Aussagen mit can</h3>
-                    <ul>
+                statements: `<ul>
                         <li>Wortstellung: Person + <code>can</code> + Verb</li>
                         <li>Beispiel: I <code>can</code> swim.</li>
                         <li>Kein "to" nach can! (I can swim, NICHT: I can to swim)</li>
                     </ul>`,
-                questions: `<h3>Fragen mit can</h3>
-                    <ul>
+                questions: `<ul>
                         <li>Wortstellung: <code>Can</code> + Person + Verb?</li>
                         <li>Beispiel: <code>Can</code> you swim?</li>
                         <li>Kein "do/does" nötig!</li>
                     </ul>`,
-                answers: `<h3>Kurzantworten</h3>
-                    <ul>
+                answers: `<ul>
                         <li>Ja: Yes, + Person + <code>can</code>.</li>
                         <li>Nein: No, + Person + <code>can't</code>.</li>
                         <li>Das Verb wird NICHT wiederholt!</li>
                     </ul>`,
-                negation: `<h3>Verneinung mit can't</h3>
-                    <ul>
+                negation: `<ul>
                         <li><code>can't</code> = <code>cannot</code> (zusammen!)</li>
                         <li>Wortstellung: Person + <code>can't</code> + Verb</li>
                         <li>Beispiel: I <code>can't</code> swim.</li>
                     </ul>`,
-                'word-order': `<h3>Wortstellung</h3>
-                    <ul>
+                'word-order': `<ul>
                         <li>Aussage: Person + can + Verb + Rest</li>
                         <li>Frage: Can + Person + Verb + Rest?</li>
                         <li>Verneinung: Person + can't + Verb + Rest</li>
                         <li>Adverbien (well, fast) am Ende!</li>
                     </ul>`
             };
-            document.getElementById('grammar-tip').innerHTML = tips[currentCategory];
+            document.getElementById('grammar-tip-content').innerHTML = tips[currentCategory];
         }
 
         function getQuestions() {
@@ -591,9 +625,12 @@
             } else if (currentQuestion.type === 'choice') {
                 typeEl.textContent = 'Multiple Choice';
                 questionEl.textContent = currentQuestion.question;
+                // Shuffle options while tracking correct answer
+                const optionsWithIndex = currentQuestion.options.map((opt, i) => ({ text: opt, originalIndex: i }));
+                const shuffledOptions = shuffleArray(optionsWithIndex);
                 let optionsHtml = '<div class="answer-options">';
-                currentQuestion.options.forEach((opt, i) => {
-                    optionsHtml += `<button class="option-btn" data-index="${i}" onclick="selectOption(${i})">${opt}</button>`;
+                shuffledOptions.forEach((opt, i) => {
+                    optionsHtml += `<button class="option-btn" data-original-index="${opt.originalIndex}" onclick="selectOption(this)">${opt.text}</button>`;
                 });
                 optionsHtml += '</div>';
                 inputArea.innerHTML = optionsHtml;
@@ -622,9 +659,9 @@
             }
         }
 
-        function selectOption(index) {
-            document.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('selected'));
-            document.querySelector(`.option-btn[data-index="${index}"]`).classList.add('selected');
+        function selectOption(btn) {
+            document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
         }
 
         function addWord(btn) {
@@ -669,16 +706,16 @@
                     showFeedback(false, 'Bitte wähle eine Antwort!');
                     return;
                 }
-                userAnswer = parseInt(selected.dataset.index);
+                userAnswer = parseInt(selected.dataset.originalIndex);
                 correctAnswer = currentQuestion.options[currentQuestion.correct];
                 isCorrect = userAnswer === currentQuestion.correct;
 
                 // Show correct/wrong on buttons
                 document.querySelectorAll('.option-btn').forEach(btn => {
-                    const idx = parseInt(btn.dataset.index);
+                    const idx = parseInt(btn.dataset.originalIndex);
                     if (idx === currentQuestion.correct) {
                         btn.classList.add('correct');
-                    } else if (idx === userAnswer && !isCorrect) {
+                    } else if (btn.classList.contains('selected') && !isCorrect) {
                         btn.classList.add('wrong');
                     }
                     btn.disabled = true;

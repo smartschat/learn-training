@@ -297,13 +297,43 @@
         .grammar-tip {
             background: linear-gradient(135deg, #f0fff4 0%, #e9ecef 100%);
             border-radius: 15px;
-            padding: 20px;
             margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .grammar-tip-header {
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+        }
+
+        .grammar-tip-header:hover {
+            background: rgba(0,0,0,0.03);
         }
 
         .grammar-tip h3 {
             color: #11998e;
-            margin-bottom: 10px;
+            margin: 0;
+        }
+
+        .grammar-tip-toggle {
+            font-size: 1.2rem;
+            transition: transform 0.3s;
+        }
+
+        .grammar-tip.collapsed .grammar-tip-toggle {
+            transform: rotate(-90deg);
+        }
+
+        .grammar-tip-content {
+            padding: 0 20px 20px 20px;
+        }
+
+        .grammar-tip.collapsed .grammar-tip-content {
+            display: none;
         }
 
         .grammar-tip ul {
@@ -368,14 +398,19 @@
         </div>
 
         <div class="grammar-tip" id="grammar-tip">
-            <h3>Grammatik-Tipp</h3>
-            <ul>
-                <li><code>'s</code> zeigt Besitz an (Tom's book = Toms Buch)</li>
-                <li>Singular: Person + <code>'s</code> (the girl's bag)</li>
-                <li>Plural auf -s: Nur <code>'</code> (the boys' room)</li>
-                <li>Unregelmäßiger Plural: <code>'s</code> (the children's toys)</li>
-                <li>Bei Dingen oft <code>of</code> (the door of the house)</li>
-            </ul>
+            <div class="grammar-tip-header" onclick="toggleGrammarTip()">
+                <h3>Grammatik-Tipp</h3>
+                <span class="grammar-tip-toggle">▼</span>
+            </div>
+            <div class="grammar-tip-content" id="grammar-tip-content">
+                <ul>
+                    <li><code>'s</code> zeigt Besitz an (Tom's book = Toms Buch)</li>
+                    <li>Singular: Person + <code>'s</code> (the girl's bag)</li>
+                    <li>Plural auf -s: Nur <code>'</code> (the boys' room)</li>
+                    <li>Unregelmäßiger Plural: <code>'s</code> (the children's toys)</li>
+                    <li>Bei Dingen oft <code>of</code> (the door of the house)</li>
+                </ul>
+            </div>
         </div>
 
         <div class="quiz-card" id="quiz-card">
@@ -487,45 +522,39 @@
 
         function updateGrammarTip() {
             const tips = {
-                all: `<h3>Grammatik-Tipps: Possessive 's</h3>
-                    <ul>
+                all: `<ul>
                         <li><code>'s</code> zeigt Besitz an (Tom's book = Toms Buch)</li>
                         <li>Singular: Person + <code>'s</code> (the girl's bag)</li>
                         <li>Plural auf -s: Nur <code>'</code> (the boys' room)</li>
                         <li>Unregelmäßiger Plural: <code>'s</code> (the children's toys)</li>
                         <li>Bei Dingen oft <code>of</code> (the door of the house)</li>
                     </ul>`,
-                singular: `<h3>Singular: 's</h3>
-                    <ul>
+                singular: `<ul>
                         <li>Bei einer Person/einem Tier: <code>'s</code></li>
                         <li>Beispiel: the girl<code>'s</code> bag</li>
                         <li>Auch bei Namen auf -s: James<code>'s</code> oder James<code>'</code></li>
                         <li>Wortstellung: Besitzer + 's + Besitz</li>
                     </ul>`,
-                plural: `<h3>Plural auf -s: nur '</h3>
-                    <ul>
+                plural: `<ul>
                         <li>Wenn der Plural auf -s endet: nur <code>'</code></li>
                         <li>boys → the boys<code>'</code> room</li>
                         <li>students → the students<code>'</code> books</li>
                         <li>parents → my parents<code>'</code> car</li>
                     </ul>`,
-                irregular: `<h3>Unregelmäßiger Plural: 's</h3>
-                    <ul>
+                irregular: `<ul>
                         <li>Wenn der Plural NICHT auf -s endet: <code>'s</code></li>
                         <li>children → the children<code>'s</code> toys</li>
                         <li>men → the men<code>'s</code> room</li>
                         <li>women → the women<code>'s</code> shoes</li>
                         <li>people → the people<code>'s</code> choice</li>
                     </ul>`,
-                translate: `<h3>Übersetzen</h3>
-                    <ul>
+                translate: `<ul>
                         <li>Im Deutschen: "von" oder Genitiv</li>
                         <li>Toms Buch = Tom<code>'s</code> book</li>
                         <li>Das Buch der Kinder = the children<code>'s</code> book</li>
                         <li>Das Zimmer der Jungen = the boys<code>'</code> room</li>
                     </ul>`,
-                's-or-of': `<h3>'s oder of?</h3>
-                    <ul>
+                's-or-of': `<ul>
                         <li><code>'s</code> bei: Personen, Tieren, Zeit</li>
                         <li><code>of</code> bei: Sachen, Gebäuden, Abstraktem</li>
                         <li>the girl<code>'s</code> name (Person)</li>
@@ -534,7 +563,11 @@
                         <li>the end <code>of</code> the film (abstrakt)</li>
                     </ul>`
             };
-            document.getElementById('grammar-tip').innerHTML = tips[currentCategory];
+            document.getElementById('grammar-tip-content').innerHTML = tips[currentCategory];
+        }
+
+        function toggleGrammarTip() {
+            document.getElementById('grammar-tip').classList.toggle('collapsed');
         }
 
         function getQuestions() {
@@ -596,9 +629,12 @@
             } else if (currentQuestion.type === 'choice') {
                 typeEl.textContent = 'Multiple Choice';
                 questionEl.textContent = currentQuestion.question;
+                // Shuffle options while tracking correct answer
+                const optionsWithIndex = currentQuestion.options.map((opt, i) => ({ text: opt, originalIndex: i }));
+                const shuffledOptions = shuffleArray(optionsWithIndex);
                 let optionsHtml = '<div class="answer-options">';
-                currentQuestion.options.forEach((opt, i) => {
-                    optionsHtml += `<button class="option-btn" data-index="${i}" onclick="selectOption(${i})">${opt}</button>`;
+                shuffledOptions.forEach((opt) => {
+                    optionsHtml += `<button class="option-btn" data-original-index="${opt.originalIndex}" onclick="selectOption(this)">${opt.text}</button>`;
                 });
                 optionsHtml += '</div>';
                 inputArea.innerHTML = optionsHtml;
@@ -613,9 +649,9 @@
             }
         }
 
-        function selectOption(index) {
-            document.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('selected'));
-            document.querySelector(`.option-btn[data-index="${index}"]`).classList.add('selected');
+        function selectOption(btn) {
+            document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
         }
 
         function normalizeAnswer(str) {
@@ -649,16 +685,16 @@
                     showFeedback(false, 'Bitte wähle eine Antwort!');
                     return;
                 }
-                userAnswer = parseInt(selected.dataset.index);
+                userAnswer = parseInt(selected.dataset.originalIndex);
                 correctAnswer = currentQuestion.options[currentQuestion.correct];
                 isCorrect = userAnswer === currentQuestion.correct;
 
                 // Show correct/wrong on buttons
                 document.querySelectorAll('.option-btn').forEach(btn => {
-                    const idx = parseInt(btn.dataset.index);
+                    const idx = parseInt(btn.dataset.originalIndex);
                     if (idx === currentQuestion.correct) {
                         btn.classList.add('correct');
-                    } else if (idx === userAnswer && !isCorrect) {
+                    } else if (btn.classList.contains('selected') && !isCorrect) {
                         btn.classList.add('wrong');
                     }
                     btn.disabled = true;
