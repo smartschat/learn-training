@@ -406,6 +406,109 @@
             font-size: 0.95rem;
             color: #666;
         }
+
+        /* Column sorting styles */
+        .column-sort-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .word-bank {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            min-height: 60px;
+            justify-content: center;
+        }
+
+        .draggable-word {
+            padding: 10px 18px;
+            background: white;
+            border: 2px solid #4facfe;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .draggable-word:hover {
+            background: #f0f9ff;
+            transform: scale(1.05);
+        }
+
+        .draggable-word.placed {
+            opacity: 0.4;
+            cursor: default;
+        }
+
+        .columns-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .sort-column {
+            background: #f0f9ff;
+            border: 2px dashed #4facfe;
+            border-radius: 15px;
+            padding: 15px;
+            min-height: 150px;
+        }
+
+        .sort-column h4 {
+            text-align: center;
+            color: #4facfe;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+
+        .sort-column .column-words {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .column-word {
+            padding: 8px 15px;
+            background: white;
+            border: 2px solid #4facfe;
+            border-radius: 15px;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .column-word .remove-btn {
+            background: none;
+            border: none;
+            color: #dc3545;
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .column-word.correct-placement {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+
+        .column-word.wrong-placement {
+            border-color: #dc3545;
+            background: #f8d7da;
+        }
+
+        .sort-column.highlight {
+            border-color: #28a745;
+            background: #e8f5e9;
+        }
     </style>
 </head>
 <body>
@@ -434,6 +537,7 @@
                 <button class="category-btn active" data-category="all">Alle</button>
                 <button class="category-btn" data-category="long-u">Langes /uː/</button>
                 <button class="category-btn" data-category="not-long-u">Kein /uː/</button>
+                <button class="category-btn" data-category="s-sounds">S-Laute</button>
             </div>
         </div>
 
@@ -555,6 +659,54 @@
             { word: 'brother', phonetic: '/ˈbrʌðə/', german: 'Bruder', sound: '/ʌ/' },
         ];
 
+        // Words with /s/ sound (after voiceless consonants: p, t, k, f, θ)
+        const sSoundWords = [
+            { word: 'cats', base: 'cat', phonetic: '/kæts/', german: 'Katzen' },
+            { word: 'stops', base: 'stop', phonetic: '/stɒps/', german: 'stoppt' },
+            { word: 'books', base: 'book', phonetic: '/bʊks/', german: 'Bücher' },
+            { word: 'walks', base: 'walk', phonetic: '/wɔːks/', german: 'geht' },
+            { word: 'laughs', base: 'laugh', phonetic: '/lɑːfs/', german: 'lacht' },
+            { word: 'cups', base: 'cup', phonetic: '/kʌps/', german: 'Tassen' },
+            { word: 'streets', base: 'street', phonetic: '/striːts/', german: 'Straßen' },
+            { word: 'snacks', base: 'snack', phonetic: '/snæks/', german: 'Snacks' },
+            { word: 'months', base: 'month', phonetic: '/mʌnθs/', german: 'Monate' },
+            { word: 'hats', base: 'hat', phonetic: '/hæts/', german: 'Hüte' },
+            { word: 'works', base: 'work', phonetic: '/wɜːks/', german: 'arbeitet' },
+            { word: 'helps', base: 'help', phonetic: '/helps/', german: 'hilft' },
+        ];
+
+        // Words with /z/ sound (after voiced consonants and vowels: b, d, g, v, m, n, l, r, vowels)
+        const zSoundWords = [
+            { word: 'dogs', base: 'dog', phonetic: '/dɒɡz/', german: 'Hunde' },
+            { word: 'plays', base: 'play', phonetic: '/pleɪz/', german: 'spielt' },
+            { word: 'runs', base: 'run', phonetic: '/rʌnz/', german: 'läuft' },
+            { word: 'comes', base: 'come', phonetic: '/kʌmz/', german: 'kommt' },
+            { word: 'goes', base: 'go', phonetic: '/ɡəʊz/', german: 'geht' },
+            { word: 'trees', base: 'tree', phonetic: '/triːz/', german: 'Bäume' },
+            { word: 'cars', base: 'car', phonetic: '/kɑːz/', german: 'Autos' },
+            { word: 'games', base: 'game', phonetic: '/ɡeɪmz/', german: 'Spiele' },
+            { word: 'friends', base: 'friend', phonetic: '/frendz/', german: 'Freunde' },
+            { word: 'days', base: 'day', phonetic: '/deɪz/', german: 'Tage' },
+            { word: 'birds', base: 'bird', phonetic: '/bɜːdz/', german: 'Vögel' },
+            { word: 'feels', base: 'feel', phonetic: '/fiːlz/', german: 'fühlt' },
+        ];
+
+        // Words with /ɪz/ sound (after sibilants: s, z, sh, ch, x, ge/dge)
+        const izSoundWords = [
+            { word: 'boxes', base: 'box', phonetic: '/bɒksɪz/', german: 'Kisten' },
+            { word: 'watches', base: 'watch', phonetic: '/wɒtʃɪz/', german: 'Uhren/schaut' },
+            { word: 'washes', base: 'wash', phonetic: '/wɒʃɪz/', german: 'wäscht' },
+            { word: 'changes', base: 'change', phonetic: '/tʃeɪndʒɪz/', german: 'Änderungen' },
+            { word: 'buses', base: 'bus', phonetic: '/bʌsɪz/', german: 'Busse' },
+            { word: 'classes', base: 'class', phonetic: '/klɑːsɪz/', german: 'Klassen' },
+            { word: 'dishes', base: 'dish', phonetic: '/dɪʃɪz/', german: 'Geschirr' },
+            { word: 'matches', base: 'match', phonetic: '/mætʃɪz/', german: 'Spiele' },
+            { word: 'places', base: 'place', phonetic: '/pleɪsɪz/', german: 'Orte' },
+            { word: 'prizes', base: 'prize', phonetic: '/praɪzɪz/', german: 'Preise' },
+            { word: 'quizzes', base: 'quiz', phonetic: '/kwɪzɪz/', german: 'Quizze' },
+            { word: 'pages', base: 'page', phonetic: '/peɪdʒɪz/', german: 'Seiten' },
+        ];
+
         // Question database
         const questions = {
             'long-u': longUWords.map(w => ({
@@ -597,6 +749,79 @@
             { type: 'group', words: ['pool', 'pull', 'cool', 'full'], correctIndices: [0, 2], hint: 'pool und cool haben /uː/, pull und full haben /ʊ/' },
             { type: 'group', words: ['food', 'good', 'mood', 'wood'], correctIndices: [0, 2], hint: 'food und mood haben /uː/, good und wood haben /ʊ/' },
             { type: 'group', words: ['moon', 'soon', 'book', 'look'], correctIndices: [0, 1], hint: 'moon und soon haben /uː/, book und look haben /ʊ/' },
+        ];
+
+        // S-sounds questions
+        questions['s-sounds'] = [
+            // Identify sound type questions
+            ...sSoundWords.map(w => ({
+                type: 's-identify',
+                word: w.word,
+                base: w.base,
+                phonetic: w.phonetic,
+                german: w.german,
+                correctSound: '/s/',
+                hint: `Nach stimmlosen Konsonanten (p, t, k, f) wird -s als /s/ ausgesprochen`
+            })),
+            ...zSoundWords.map(w => ({
+                type: 's-identify',
+                word: w.word,
+                base: w.base,
+                phonetic: w.phonetic,
+                german: w.german,
+                correctSound: '/z/',
+                hint: `Nach stimmhaften Konsonanten und Vokalen wird -s als /z/ ausgesprochen`
+            })),
+            ...izSoundWords.map(w => ({
+                type: 's-identify',
+                word: w.word,
+                base: w.base,
+                phonetic: w.phonetic,
+                german: w.german,
+                correctSound: '/ɪz/',
+                hint: `Nach Zischlauten (s, z, sh, ch, x, ge) wird -es als /ɪz/ ausgesprochen`
+            })),
+            // Column sorting exercises
+            {
+                type: 'column-sort',
+                words: ['cats', 'dogs', 'boxes', 'plays', 'watches', 'books'],
+                correctColumns: {
+                    '/s/': ['cats', 'books'],
+                    '/z/': ['dogs', 'plays'],
+                    '/ɪz/': ['boxes', 'watches']
+                },
+                hint: 'Achte auf den letzten Laut des Grundworts!'
+            },
+            {
+                type: 'column-sort',
+                words: ['runs', 'stops', 'classes', 'walks', 'games', 'dishes'],
+                correctColumns: {
+                    '/s/': ['stops', 'walks'],
+                    '/z/': ['runs', 'games'],
+                    '/ɪz/': ['classes', 'dishes']
+                },
+                hint: '/s/ nach p, t, k - /z/ nach n, m, Vokalen - /ɪz/ nach s, sh'
+            },
+            {
+                type: 'column-sort',
+                words: ['cups', 'trees', 'buses', 'hats', 'cars', 'places'],
+                correctColumns: {
+                    '/s/': ['cups', 'hats'],
+                    '/z/': ['trees', 'cars'],
+                    '/ɪz/': ['buses', 'places']
+                },
+                hint: 'Denke an den Klang am Ende des Grundworts!'
+            },
+            {
+                type: 'column-sort',
+                words: ['helps', 'days', 'changes', 'works', 'birds', 'washes'],
+                correctColumns: {
+                    '/s/': ['helps', 'works'],
+                    '/z/': ['days', 'birds'],
+                    '/ɪz/': ['changes', 'washes']
+                },
+                hint: 'Stimmlos → /s/, Stimmhaft → /z/, Zischlaut → /ɪz/'
+            },
         ];
 
         let currentQuestion = null;
@@ -650,6 +875,28 @@
                         <li><code>/ʊ/</code> (kurzes u): book, look, good, put, foot</li>
                         <li><code>/ʌ/</code> (wie "a" in "Mama"): but, cup, bus, come, love</li>
                         <li><strong>Achtung:</strong> "oo" kann kurz sein: book ≠ boot!</li>
+                    </ul>`,
+                's-sounds': `<div class="sound-comparison" style="grid-template-columns: repeat(3, 1fr);">
+                        <div class="sound-box">
+                            <h4>/s/</h4>
+                            <p>Nach stimmlosen Konsonanten</p>
+                            <div class="examples">cats, stops, books, walks</div>
+                        </div>
+                        <div class="sound-box">
+                            <h4>/z/</h4>
+                            <p>Nach stimmhaften Lauten</p>
+                            <div class="examples">dogs, plays, runs, trees</div>
+                        </div>
+                        <div class="sound-box">
+                            <h4>/ɪz/</h4>
+                            <p>Nach Zischlauten</p>
+                            <div class="examples">boxes, watches, buses</div>
+                        </div>
+                    </div>
+                    <ul>
+                        <li><code>/s/</code> nach: p, t, k, f, th → cats, stops, books</li>
+                        <li><code>/z/</code> nach: b, d, g, v, m, n, l, r, Vokale → dogs, games, trees</li>
+                        <li><code>/ɪz/</code> nach: s, z, sh, ch, x, ge/dge → buses, dishes, changes</li>
                     </ul>`
             };
             document.getElementById('grammar-tip-content').innerHTML = tips[currentCategory];
@@ -768,7 +1015,117 @@
                         `).join('')}
                     </div>
                 `;
+
+            } else if (currentQuestion.type === 's-identify') {
+                typeEl.textContent = 'Welchen S-Laut hörst du?';
+                questionEl.innerHTML = `Wie wird das <strong>-s</strong> in diesem Wort ausgesprochen?`;
+
+                inputArea.innerHTML = `
+                    <div class="word-display">
+                        ${currentQuestion.word}
+                        <button class="sound-btn" onclick="speakWord('${currentQuestion.word}')" title="Anhören">🔊</button>
+                    </div>
+                    <p style="text-align: center; color: #666; margin-bottom: 15px;">(${currentQuestion.german})</p>
+                    <div class="answer-options" style="flex-direction: row; gap: 10px;">
+                        <button class="option-btn" data-answer="/s/" onclick="selectSSound(this)" style="flex: 1;">
+                            /s/<br><small>stimmlos</small>
+                        </button>
+                        <button class="option-btn" data-answer="/z/" onclick="selectSSound(this)" style="flex: 1;">
+                            /z/<br><small>stimmhaft</small>
+                        </button>
+                        <button class="option-btn" data-answer="/ɪz/" onclick="selectSSound(this)" style="flex: 1;">
+                            /ɪz/<br><small>extra Silbe</small>
+                        </button>
+                    </div>
+                `;
+
+                setTimeout(() => speakWord(currentQuestion.word), 300);
+
+            } else if (currentQuestion.type === 'column-sort') {
+                typeEl.textContent = 'Wörter sortieren';
+                questionEl.innerHTML = `Sortiere die Wörter in die richtige Spalte nach ihrem S-Laut:`;
+
+                const shuffledWords = shuffleArray([...currentQuestion.words]);
+
+                inputArea.innerHTML = `
+                    <div class="column-sort-container">
+                        <div class="word-bank" id="word-bank">
+                            ${shuffledWords.map(word => `
+                                <div class="draggable-word" data-word="${word}" onclick="selectWordForColumn(this)">
+                                    ${word}
+                                    <button class="sound-btn" onclick="event.stopPropagation(); speakWord('${word}')" style="margin-left: 8px; width: 30px; height: 30px; font-size: 0.9rem;">🔊</button>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="columns-container">
+                            <div class="sort-column" data-column="/s/" onclick="placeWordInColumn(this)">
+                                <h4>/s/</h4>
+                                <div class="column-words"></div>
+                            </div>
+                            <div class="sort-column" data-column="/z/" onclick="placeWordInColumn(this)">
+                                <h4>/z/</h4>
+                                <div class="column-words"></div>
+                            </div>
+                            <div class="sort-column" data-column="/ɪz/" onclick="placeWordInColumn(this)">
+                                <h4>/ɪz/</h4>
+                                <div class="column-words"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
             }
+        }
+
+        let selectedWord = null;
+
+        function selectWordForColumn(wordEl) {
+            if (wordEl.classList.contains('placed')) return;
+
+            document.querySelectorAll('.draggable-word').forEach(w => w.style.outline = 'none');
+            wordEl.style.outline = '3px solid #28a745';
+            selectedWord = wordEl.dataset.word;
+        }
+
+        function placeWordInColumn(columnEl) {
+            if (!selectedWord) return;
+
+            const column = columnEl.dataset.column;
+            const columnWords = columnEl.querySelector('.column-words');
+
+            // Add word to column
+            const wordDiv = document.createElement('div');
+            wordDiv.className = 'column-word';
+            wordDiv.dataset.word = selectedWord;
+            wordDiv.innerHTML = `
+                ${selectedWord}
+                <button class="remove-btn" onclick="removeWordFromColumn(this, '${selectedWord}')">×</button>
+            `;
+            columnWords.appendChild(wordDiv);
+
+            // Mark original word as placed
+            const originalWord = document.querySelector(`.draggable-word[data-word="${selectedWord}"]`);
+            if (originalWord) {
+                originalWord.classList.add('placed');
+                originalWord.style.outline = 'none';
+            }
+
+            selectedWord = null;
+        }
+
+        function removeWordFromColumn(btn, word) {
+            // Remove from column
+            btn.parentElement.remove();
+
+            // Unmark original word
+            const originalWord = document.querySelector(`.draggable-word[data-word="${word}"]`);
+            if (originalWord) {
+                originalWord.classList.remove('placed');
+            }
+        }
+
+        function selectSSound(btn) {
+            document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
         }
 
         function selectAnswer(answer) {
@@ -863,6 +1220,67 @@
                     }
                     btn.disabled = true;
                 });
+
+            } else if (currentQuestion.type === 's-identify') {
+                const selected = document.querySelector('.option-btn.selected');
+                if (!selected) {
+                    showFeedback(false, 'Bitte wähle eine Antwort!');
+                    return;
+                }
+                const userAnswer = selected.dataset.answer;
+                isCorrect = userAnswer === currentQuestion.correctSound;
+
+                correctAnswer = `"${currentQuestion.word}" ${currentQuestion.phonetic} hat den ${currentQuestion.correctSound} Laut`;
+
+                document.querySelectorAll('.option-btn').forEach(btn => {
+                    if (btn.dataset.answer === currentQuestion.correctSound) {
+                        btn.classList.add('correct');
+                    } else if (btn.classList.contains('selected') && !isCorrect) {
+                        btn.classList.add('wrong');
+                    }
+                    btn.disabled = true;
+                });
+
+            } else if (currentQuestion.type === 'column-sort') {
+                // Check if all words are placed
+                const placedWords = document.querySelectorAll('.column-word');
+                if (placedWords.length < currentQuestion.words.length) {
+                    showFeedback(false, 'Bitte sortiere alle Wörter in die Spalten!');
+                    return;
+                }
+
+                // Check each column
+                let allCorrect = true;
+                const columns = document.querySelectorAll('.sort-column');
+
+                columns.forEach(col => {
+                    const columnName = col.dataset.column;
+                    const wordsInColumn = Array.from(col.querySelectorAll('.column-word'))
+                        .map(w => w.dataset.word);
+                    const correctWords = currentQuestion.correctColumns[columnName] || [];
+
+                    wordsInColumn.forEach(word => {
+                        const wordEl = col.querySelector(`.column-word[data-word="${word}"]`);
+                        if (correctWords.includes(word)) {
+                            wordEl.classList.add('correct-placement');
+                        } else {
+                            wordEl.classList.add('wrong-placement');
+                            allCorrect = false;
+                        }
+                    });
+                });
+
+                isCorrect = allCorrect;
+
+                const correctSummary = Object.entries(currentQuestion.correctColumns)
+                    .map(([sound, words]) => `${sound}: ${words.join(', ')}`)
+                    .join(' | ');
+                correctAnswer = correctSummary;
+
+                // Disable further interaction
+                document.querySelectorAll('.draggable-word').forEach(w => w.onclick = null);
+                document.querySelectorAll('.sort-column').forEach(c => c.onclick = null);
+                document.querySelectorAll('.remove-btn').forEach(b => b.style.display = 'none');
             }
 
             if (isCorrect) {
@@ -902,6 +1320,12 @@
             } else if (currentQuestion.type === 'group') {
                 const correctWords = currentQuestion.correctIndices.map(i => currentQuestion.words[i]);
                 correctAnswer = `${correctWords.join(', ')} haben /uː/`;
+            } else if (currentQuestion.type === 's-identify') {
+                correctAnswer = `"${currentQuestion.word}" hat den ${currentQuestion.correctSound} Laut`;
+            } else if (currentQuestion.type === 'column-sort') {
+                correctAnswer = Object.entries(currentQuestion.correctColumns)
+                    .map(([sound, words]) => `${sound}: ${words.join(', ')}`)
+                    .join(' | ');
             }
 
             showFeedback(false, `Übersprungen. ${correctAnswer}<br><br>Tipp: ${currentQuestion.hint || ''}`);
@@ -915,6 +1339,8 @@
 
             // Disable all buttons
             document.querySelectorAll('.option-btn').forEach(btn => btn.disabled = true);
+            document.querySelectorAll('.draggable-word').forEach(w => w.onclick = null);
+            document.querySelectorAll('.sort-column').forEach(c => c.onclick = null);
         }
 
         function showFeedback(correct, message) {
