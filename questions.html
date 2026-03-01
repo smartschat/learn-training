@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Can / Can't Practice</title>
+    <title>Questions in Simple Present</title>
     <style>
         * {
             box-sizing: border-box;
@@ -13,7 +13,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #f7971e 0%, #ffd200 100%);
             min-height: 100vh;
             padding: 20px;
         }
@@ -84,9 +84,9 @@
 
         .category-btn {
             padding: 10px 20px;
-            border: 2px solid #667eea;
+            border: 2px solid #f7971e;
             background: white;
-            color: #667eea;
+            color: #f7971e;
             border-radius: 25px;
             cursor: pointer;
             font-size: 1rem;
@@ -94,7 +94,7 @@
         }
 
         .category-btn:hover, .category-btn.active {
-            background: #667eea;
+            background: #f7971e;
             color: white;
         }
 
@@ -124,7 +124,7 @@
         }
 
         .german-text {
-            color: #667eea;
+            color: #f7971e;
             font-weight: 600;
         }
 
@@ -145,7 +145,7 @@
 
         .answer-input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #f7971e;
         }
 
         .answer-options {
@@ -167,13 +167,13 @@
         }
 
         .option-btn:hover {
-            border-color: #667eea;
-            background: #f8f9ff;
+            border-color: #f7971e;
+            background: #fffbf0;
         }
 
         .option-btn.selected {
-            border-color: #667eea;
-            background: #667eea;
+            border-color: #f7971e;
+            background: #f7971e;
             color: white;
         }
 
@@ -205,12 +205,12 @@
         }
 
         .btn-check {
-            background: #667eea;
+            background: #f7971e;
             color: white;
         }
 
         .btn-check:hover {
-            background: #5a6fd6;
+            background: #e08a1a;
         }
 
         .btn-next {
@@ -283,7 +283,7 @@
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #667eea, #764ba2);
+            background: linear-gradient(90deg, #f7971e, #ffd200);
             border-radius: 4px;
             transition: width 0.5s ease;
         }
@@ -291,12 +291,13 @@
         .streak {
             text-align: center;
             margin-top: 10px;
-            color: #ffc107;
+            color: #e08a1a;
             font-weight: bold;
         }
 
+
         .grammar-tip {
-            background: linear-gradient(135deg, #f8f9ff 0%, #e9ecef 100%);
+            background: linear-gradient(135deg, #fffbf0 0%, #fff3cd 100%);
             border-radius: 15px;
             margin-bottom: 20px;
             overflow: hidden;
@@ -316,7 +317,7 @@
         }
 
         .grammar-tip h3 {
-            color: #667eea;
+            color: #f7971e;
             margin: 0;
         }
 
@@ -353,12 +354,30 @@
             border-radius: 4px;
             color: #e83e8c;
         }
+
+        .grammar-tip table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+
+        .grammar-tip th, .grammar-tip td {
+            padding: 6px 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+            font-size: 0.95rem;
+        }
+
+        .grammar-tip th {
+            background: #fff8e1;
+            color: #856404;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Can / Can't Practice</h1>
+            <h1>Questions Practice</h1>
             <div class="score-board">
                 <div class="score-item correct">
                     <span>Richtig</span>
@@ -379,11 +398,9 @@
             <h2>Kategorie wählen:</h2>
             <div class="category-buttons">
                 <button class="category-btn active" data-category="all">Alle</button>
-                <button class="category-btn" data-category="statements">Aussagen</button>
-                <button class="category-btn" data-category="questions">Fragen</button>
-                <button class="category-btn" data-category="answers">Antworten</button>
-                <button class="category-btn" data-category="negation">Verneinung</button>
-                <button class="category-btn" data-category="word-order">Wortstellung</button>
+                <button class="category-btn" data-category="do-does">Do/Does</button>
+                <button class="category-btn" data-category="question-words">Fragewörter</button>
+                <button class="category-btn" data-category="short-answers">Kurzantworten</button>
             </div>
         </div>
 
@@ -394,11 +411,10 @@
             </div>
             <div class="grammar-tip-content" id="grammar-tip-content">
                 <ul>
-                    <li><code>can</code> = können (Fähigkeit/Möglichkeit)</li>
-                    <li><code>can't</code> / <code>cannot</code> = nicht können</li>
-                    <li>Frage: <code>Can</code> + Person + Verb? (Can you swim?)</li>
-                    <li>Antwort: Yes, I can. / No, I can't.</li>
-                    <li>Wortstellung: Person + <code>can</code> + Verb (I can play)</li>
+                    <li>Fragen im Simple Present mit <code>Do</code> / <code>Does</code></li>
+                    <li><code>Do</code> + I/you/we/they + Verb (Grundform)</li>
+                    <li><code>Does</code> + he/she/it + Verb (Grundform)</li>
+                    <li>Fragewörter: What, Where, When, Who, Why, How</li>
                 </ul>
             </div>
         </div>
@@ -429,8 +445,8 @@
     <script src="common.js"></script>
     <script>
         initCommon({
-            accentColor1: '#667eea',
-            accentColor2: '#764ba2',
+            accentColor1: '#f7971e',
+            accentColor2: '#ffd200',
             onRestart: function() {
                 correctlyAnswered = new Set();
                 score = { correct: 0, wrong: 0, total: 0 };
@@ -442,63 +458,75 @@
 
         // Question database
         const questions = {
-            statements: [
-                // German to English - Statements
-                { type: 'translate', from: 'de', german: 'Ich kann schwimmen.', english: 'I can swim.', hint: 'Person + can + Verb' },
-                { type: 'translate', from: 'de', german: 'Sie kann gut singen.', english: 'She can sing well.', hint: 'well = gut (kommt am Ende)' },
-                { type: 'translate', from: 'de', german: 'Wir können Englisch sprechen.', english: 'We can speak English.', hint: 'Person + can + Verb + Objekt' },
-                { type: 'translate', from: 'de', german: 'Er kann schnell laufen.', english: 'He can run fast.', hint: 'fast = schnell' },
-                { type: 'translate', from: 'de', german: 'Sie können Gitarre spielen.', english: 'They can play the guitar.', hint: 'Instrumente mit "the"!' },
-                { type: 'translate', from: 'de', german: 'Mein Bruder kann kochen.', english: 'My brother can cook.', hint: 'My brother + can + Verb' },
-                // English to German - Statements
-                { type: 'translate', from: 'en', german: 'Ich kann Fahrrad fahren.', english: 'I can ride a bike.', hint: 'ride a bike = Fahrrad fahren' },
-                { type: 'translate', from: 'en', german: 'Sie kann tanzen.', english: 'She can dance.', hint: 'dance = tanzen' },
-                { type: 'translate', from: 'en', german: 'Der Hund kann Tricks machen.', english: 'The dog can do tricks.', hint: 'do tricks = Tricks machen' },
+            'do-does': [
+                // Do or Does? Fill in the blank
+                { type: 'fill', sentence: '___ you like chocolate?', answer: 'Do', hint: 'you → Do' },
+                { type: 'fill', sentence: '___ she play tennis?', answer: 'Does', hint: 'she → Does (he/she/it)' },
+                { type: 'fill', sentence: '___ they live in Berlin?', answer: 'Do', hint: 'they → Do' },
+                { type: 'fill', sentence: '___ he speak English?', answer: 'Does', hint: 'he → Does (he/she/it)' },
+                { type: 'fill', sentence: '___ we need a pen?', answer: 'Do', hint: 'we → Do' },
+                { type: 'fill', sentence: '___ it rain a lot here?', answer: 'Does', hint: 'it → Does (he/she/it)' },
+                { type: 'fill', sentence: '___ your mother work in a hospital?', answer: 'Does', hint: 'your mother = she → Does' },
+                { type: 'fill', sentence: '___ the children go to school?', answer: 'Do', hint: 'the children = they → Do' },
+                // Common mistake: verb form after does
+                { type: 'choice', question: 'Welcher Satz ist richtig?', options: ['Does she like pizza?', 'Does she likes pizza?', 'Do she like pizza?', 'Do she likes pizza?'], correct: 0, hint: 'Does + Grundform! Kein -s am Verb nach does!' },
+                { type: 'choice', question: 'Welcher Satz ist richtig?', options: ['Do they play football?', 'Do they plays football?', 'Does they play football?', 'Does they plays football?'], correct: 0, hint: 'they → Do + Grundform' },
+                { type: 'choice', question: 'Welcher Satz ist richtig?', options: ['Does he go to school?', 'Does he goes to school?', 'Do he go to school?', 'Do he goes to school?'], correct: 0, hint: 'he → Does + Grundform (go, nicht goes!)' },
+                // Translate Do/Does questions
+                { type: 'translate', from: 'de', german: 'Spielst du Fußball?', english: 'Do you play football?', altEnglish: 'Do you play soccer?', hint: 'Do + you + Grundform' },
+                { type: 'translate', from: 'de', german: 'Spricht er Deutsch?', english: 'Does he speak German?', hint: 'Does + he + Grundform (speak, nicht speaks!)' },
+                { type: 'translate', from: 'de', german: 'Wohnen sie in London?', english: 'Do they live in London?', hint: 'sie (Plural) → Do + they' },
+                { type: 'translate', from: 'de', german: 'Mag sie Katzen?', english: 'Does she like cats?', hint: 'Does + she + Grundform' },
+                // Word order
+                { type: 'order', words: ['Do', 'you', 'like', 'music', '?'], correct: 'Do you like music?', hint: 'Do/Does + Person + Verb + Rest?' },
+                { type: 'order', words: ['Does', 'he', 'play', 'the', 'guitar', '?'], correct: 'Does he play the guitar?', hint: 'Does + Person + Verb + Rest?' },
+                { type: 'order', words: ['Do', 'they', 'go', 'to', 'school', '?'], correct: 'Do they go to school?', hint: 'Do + Person + Verb + Rest?' },
             ],
-            questions: [
-                // Question formation
-                { type: 'translate', from: 'de', german: 'Kannst du schwimmen?', english: 'Can you swim?', hint: 'Frage: Can + Person + Verb?' },
-                { type: 'translate', from: 'de', german: 'Kann sie Klavier spielen?', english: 'Can she play the piano?', hint: 'Instrumente mit "the"!' },
-                { type: 'translate', from: 'de', german: 'Können wir hier parken?', english: 'Can we park here?', hint: 'here = hier' },
-                { type: 'translate', from: 'de', german: 'Kann er Deutsch sprechen?', english: 'Can he speak German?', hint: 'Sprachen ohne Artikel' },
-                { type: 'translate', from: 'en', german: 'Kannst du mir helfen?', english: 'Can you help me?', hint: 'help me = mir helfen' },
-                { type: 'translate', from: 'en', german: 'Kann ich das Fenster öffnen?', english: 'Can I open the window?', hint: 'open = öffnen' },
-                // Multiple choice for question formation
-                { type: 'choice', question: 'Wie fragt man "Kannst du kochen?"', options: ['Can you cook?', 'You can cook?', 'Do you can cook?', 'Can cook you?'], correct: 0, hint: 'Frage: Can + Person + Verb?' },
-                { type: 'choice', question: 'Wähle die richtige Frage für "Kann er laufen?"', options: ['Can he run?', 'He can run?', 'Does he can run?', 'Can run he?'], correct: 0, hint: 'Bei Fragen steht "can" VOR der Person' },
+            'question-words': [
+                // Fill in the question word
+                { type: 'fill', sentence: '___ do you live? - In Berlin.', answer: 'Where', hint: 'Wo? → Where' },
+                { type: 'fill', sentence: '___ does she do after school? - She plays tennis.', answer: 'What', hint: 'Was? → What' },
+                { type: 'fill', sentence: '___ do they go to school? - At 8 o\'clock.', answer: 'When', hint: 'Wann? → When' },
+                { type: 'fill', sentence: '___ does he like English? - Because it\'s fun.', answer: 'Why', hint: 'Warum? → Why' },
+                { type: 'fill', sentence: '___ plays the guitar? - Tom plays the guitar.', answer: 'Who', hint: 'Wer? → Who' },
+                { type: 'fill', sentence: '___ do you get to school? - By bus.', answer: 'How', hint: 'Wie? → How' },
+                { type: 'fill', sentence: '___ brothers does she have? - Two.', answer: 'How many', hint: 'Wie viele? → How many' },
+                { type: 'fill', sentence: '___ is your favourite teacher? - Mrs Smith.', answer: 'Who', hint: 'Wer? → Who' },
+                // Multiple choice
+                { type: 'choice', question: '"Wo wohnst du?" auf Englisch?', options: ['Where do you live?', 'What do you live?', 'When do you live?', 'How do you live?'], correct: 0, hint: 'Wo? → Where' },
+                { type: 'choice', question: '"Warum lernst du Englisch?" auf Englisch?', options: ['Why do you learn English?', 'What do you learn English?', 'When do you learn English?', 'How do you learn English?'], correct: 0, hint: 'Warum? → Why' },
+                { type: 'choice', question: '"Wann stehst du auf?" auf Englisch?', options: ['When do you get up?', 'Where do you get up?', 'What do you get up?', 'Who do you get up?'], correct: 0, hint: 'Wann? → When' },
+                { type: 'choice', question: '"Wie kommst du zur Schule?" auf Englisch?', options: ['How do you get to school?', 'What do you get to school?', 'Where do you get to school?', 'Why do you get to school?'], correct: 0, hint: 'Wie? → How' },
+                // Translate
+                { type: 'translate', from: 'de', german: 'Was machst du am Wochenende?', english: 'What do you do at the weekend?', altEnglish: 'What do you do on the weekend?', hint: 'What + do + you + Verb?' },
+                { type: 'translate', from: 'de', german: 'Wo wohnt dein Freund?', english: 'Where does your friend live?', hint: 'Where + does + Person + Grundform?' },
+                { type: 'translate', from: 'de', german: 'Wer spielt gerne Basketball?', english: 'Who likes playing basketball?', altEnglish: 'Who likes to play basketball?', hint: 'Who + Verb (3. Person)! Kein do/does nach Who!' },
+                { type: 'translate', from: 'de', german: 'Wie viele Haustiere hast du?', english: 'How many pets do you have?', hint: 'How many + Nomen + do/does + Person + Verb?' },
+                // Word order
+                { type: 'order', words: ['Where', 'does', 'she', 'live', '?'], correct: 'Where does she live?', hint: 'Fragewort + do/does + Person + Verb?' },
+                { type: 'order', words: ['What', 'do', 'you', 'like', '?'], correct: 'What do you like?', hint: 'Fragewort + do/does + Person + Verb?' },
+                { type: 'order', words: ['When', 'does', 'he', 'get', 'up', '?'], correct: 'When does he get up?', hint: 'Fragewort + do/does + Person + Verb?' },
             ],
-            answers: [
-                // Short answers
-                { type: 'choice', question: 'Can you swim? - Yes, ...', options: ['I can', 'I can swim', 'I do', 'I am'], correct: 0, hint: 'Kurze Antwort: Yes, + Person + can' },
-                { type: 'choice', question: 'Can she dance? - No, ...', options: ["she can't", "she can not dance", "she doesn't", "she isn't"], correct: 0, hint: "Kurze Antwort: No, + Person + can't" },
-                { type: 'choice', question: 'Can they play football? - Yes, ...', options: ['they can', 'they can play', 'they do', 'they are'], correct: 0, hint: 'Kurze Antwort ohne Verb am Ende!' },
-                { type: 'translate', from: 'de', german: 'Ja, ich kann.', english: 'Yes, I can.', hint: 'Kurze Antwort' },
-                { type: 'translate', from: 'de', german: 'Nein, sie kann nicht.', english: "No, she can't.", hint: "can't für Verneinung" },
-                { type: 'translate', from: 'de', german: 'Ja, wir können.', english: 'Yes, we can.', hint: 'Kurze Antwort' },
-                { type: 'fill', sentence: 'Can he swim? - No, he ___.', answer: "can't", hint: 'Verneinung von can' },
-                { type: 'fill', sentence: 'Can you help me? - Yes, I ___.', answer: 'can', hint: 'Bejahende kurze Antwort' },
-            ],
-            negation: [
-                // Can't / Cannot
-                { type: 'translate', from: 'de', german: 'Ich kann nicht schwimmen.', english: "I can't swim.", altEnglish: 'I cannot swim.', hint: "can't = cannot = nicht können" },
-                { type: 'translate', from: 'de', german: 'Sie kann nicht kochen.', english: "She can't cook.", altEnglish: 'She cannot cook.', hint: 'Person + can\'t + Verb' },
-                { type: 'translate', from: 'de', german: 'Wir können heute nicht kommen.', english: "We can't come today.", hint: 'today = heute' },
-                { type: 'translate', from: 'de', german: 'Er kann das nicht verstehen.', english: "He can't understand that.", hint: 'understand = verstehen' },
-                { type: 'translate', from: 'en', german: 'Ich kann nicht singen.', english: "I can't sing.", hint: 'sing = singen' },
-                { type: 'translate', from: 'en', german: 'Sie können nicht bleiben.', english: "They can't stay.", hint: 'stay = bleiben' },
-                { type: 'choice', question: "Wähle die richtige Verneinung: I ___ swim.", options: ["can't", "don't can", "not can", "can not to"], correct: 0, hint: "can + not = can't oder cannot" },
-                { type: 'fill', sentence: 'She ___ play tennis. (nicht können)', answer: "can't", hint: 'Verneinung' },
-            ],
-            'word-order': [
-                // Word order exercises
-                { type: 'order', words: ['I', 'can', 'swim', 'well'], correct: 'I can swim well.', hint: 'Person + can + Verb + Adverb' },
-                { type: 'order', words: ['Can', 'you', 'help', 'me', '?'], correct: 'Can you help me?', hint: 'Frage: Can + Person + Verb + Objekt?' },
-                { type: 'order', words: ['She', "can't", 'come', 'today'], correct: "She can't come today.", hint: "Person + can't + Verb + Zeit" },
-                { type: 'order', words: ['Can', 'he', 'play', 'the', 'guitar', '?'], correct: 'Can he play the guitar?', hint: 'Instrumente mit "the"' },
-                { type: 'order', words: ['We', 'can', 'speak', 'English'], correct: 'We can speak English.', hint: 'Person + can + Verb + Sprache' },
-                { type: 'order', words: ['My', 'sister', 'can', 'dance'], correct: 'My sister can dance.', hint: 'Subjekt + can + Verb' },
-                { type: 'choice', question: 'Richtige Wortstellung?', options: ['He can run fast.', 'He can fast run.', 'Can he fast run.', 'Fast he can run.'], correct: 0, hint: 'Adverb am Ende!' },
-                { type: 'choice', question: 'Richtige Wortstellung für eine Frage?', options: ['Can they swim?', 'They can swim?', 'Swim can they?', 'Can swim they?'], correct: 0, hint: 'Frage: Can + Person + Verb?' },
+            'short-answers': [
+                // Fill in the short answer
+                { type: 'fill', sentence: 'Do you like pizza? - Yes, I ___.', answer: 'do', hint: 'Do-Frage → Antwort mit do' },
+                { type: 'fill', sentence: 'Does she play tennis? - No, she ___.', answer: "doesn't", hint: "Does-Frage → Verneinung mit doesn't" },
+                { type: 'fill', sentence: 'Do they live in London? - Yes, they ___.', answer: 'do', hint: 'Do-Frage → Antwort mit do' },
+                { type: 'fill', sentence: 'Does he speak French? - No, he ___.', answer: "doesn't", hint: "Does-Frage → Verneinung mit doesn't" },
+                { type: 'fill', sentence: 'Do we need more time? - Yes, we ___.', answer: 'do', hint: 'Do-Frage → Antwort mit do' },
+                { type: 'fill', sentence: 'Does it rain a lot? - Yes, it ___.', answer: 'does', hint: 'Does-Frage → Bejahung mit does' },
+                { type: 'fill', sentence: 'Do you have a pet? - No, I ___.', answer: "don't", hint: "Do-Frage → Verneinung mit don't" },
+                // Multiple choice
+                { type: 'choice', question: 'Does he like sports? - Yes, ...', options: ['he does.', 'he do.', 'he likes.', 'he is.'], correct: 0, hint: 'Does-Frage → Antwort mit does. Kein Verb wiederholen!' },
+                { type: 'choice', question: 'Do they go to school? - No, ...', options: ["they don't.", "they doesn't.", "they not go.", "they aren't."], correct: 0, hint: "Do-Frage → Verneinung mit don't" },
+                { type: 'choice', question: 'Does she read books? - No, ...', options: ["she doesn't.", "she don't.", "she not reads.", "she isn't."], correct: 0, hint: "Does-Frage → Verneinung mit doesn't" },
+                { type: 'choice', question: 'Do you play the guitar? - Yes, ...', options: ['I do.', 'I does.', 'I play.', 'I am.'], correct: 0, hint: 'Do-Frage → Antwort mit do' },
+                { type: 'choice', question: 'Does your dog like cats? - No, ...', options: ["it doesn't.", "it don't.", "it not like.", "it isn't."], correct: 0, hint: "Does-Frage → Verneinung mit doesn't" },
+                // Translate short answers
+                { type: 'translate', from: 'de', german: 'Ja, das tue ich.', english: 'Yes, I do.', hint: 'Kurze Bejahung mit do' },
+                { type: 'translate', from: 'de', german: 'Nein, tut sie nicht.', english: "No, she doesn't.", hint: "Kurze Verneinung mit doesn't" },
+                { type: 'translate', from: 'de', german: 'Ja, das tut er.', english: 'Yes, he does.', hint: 'Kurze Bejahung mit does' },
+                { type: 'translate', from: 'de', german: 'Nein, tun wir nicht.', english: "No, we don't.", hint: "Kurze Verneinung mit don't" },
             ]
         };
 
@@ -527,36 +555,38 @@
         function updateGrammarTip() {
             const tips = {
                 all: `<ul>
-                        <li><code>can</code> = können (Fähigkeit/Möglichkeit)</li>
-                        <li><code>can't</code> / <code>cannot</code> = nicht können</li>
-                        <li>Frage: <code>Can</code> + Person + Verb?</li>
-                        <li>Antwort: Yes, I can. / No, I can't.</li>
+                        <li>Fragen im Simple Present mit <code>Do</code> / <code>Does</code></li>
+                        <li><code>Do</code> + I/you/we/they + Verb (Grundform)</li>
+                        <li><code>Does</code> + he/she/it + Verb (Grundform)</li>
+                        <li>Fragewörter: What, Where, When, Who, Why, How</li>
                     </ul>`,
-                statements: `<ul>
-                        <li>Wortstellung: Person + <code>can</code> + Verb</li>
-                        <li>Beispiel: I <code>can</code> swim.</li>
-                        <li>Kein "to" nach can! (I can swim, NICHT: I can to swim)</li>
+                'do-does': `<ul>
+                        <li><code>Do</code> bei: I, you, we, they</li>
+                        <li><code>Does</code> bei: he, she, it</li>
+                        <li>Nach Do/Does kommt immer die <strong>Grundform</strong>!</li>
+                        <li>Does she speak English. (nicht: speak<strong>s</strong>)</li>
+                        <li>Aufbau: <code>Do/Does</code> + Person + Verb (Grundform) + Rest?</li>
                     </ul>`,
-                questions: `<ul>
-                        <li>Wortstellung: <code>Can</code> + Person + Verb?</li>
-                        <li>Beispiel: <code>Can</code> you swim?</li>
-                        <li>Kein "do/does" nötig!</li>
+                'question-words': `<table>
+                        <tr><th>Englisch</th><th>Deutsch</th><th>Beispiel</th></tr>
+                        <tr><td><code>What</code></td><td>Was</td><td>What do you like?</td></tr>
+                        <tr><td><code>Where</code></td><td>Wo</td><td>Where does he live?</td></tr>
+                        <tr><td><code>When</code></td><td>Wann</td><td>When do they start?</td></tr>
+                        <tr><td><code>Who</code></td><td>Wer</td><td>Who likes pizza?</td></tr>
+                        <tr><td><code>Why</code></td><td>Warum</td><td>Why does she cry?</td></tr>
+                        <tr><td><code>How</code></td><td>Wie</td><td>How do you get there?</td></tr>
+                    </table>
+                    <ul>
+                        <li>Aufbau: Fragewort + <code>do/does</code> + Person + Verb?</li>
+                        <li>Ausnahme <code>Who</code>: Who + Verb (3. Person) — kein do/does!</li>
                     </ul>`,
-                answers: `<ul>
-                        <li>Ja: Yes, + Person + <code>can</code>.</li>
-                        <li>Nein: No, + Person + <code>can't</code>.</li>
-                        <li>Das Verb wird NICHT wiederholt!</li>
-                    </ul>`,
-                negation: `<ul>
-                        <li><code>can't</code> = <code>cannot</code> (zusammen!)</li>
-                        <li>Wortstellung: Person + <code>can't</code> + Verb</li>
-                        <li>Beispiel: I <code>can't</code> swim.</li>
-                    </ul>`,
-                'word-order': `<ul>
-                        <li>Aussage: Person + can + Verb + Rest</li>
-                        <li>Frage: Can + Person + Verb + Rest?</li>
-                        <li>Verneinung: Person + can't + Verb + Rest</li>
-                        <li>Adverbien (well, fast) am Ende!</li>
+                'short-answers': `<ul>
+                        <li><strong>Do</strong>-Frage → Antwort mit <code>do</code> / <code>don't</code></li>
+                        <li><strong>Does</strong>-Frage → Antwort mit <code>does</code> / <code>doesn't</code></li>
+                        <li>Ja: Yes, + Person + <code>do/does</code>.</li>
+                        <li>Nein: No, + Person + <code>don't/doesn't</code>.</li>
+                        <li>Das Verb wird <strong>NICHT</strong> wiederholt!</li>
+                        <li>Do you like pizza? → Yes, I <code>do</code>. (nicht: Yes, I like.)</li>
                     </ul>`
             };
             document.getElementById('grammar-tip-content').innerHTML = tips[currentCategory];
@@ -571,6 +601,8 @@
 
         function nextQuestion() {
             const allQuestions = getQuestions();
+
+            // Filter out correctly answered questions
             let available = allQuestions.filter(q => !correctlyAnswered.has(JSON.stringify(q)));
 
             if (available.length === 0) {
@@ -620,7 +652,7 @@
                 inputArea.innerHTML = optionsHtml;
             } else if (currentQuestion.type === 'fill') {
                 typeEl.textContent = 'Lückentext';
-                questionEl.innerHTML = currentQuestion.sentence.replace('___', '<span style="border-bottom: 2px solid #667eea; padding: 0 20px;">___</span>');
+                questionEl.innerHTML = currentQuestion.sentence.replace('___', '<span style="border-bottom: 2px solid #f7971e; padding: 0 20px;">___</span>');
                 inputArea.innerHTML = `<input type="text" class="answer-input" id="answer-input" placeholder="Fülle die Lücke..." autocomplete="off">`;
                 document.getElementById('answer-input').addEventListener('keypress', (e) => {
                     if (e.key === 'Enter') checkAnswer();
@@ -676,6 +708,9 @@
                 } else {
                     correctAnswer = currentQuestion.german;
                     isCorrect = normalizeAnswer(userAnswer) === normalizeAnswer(currentQuestion.german);
+                    if (!isCorrect && currentQuestion.altGerman) {
+                        isCorrect = normalizeAnswer(userAnswer) === normalizeAnswer(currentQuestion.altGerman);
+                    }
                 }
             } else if (currentQuestion.type === 'choice') {
                 const selected = document.querySelector('.option-btn.selected');
@@ -704,7 +739,6 @@
             } else if (currentQuestion.type === 'order') {
                 userAnswer = document.getElementById('answer-input').value;
                 correctAnswer = currentQuestion.correct;
-                // Allow with or without final punctuation
                 const normalizedUser = normalizeAnswer(userAnswer);
                 const normalizedCorrect = normalizeAnswer(currentQuestion.correct);
                 isCorrect = normalizedUser === normalizedCorrect;

@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Club Writing</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .score-board {
+            background: white;
+            border-radius: 15px;
+            padding: 15px 25px;
+            display: inline-flex;
+            gap: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .score-item {
+            text-align: center;
+        }
+
+        .score-item span {
+            display: block;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .score-item strong {
+            font-size: 1.5rem;
+            color: #333;
+        }
+
+        .score-item.correct strong { color: #28a745; }
+
+        /* Quiz card */
+        .quiz-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+
+        .question-type {
+            display: inline-block;
+            background: #e9ecef;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        /* Scenario box */
+        .scenario-box {
+            background: #eafaf1;
+            border: 2px solid #2ecc71;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .scenario-box h3 {
+            color: #27ae60;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .detail-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 8px;
+            font-size: 1.05rem;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #27ae60;
+            min-width: 90px;
+        }
+
+        /* Writing tips */
+        .writing-tip {
+            background: linear-gradient(135deg, #eafaf1 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .writing-tip h3 {
+            color: #27ae60;
+            margin-bottom: 10px;
+        }
+
+        .writing-tip ul {
+            margin-left: 20px;
+            color: #555;
+        }
+
+        .writing-tip li {
+            margin-bottom: 5px;
+        }
+
+        /* Compact scenario reminder */
+        .scenario-mini {
+            background: #f8f9fa;
+            border-left: 4px solid #2ecc71;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .scenario-mini strong {
+            color: #27ae60;
+        }
+
+        /* Textarea */
+        .writing-area {
+            width: 100%;
+            padding: 20px;
+            font-size: 1.1rem;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            resize: vertical;
+            min-height: 200px;
+            transition: border-color 0.3s;
+            line-height: 1.6;
+        }
+
+        .writing-area:focus {
+            outline: none;
+            border-color: #2ecc71;
+        }
+
+        .word-count {
+            text-align: right;
+            color: #999;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+        }
+
+        /* Buttons */
+        .btn-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-check {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+        }
+
+        .btn-check:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.4);
+        }
+
+        .btn-check:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-skip {
+            background: #e9ecef;
+            color: #666;
+        }
+
+        .btn-skip:hover {
+            background: #dee2e6;
+        }
+
+        .btn-next {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+        }
+
+        .btn-next:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.4);
+        }
+
+        /* Feedback sections */
+        .feedback-overall {
+            text-align: center;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .feedback-overall .grade-emoji {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        .feedback-overall .grade-text {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .feedback-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .feedback-section h4 {
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .feedback-section.good {
+            border-left: 4px solid #28a745;
+        }
+
+        .feedback-section.good h4 {
+            color: #28a745;
+        }
+
+        .feedback-section.improve {
+            border-left: 4px solid #ffc107;
+        }
+
+        .feedback-section.improve h4 {
+            color: #856404;
+        }
+
+        .feedback-section.grammar {
+            border-left: 4px solid #dc3545;
+        }
+
+        .feedback-section.grammar h4 {
+            color: #dc3545;
+        }
+
+        .feedback-section ul {
+            margin-left: 20px;
+            color: #555;
+        }
+
+        .feedback-section li {
+            margin-bottom: 5px;
+        }
+
+        .content-checklist {
+            list-style: none;
+            margin-left: 0 !important;
+        }
+
+        .content-checklist li {
+            padding: 5px 0;
+        }
+
+        .correction-item {
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+        }
+
+        .correction-original {
+            color: #dc3545;
+            margin-bottom: 5px;
+        }
+
+        .correction-fixed {
+            color: #28a745;
+            margin-bottom: 5px;
+        }
+
+        .correction-explanation {
+            color: #666;
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+
+        /* Loading overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 15px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-overlay p {
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        /* Warning card */
+        .warning-card {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .warning-card h2 {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+
+        .warning-card p {
+            color: #856404;
+            line-height: 1.6;
+        }
+
+        .warning-card code {
+            background: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+        /* Back link */
+        .back-link {
+            display: inline-block;
+            color: white;
+            text-decoration: none;
+            margin-bottom: 15px;
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .back-link:hover {
+            opacity: 1;
+        }
+
+        /* Error display */
+        .error-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">&larr; Zurück</a>
+
+        <header>
+            <h1>Club Writing</h1>
+            <div class="score-board">
+                <div class="score-item">
+                    <span>Versuche</span>
+                    <strong id="attempts-count">0</strong>
+                </div>
+                <div class="score-item correct">
+                    <span>Geschafft</span>
+                    <strong id="success-count">0</strong>
+                </div>
+            </div>
+        </header>
+
+        <!-- API key missing warning -->
+        <div id="api-key-warning" class="warning-card" style="display: none;">
+            <h2>API-Schlüssel fehlt</h2>
+            <p>
+                Um dieses Modul zu nutzen, brauchst du einen OpenAI API-Schlüssel.<br><br>
+                1. Kopiere <code>config.example.js</code> zu <code>config.js</code><br>
+                2. Trage deinen API-Schlüssel in <code>config.js</code> ein<br>
+                3. Lade die Seite neu
+            </p>
+        </div>
+
+        <!-- Phase 1: Scenario -->
+        <div id="phase-scenario" class="quiz-card" style="display: none;">
+            <div class="question-type">Deine Aufgabe</div>
+            <div id="scenario-content" class="scenario-box"></div>
+            <div class="writing-tip">
+                <h3>Dein Text sollte enthalten:</h3>
+                <ul>
+                    <li><strong>Wer</strong> leitet die AG? (The teacher is...)</li>
+                    <li><strong>Wann</strong> trifft sich die AG? (The club is on...)</li>
+                    <li><strong>Wo</strong> trifft sich die AG? (It is in...)</li>
+                    <li><strong>Was</strong> macht man in der AG? (You can... / We...)</li>
+                </ul>
+            </div>
+            <button class="btn btn-check" onclick="startWriting()">Text schreiben</button>
+        </div>
+
+        <!-- Phase 2: Writing -->
+        <div id="phase-writing" class="quiz-card" style="display: none;">
+            <div class="question-type">Schreibe deinen Text</div>
+            <div id="scenario-summary" class="scenario-mini"></div>
+            <textarea id="student-text" class="writing-area"
+                      placeholder="Write your text about the school club here..."></textarea>
+            <div class="word-count">Wörter: <span id="word-count">0</span></div>
+            <div class="btn-row">
+                <button class="btn btn-skip" onclick="newScenario()">Neue Aufgabe</button>
+                <button class="btn btn-check" id="btn-submit" onclick="submitText()">Abschicken</button>
+            </div>
+        </div>
+
+        <!-- Phase 3: Feedback -->
+        <div id="phase-feedback" class="quiz-card" style="display: none;">
+            <div class="question-type">Feedback</div>
+            <div id="feedback-content"></div>
+            <div class="btn-row">
+                <button class="btn btn-skip" onclick="tryAgain()">Nochmal versuchen</button>
+                <button class="btn btn-next" onclick="newScenario()">Neue Aufgabe</button>
+            </div>
+        </div>
+
+        <!-- Loading overlay -->
+        <div id="loading-overlay" class="loading-overlay" style="display: none;">
+            <div class="spinner"></div>
+            <p id="loading-text">KI denkt nach...</p>
+        </div>
+    </div>
+
+    <script src="config.js" onerror="window._configMissing=true"></script>
+    <script src="common.js"></script>
+    <script>
+        // --- Configuration ---
+        const MODEL = 'gpt-5';
+
+        // --- State ---
+        let currentScenario = null;
+        let attempts = 0;
+        let successes = 0;
+        let lastStudentText = '';
+
+        // --- Initialization ---
+        function init() {
+            if (window._configMissing || typeof OPENAI_API_KEY === 'undefined' ||
+                OPENAI_API_KEY === 'sk-your-api-key-here') {
+                document.getElementById('api-key-warning').style.display = 'block';
+                return;
+            }
+
+            initCommon({
+                accentColor1: '#2ecc71',
+                accentColor2: '#27ae60',
+                onRestart: newScenario
+            });
+
+            newScenario();
+        }
+
+        // --- Phase management ---
+        function showPhase(phaseName) {
+            ['phase-scenario', 'phase-writing', 'phase-feedback'].forEach(function(id) {
+                document.getElementById(id).style.display = 'none';
+            });
+            document.getElementById('phase-' + phaseName).style.display = 'block';
+        }
+
+        function showLoading(text) {
+            document.getElementById('loading-text').textContent = text;
+            document.getElementById('loading-overlay').style.display = 'flex';
+        }
+
+        function hideLoading() {
+            document.getElementById('loading-overlay').style.display = 'none';
+        }
+
+        function updateStats() {
+            document.getElementById('attempts-count').textContent = attempts;
+            document.getElementById('success-count').textContent = successes;
+        }
+
+        // --- API ---
+        async function callOpenAI(messages) {
+            var response = await fetch('https://api.openai.com/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + OPENAI_API_KEY
+                },
+                body: JSON.stringify({
+                    model: MODEL,
+                    messages: messages,
+                    temperature: 1.0
+                })
+            });
+
+            if (!response.ok) {
+                var errorData = {};
+                try { errorData = await response.json(); } catch(e) {}
+                var err = new Error('API Error: ' + response.status);
+                err.status = response.status;
+                err.data = errorData;
+                throw err;
+            }
+
+            var data = await response.json();
+            return data.choices[0].message.content;
+        }
+
+        function parseJSON(content) {
+            var jsonStr = content;
+            var match = content.match(/```(?:json)?\s*([\s\S]*?)```/);
+            if (match) {
+                jsonStr = match[1];
+            }
+            return JSON.parse(jsonStr.trim());
+        }
+
+        // --- Scenario generation ---
+        async function generateScenario() {
+            var systemPrompt = 'You are a helper for a 5th grade English class in Germany. ' +
+                'Generate a random school club scenario for students to write about.\n\n' +
+                'Return ONLY a JSON object with these fields:\n' +
+                '{\n' +
+                '  "clubName": "name of the club in English (e.g., Art Club, Science Club, Drama Club, Chess Club, Cooking Club, Football Club, Gardening Club, Music Club, Photography Club, Reading Club)",\n' +
+                '  "teacherTitle": "Mr" or "Mrs" or "Ms",\n' +
+                '  "teacherLastName": "a common English surname",\n' +
+                '  "day": "a weekday in English",\n' +
+                '  "time": "a time like 3:15 pm or 4:00 pm",\n' +
+                '  "location": "a school location in English (e.g., Room 14, the gym, the art room, the music room, the school garden, the library)",\n' +
+                '  "activities": ["3-4 simple activities in English that 5th graders would understand"]\n' +
+                '}\n\n' +
+                'Make it varied and fun. Use simple English vocabulary suitable for 5th graders (A1-A2 level). ' +
+                'Do NOT repeat the same club every time - be creative but realistic for a school setting.';
+
+            var content = await callOpenAI([
+                { role: 'system', content: systemPrompt },
+                { role: 'user', content: 'Generate a new random school club scenario.' }
+            ]);
+
+            return parseJSON(content);
+        }
+
+        // --- Grading ---
+        async function gradeText(studentText, scenario) {
+            var systemPrompt = 'You are a friendly, encouraging English teacher for 5th grade German students (A1-A2 level).\n\n' +
+                'You must evaluate a student\'s text about a school club. The student was given this scenario:\n' +
+                '- Club: ' + scenario.clubName + '\n' +
+                '- Teacher: ' + scenario.teacherTitle + ' ' + scenario.teacherLastName + '\n' +
+                '- Day: ' + scenario.day + '\n' +
+                '- Time: ' + scenario.time + '\n' +
+                '- Location: ' + scenario.location + '\n' +
+                '- Activities: ' + scenario.activities.join(', ') + '\n\n' +
+                'The student should write about:\n' +
+                '1. WHO is the teacher (e.g., "The teacher is Mrs Smith." or "Mrs Smith is the teacher.")\n' +
+                '2. WHEN the club meets (day and/or time)\n' +
+                '3. WHERE the club meets (location)\n' +
+                '4. WHAT you do in the club (activities)\n\n' +
+                'Evaluate the text and return ONLY a JSON object:\n' +
+                '{\n' +
+                '  "passed": true/false,\n' +
+                '  "overallEmoji": "one emoji: use a star for great, thumbs up for good, flexed arm for keep trying",\n' +
+                '  "overallComment": "1-2 sentences in German, encouraging, summarizing the result",\n' +
+                '  "contentChecks": {\n' +
+                '    "teacher": { "found": true/false, "comment": "short German comment" },\n' +
+                '    "when": { "found": true/false, "comment": "short German comment" },\n' +
+                '    "where": { "found": true/false, "comment": "short German comment" },\n' +
+                '    "activities": { "found": true/false, "comment": "short German comment" }\n' +
+                '  },\n' +
+                '  "goodPoints": ["list of 1-3 things the student did well, in German"],\n' +
+                '  "grammarCorrections": [\n' +
+                '    {\n' +
+                '      "original": "the exact phrase the student wrote",\n' +
+                '      "corrected": "the corrected version",\n' +
+                '      "explanation": "brief German explanation of the grammar rule"\n' +
+                '    }\n' +
+                '  ],\n' +
+                '  "vocabularyTips": ["0-2 vocabulary suggestions in German"],\n' +
+                '  "exampleSentence": "One example sentence the student could add or improve, in English"\n' +
+                '}\n\n' +
+                'Set "passed" to true if at least 3 of 4 content points are covered AND there are no major grammar errors that prevent understanding.\n\n' +
+                'IMPORTANT RULES:\n' +
+                '- Be ENCOURAGING, not harsh. This is a 5th grader learning English.\n' +
+                '- Focus on the most important 2-3 grammar issues, don\'t overwhelm.\n' +
+                '- Praise specific things the student did well.\n' +
+                '- All comments and explanations must be in German.\n' +
+                '- The "original" and "corrected" fields in grammarCorrections must be in English.\n' +
+                '- Be lenient with minor spelling errors if the meaning is clear.\n' +
+                '- If the text is very short or off-topic, still be kind but note what\'s missing.';
+
+            var content = await callOpenAI([
+                { role: 'system', content: systemPrompt },
+                { role: 'user', content: 'Bitte bewerte diesen Text:\n\n' + studentText }
+            ]);
+
+            return parseJSON(content);
+        }
+
+        // --- Display functions ---
+        function displayScenario() {
+            var s = currentScenario;
+            var html = '<h3>' + s.clubName + '</h3>' +
+                '<div class="detail-row"><span class="detail-label">Teacher:</span><span>' + s.teacherTitle + ' ' + s.teacherLastName + '</span></div>' +
+                '<div class="detail-row"><span class="detail-label">Day:</span><span>' + s.day + '</span></div>' +
+                '<div class="detail-row"><span class="detail-label">Time:</span><span>' + s.time + '</span></div>' +
+                '<div class="detail-row"><span class="detail-label">Place:</span><span>' + s.location + '</span></div>' +
+                '<div class="detail-row"><span class="detail-label">Activities:</span><span>' + s.activities.join(', ') + '</span></div>';
+            document.getElementById('scenario-content').innerHTML = html;
+        }
+
+        function displayScenarioMini() {
+            var s = currentScenario;
+            document.getElementById('scenario-summary').innerHTML =
+                '<strong>' + s.clubName + '</strong> &mdash; ' +
+                s.teacherTitle + ' ' + s.teacherLastName + ' | ' +
+                s.day + ', ' + s.time + ' | ' + s.location;
+        }
+
+        function displayFeedback(feedback) {
+            var html = '';
+
+            // Overall
+            html += '<div class="feedback-overall">' +
+                '<div class="grade-emoji">' + (feedback.overallEmoji || '') + '</div>' +
+                '<div class="grade-text">' + escapeHtml(feedback.overallComment || '') + '</div>' +
+                '</div>';
+
+            // Content checklist
+            var labels = {
+                teacher: 'Lehrer/in genannt',
+                when: 'Wann (Tag/Uhrzeit)',
+                where: 'Wo (Ort)',
+                activities: 'Was man macht'
+            };
+            html += '<div class="feedback-section"><h4>Inhalt</h4><ul class="content-checklist">';
+            for (var key in labels) {
+                var check = feedback.contentChecks && feedback.contentChecks[key];
+                if (check) {
+                    var icon = check.found ? '\u2705' : '\u274C';
+                    html += '<li>' + icon + ' <strong>' + labels[key] + '</strong>: ' + escapeHtml(check.comment) + '</li>';
+                }
+            }
+            html += '</ul></div>';
+
+            // Good points
+            if (feedback.goodPoints && feedback.goodPoints.length > 0) {
+                html += '<div class="feedback-section good"><h4>Das hast du gut gemacht!</h4><ul>';
+                feedback.goodPoints.forEach(function(p) {
+                    html += '<li>' + escapeHtml(p) + '</li>';
+                });
+                html += '</ul></div>';
+            }
+
+            // Grammar corrections
+            if (feedback.grammarCorrections && feedback.grammarCorrections.length > 0) {
+                html += '<div class="feedback-section grammar"><h4>Grammatik-Korrekturen</h4>';
+                feedback.grammarCorrections.forEach(function(gc) {
+                    html += '<div class="correction-item">' +
+                        '<div class="correction-original">\u274C ' + escapeHtml(gc.original) + '</div>' +
+                        '<div class="correction-fixed">\u2705 ' + escapeHtml(gc.corrected) + '</div>' +
+                        '<div class="correction-explanation">' + escapeHtml(gc.explanation) + '</div>' +
+                        '</div>';
+                });
+                html += '</div>';
+            }
+
+            // Vocabulary tips
+            if (feedback.vocabularyTips && feedback.vocabularyTips.length > 0) {
+                html += '<div class="feedback-section improve"><h4>Wortschatz-Tipps</h4><ul>';
+                feedback.vocabularyTips.forEach(function(t) {
+                    html += '<li>' + escapeHtml(t) + '</li>';
+                });
+                html += '</ul></div>';
+            }
+
+            // Example sentence
+            if (feedback.exampleSentence) {
+                html += '<div class="feedback-section improve"><h4>Beispiel zum Verbessern</h4>' +
+                    '<p><em>' + escapeHtml(feedback.exampleSentence) + '</em></p></div>';
+            }
+
+            document.getElementById('feedback-content').innerHTML = html;
+        }
+
+        function escapeHtml(text) {
+            var div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // --- Actions ---
+        async function newScenario() {
+            lastStudentText = '';
+            showLoading('Neue Aufgabe wird erstellt...');
+            try {
+                currentScenario = await generateScenario();
+                displayScenario();
+                showPhase('scenario');
+            } catch (error) {
+                handleApiError(error);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function startWriting() {
+            showPhase('writing');
+            displayScenarioMini();
+            var textarea = document.getElementById('student-text');
+            textarea.value = lastStudentText || '';
+            textarea.focus();
+            updateWordCount();
+        }
+
+        async function submitText() {
+            var text = document.getElementById('student-text').value.trim();
+            var wordCount = text ? text.split(/\s+/).length : 0;
+
+            if (wordCount < 10) {
+                var wc = document.querySelector('.word-count');
+                wc.style.color = '#dc3545';
+                wc.textContent = 'Bitte schreibe mindestens 10 Wörter! (Aktuell: ' + wordCount + ')';
+                setTimeout(function() {
+                    wc.style.color = '#999';
+                    updateWordCount();
+                }, 3000);
+                return;
+            }
+
+            lastStudentText = text;
+            attempts++;
+            updateStats();
+
+            showLoading('Dein Text wird ausgewertet...');
+            try {
+                var feedback = await gradeText(text, currentScenario);
+                displayFeedback(feedback);
+                if (feedback.passed) {
+                    successes++;
+                    updateStats();
+                    celebrate();
+                }
+                showPhase('feedback');
+            } catch (error) {
+                handleApiError(error);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function tryAgain() {
+            showPhase('writing');
+            displayScenarioMini();
+            document.getElementById('student-text').value = lastStudentText;
+            document.getElementById('student-text').focus();
+            updateWordCount();
+        }
+
+        // --- Word count ---
+        function updateWordCount() {
+            var text = document.getElementById('student-text').value.trim();
+            var count = text ? text.split(/\s+/).length : 0;
+            document.getElementById('word-count').textContent = count;
+        }
+
+        // --- Error handling ---
+        function handleApiError(error) {
+            hideLoading();
+            var message = '';
+
+            if (error.status === 401) {
+                message = 'Der API-Schlüssel ist ungültig. Bitte prüfe deine <code>config.js</code> Datei.';
+            } else if (error.status === 429) {
+                message = 'Zu viele Anfragen. Bitte warte einen Moment und versuche es dann erneut.';
+            } else if (error.status >= 500) {
+                message = 'Der OpenAI-Server hat ein Problem. Bitte versuche es später erneut.';
+            } else if (error instanceof SyntaxError) {
+                message = 'Die KI-Antwort konnte nicht verarbeitet werden. Bitte versuche es erneut.';
+            } else if (error.message && error.message.includes('fetch')) {
+                message = 'Keine Internetverbindung. Bitte prüfe deine Verbindung und versuche es erneut.';
+            } else {
+                message = 'Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es erneut.';
+            }
+
+            // Show error as a card
+            var container = document.querySelector('.container');
+            // Hide all phases
+            ['phase-scenario', 'phase-writing', 'phase-feedback'].forEach(function(id) {
+                document.getElementById(id).style.display = 'none';
+            });
+
+            var errorDiv = document.getElementById('error-display');
+            if (!errorDiv) {
+                errorDiv = document.createElement('div');
+                errorDiv.id = 'error-display';
+                errorDiv.className = 'error-card';
+                container.appendChild(errorDiv);
+            }
+            errorDiv.innerHTML = '<div class="feedback-section grammar">' +
+                '<h4>Fehler</h4>' +
+                '<p>' + message + '</p>' +
+                '</div>' +
+                '<button class="btn btn-check" onclick="dismissError()" style="margin-top: 15px;">Erneut versuchen</button>';
+            errorDiv.style.display = 'block';
+        }
+
+        function dismissError() {
+            var errorDiv = document.getElementById('error-display');
+            if (errorDiv) errorDiv.style.display = 'none';
+            newScenario();
+        }
+
+        // --- Event listeners ---
+        document.addEventListener('DOMContentLoaded', function() {
+            var textarea = document.getElementById('student-text');
+            if (textarea) {
+                textarea.addEventListener('input', updateWordCount);
+            }
+            init();
+        });
+    </script>
+</body>
+</html>

@@ -291,23 +291,6 @@
             font-weight: bold;
         }
 
-        .celebration {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 4rem;
-            animation: pop 0.5s ease;
-            pointer-events: none;
-            z-index: 1000;
-        }
-
-        @keyframes pop {
-            0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
-            50% { transform: translate(-50%, -50%) scale(1.2); }
-            100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
-        }
-
         .grammar-tip {
             background: linear-gradient(135deg, #f0f9ff 0%, #e9ecef 100%);
             border-radius: 15px;
@@ -537,6 +520,7 @@
                 <button class="category-btn active" data-category="all">Alle</button>
                 <button class="category-btn" data-category="long-u">Langes /uː/</button>
                 <button class="category-btn" data-category="not-long-u">Kein /uː/</button>
+                <button class="category-btn" data-category="long-aw">Langes /ɔː/</button>
                 <button class="category-btn" data-category="s-sounds">S-Laute</button>
             </div>
         </div>
@@ -547,22 +531,27 @@
                 <span class="grammar-tip-toggle">▼</span>
             </div>
             <div class="grammar-tip-content" id="grammar-tip-content">
-                <div class="sound-comparison">
+                <div class="sound-comparison" style="grid-template-columns: repeat(3, 1fr);">
                     <div class="sound-box">
                         <h4>/uː/</h4>
                         <p>Langer "u" Laut</p>
-                        <div class="examples">school, food, moon, blue</div>
+                        <div class="examples">school, food, moon</div>
                     </div>
                     <div class="sound-box">
-                        <h4>andere Laute</h4>
-                        <p>z.B. /əʊ/, /ʌ/, /ʊ/</p>
-                        <div class="examples">go, but, book, home</div>
+                        <h4>/ɔː/</h4>
+                        <p>Langer "o" Laut</p>
+                        <div class="examples">all, walk, sport</div>
+                    </div>
+                    <div class="sound-box">
+                        <h4>S-Laute</h4>
+                        <p>/s/, /z/, /ɪz/</p>
+                        <div class="examples">cats, dogs, boxes</div>
                     </div>
                 </div>
                 <ul>
                     <li><code>/uː/</code> = langer "u" Laut (wie deutsches "u" in "Schule")</li>
-                    <li>Oft geschrieben als: <strong>oo</strong>, <strong>ue</strong>, <strong>ew</strong>, <strong>o</strong></li>
-                    <li>Achtung: <strong>oo</strong> ist manchmal kurz: book, look, good /ʊ/</li>
+                    <li><code>/ɔː/</code> = langer "o" Laut (wie "o" in "Tor" mit offenem Mund)</li>
+                    <li>Drei S-Laute: <code>/s/</code> stimmlos, <code>/z/</code> stimmhaft, <code>/ɪz/</code> extra Silbe</li>
                 </ul>
             </div>
         </div>
@@ -590,7 +579,20 @@
         </div>
     </div>
 
+    <script src="common.js"></script>
     <script>
+        initCommon({
+            accentColor1: '#4facfe',
+            accentColor2: '#00f2fe',
+            onRestart: function() {
+                correctlyAnswered = new Set();
+                score = { correct: 0, wrong: 0, total: 0 };
+                streak = 0;
+                updateScore(score, streak, correctlyAnswered, getQuestions);
+                nextQuestion();
+            }
+        });
+
         // Words with long /uː/ sound
         const longUWords = [
             { word: 'school', phonetic: '/skuːl/', german: 'Schule' },
@@ -657,6 +659,64 @@
             { word: 'love', phonetic: '/lʌv/', german: 'Liebe', sound: '/ʌ/' },
             { word: 'mother', phonetic: '/ˈmʌðə/', german: 'Mutter', sound: '/ʌ/' },
             { word: 'brother', phonetic: '/ˈbrʌðə/', german: 'Bruder', sound: '/ʌ/' },
+        ];
+
+        // Words with long /ɔː/ sound
+        const longAwWords = [
+            { word: 'all', phonetic: '/ɔːl/', german: 'alle' },
+            { word: 'ball', phonetic: '/bɔːl/', german: 'Ball' },
+            { word: 'call', phonetic: '/kɔːl/', german: 'rufen' },
+            { word: 'fall', phonetic: '/fɔːl/', german: 'fallen' },
+            { word: 'tall', phonetic: '/tɔːl/', german: 'groß' },
+            { word: 'wall', phonetic: '/wɔːl/', german: 'Wand' },
+            { word: 'small', phonetic: '/smɔːl/', german: 'klein' },
+            { word: 'walk', phonetic: '/wɔːk/', german: 'gehen' },
+            { word: 'talk', phonetic: '/tɔːk/', german: 'reden' },
+            { word: 'sport', phonetic: '/spɔːt/', german: 'Sport' },
+            { word: 'short', phonetic: '/ʃɔːt/', german: 'kurz' },
+            { word: 'horse', phonetic: '/hɔːs/', german: 'Pferd' },
+            { word: 'morning', phonetic: '/ˈmɔːnɪŋ/', german: 'Morgen' },
+            { word: 'born', phonetic: '/bɔːn/', german: 'geboren' },
+            { word: 'door', phonetic: '/dɔː/', german: 'Tür' },
+            { word: 'floor', phonetic: '/flɔː/', german: 'Boden' },
+            { word: 'four', phonetic: '/fɔː/', german: 'vier' },
+            { word: 'your', phonetic: '/jɔː/', german: 'dein' },
+            { word: 'more', phonetic: '/mɔː/', german: 'mehr' },
+            { word: 'before', phonetic: '/bɪˈfɔː/', german: 'bevor' },
+            { word: 'draw', phonetic: '/drɔː/', german: 'zeichnen' },
+            { word: 'saw', phonetic: '/sɔː/', german: 'sah' },
+            { word: 'law', phonetic: '/lɔː/', german: 'Gesetz' },
+            { word: 'water', phonetic: '/ˈwɔːtə/', german: 'Wasser' },
+            { word: 'warm', phonetic: '/wɔːm/', german: 'warm' },
+            { word: 'war', phonetic: '/wɔː/', german: 'Krieg' },
+            { word: 'bought', phonetic: '/bɔːt/', german: 'kaufte' },
+            { word: 'thought', phonetic: '/θɔːt/', german: 'dachte' },
+            { word: 'caught', phonetic: '/kɔːt/', german: 'fing' },
+            { word: 'daughter', phonetic: '/ˈdɔːtə/', german: 'Tochter' },
+        ];
+
+        // Words WITHOUT /ɔː/ sound (common confusions)
+        const notLongAwWords = [
+            { word: 'hot', phonetic: '/hɒt/', german: 'heiß', sound: '/ɒ/' },
+            { word: 'dog', phonetic: '/dɒɡ/', german: 'Hund', sound: '/ɒ/' },
+            { word: 'got', phonetic: '/ɡɒt/', german: 'bekam', sound: '/ɒ/' },
+            { word: 'stop', phonetic: '/stɒp/', german: 'stoppen', sound: '/ɒ/' },
+            { word: 'lot', phonetic: '/lɒt/', german: 'viel', sound: '/ɒ/' },
+            { word: 'box', phonetic: '/bɒks/', german: 'Kiste', sound: '/ɒ/' },
+            { word: 'not', phonetic: '/nɒt/', german: 'nicht', sound: '/ɒ/' },
+            { word: 'top', phonetic: '/tɒp/', german: 'Spitze', sound: '/ɒ/' },
+            { word: 'clock', phonetic: '/klɒk/', german: 'Uhr', sound: '/ɒ/' },
+            { word: 'shop', phonetic: '/ʃɒp/', german: 'Geschäft', sound: '/ɒ/' },
+            { word: 'go', phonetic: '/ɡəʊ/', german: 'gehen', sound: '/əʊ/' },
+            { word: 'home', phonetic: '/həʊm/', german: 'Zuhause', sound: '/əʊ/' },
+            { word: 'no', phonetic: '/nəʊ/', german: 'nein', sound: '/əʊ/' },
+            { word: 'show', phonetic: '/ʃəʊ/', german: 'zeigen', sound: '/əʊ/' },
+            { word: 'know', phonetic: '/nəʊ/', german: 'wissen', sound: '/əʊ/' },
+            { word: 'old', phonetic: '/əʊld/', german: 'alt', sound: '/əʊ/' },
+            { word: 'gold', phonetic: '/ɡəʊld/', german: 'Gold', sound: '/əʊ/' },
+            { word: 'cold', phonetic: '/kəʊld/', german: 'kalt', sound: '/əʊ/' },
+            { word: 'told', phonetic: '/təʊld/', german: 'erzählte', sound: '/əʊ/' },
+            { word: 'hold', phonetic: '/həʊld/', german: 'halten', sound: '/əʊ/' },
         ];
 
         // Words with /s/ sound (after voiceless consonants: p, t, k, f, θ)
@@ -728,6 +788,40 @@
             }))
         };
 
+        // /ɔː/ questions
+        questions['long-aw'] = [
+            ...longAwWords.map(w => ({
+                type: 'aw-identify',
+                word: w.word,
+                phonetic: w.phonetic,
+                german: w.german,
+                isLongAw: true,
+                hint: `${w.word} hat den langen /ɔː/ Laut`
+            })),
+            ...notLongAwWords.map(w => ({
+                type: 'aw-identify',
+                word: w.word,
+                phonetic: w.phonetic,
+                german: w.german,
+                isLongAw: false,
+                actualSound: w.sound,
+                hint: `${w.word} hat den ${w.sound} Laut, nicht /ɔː/`
+            })),
+            // Compare questions: which word has /ɔː/?
+            { type: 'aw-compare', words: ['ball', 'box'], correct: 0, hint: 'ball = /bɔːl/, box = /bɒks/' },
+            { type: 'aw-compare', words: ['hot', 'horse'], correct: 1, hint: 'hot = /hɒt/, horse = /hɔːs/' },
+            { type: 'aw-compare', words: ['walk', 'go'], correct: 0, hint: 'walk = /wɔːk/, go = /ɡəʊ/' },
+            { type: 'aw-compare', words: ['dog', 'door'], correct: 1, hint: 'dog = /dɒɡ/, door = /dɔː/' },
+            { type: 'aw-compare', words: ['morning', 'home'], correct: 0, hint: 'morning = /ˈmɔːnɪŋ/, home = /həʊm/' },
+            { type: 'aw-compare', words: ['cold', 'call'], correct: 1, hint: 'cold = /kəʊld/, call = /kɔːl/' },
+            { type: 'aw-compare', words: ['four', 'no'], correct: 0, hint: 'four = /fɔː/, no = /nəʊ/' },
+            { type: 'aw-compare', words: ['shop', 'short'], correct: 1, hint: 'shop = /ʃɒp/, short = /ʃɔːt/' },
+            // Group questions: which words have /ɔː/?
+            { type: 'aw-group', words: ['ball', 'box', 'call', 'clock'], correctIndices: [0, 2], hint: 'ball und call haben /ɔːl/, box und clock haben /ɒ/' },
+            { type: 'aw-group', words: ['sport', 'stop', 'short', 'shop'], correctIndices: [0, 2], hint: 'sport und short haben /ɔː/, stop und shop haben /ɒ/' },
+            { type: 'aw-group', words: ['old', 'all', 'gold', 'wall'], correctIndices: [1, 3], hint: 'all und wall haben /ɔː/, old und gold haben /əʊ/' },
+        ];
+
         // Add mixed comparison questions
         questions.all = [
             ...questions['long-u'],
@@ -749,6 +843,8 @@
             { type: 'group', words: ['pool', 'pull', 'cool', 'full'], correctIndices: [0, 2], hint: 'pool und cool haben /uː/, pull und full haben /ʊ/' },
             { type: 'group', words: ['food', 'good', 'mood', 'wood'], correctIndices: [0, 2], hint: 'food und mood haben /uː/, good und wood haben /ʊ/' },
             { type: 'group', words: ['moon', 'soon', 'book', 'look'], correctIndices: [0, 1], hint: 'moon und soon haben /uː/, book und look haben /ʊ/' },
+            // /ɔː/ questions in all
+            ...questions['long-aw'],
         ];
 
         // S-sounds questions
@@ -828,7 +924,7 @@
         let currentCategory = 'all';
         let score = { correct: 0, wrong: 0, total: 0 };
         let streak = 0;
-        let answeredQuestions = [];
+        let correctlyAnswered = new Set();
 
         // Category button handling
         document.querySelectorAll('.category-btn').forEach(btn => {
@@ -836,7 +932,7 @@
                 document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 currentCategory = btn.dataset.category;
-                answeredQuestions = [];
+                correctlyAnswered = new Set();
                 updateGrammarTip();
                 nextQuestion();
             });
@@ -844,22 +940,27 @@
 
         function updateGrammarTip() {
             const tips = {
-                all: `<div class="sound-comparison">
+                all: `<div class="sound-comparison" style="grid-template-columns: repeat(3, 1fr);">
                         <div class="sound-box">
                             <h4>/uː/</h4>
                             <p>Langer "u" Laut</p>
-                            <div class="examples">school, food, moon, blue</div>
+                            <div class="examples">school, food, moon</div>
                         </div>
                         <div class="sound-box">
-                            <h4>andere Laute</h4>
-                            <p>z.B. /əʊ/, /ʌ/, /ʊ/</p>
-                            <div class="examples">go, but, book, home</div>
+                            <h4>/ɔː/</h4>
+                            <p>Langer "o" Laut</p>
+                            <div class="examples">all, walk, sport</div>
+                        </div>
+                        <div class="sound-box">
+                            <h4>S-Laute</h4>
+                            <p>/s/, /z/, /ɪz/</p>
+                            <div class="examples">cats, dogs, boxes</div>
                         </div>
                     </div>
                     <ul>
                         <li><code>/uː/</code> = langer "u" Laut (wie deutsches "u" in "Schule")</li>
-                        <li>Oft geschrieben als: <strong>oo</strong>, <strong>ue</strong>, <strong>ew</strong>, <strong>o</strong></li>
-                        <li>Achtung: <strong>oo</strong> ist manchmal kurz: book, look, good /ʊ/</li>
+                        <li><code>/ɔː/</code> = langer "o" Laut (wie "o" in "Tor" mit offenem Mund)</li>
+                        <li>Drei S-Laute: <code>/s/</code> stimmlos, <code>/z/</code> stimmhaft, <code>/ɪz/</code> extra Silbe</li>
                     </ul>`,
                 'long-u': `<ul>
                         <li><code>/uː/</code> = langer "u" Laut</li>
@@ -875,6 +976,28 @@
                         <li><code>/ʊ/</code> (kurzes u): book, look, good, put, foot</li>
                         <li><code>/ʌ/</code> (wie "a" in "Mama"): but, cup, bus, come, love</li>
                         <li><strong>Achtung:</strong> "oo" kann kurz sein: book ≠ boot!</li>
+                    </ul>`,
+                'long-aw': `<div class="sound-comparison">
+                        <div class="sound-box">
+                            <h4>/ɔː/</h4>
+                            <p>Langer offener "o" Laut</p>
+                            <div class="examples">all, ball, walk, sport</div>
+                        </div>
+                        <div class="sound-box">
+                            <h4>andere Laute</h4>
+                            <p>z.B. /ɒ/, /əʊ/</p>
+                            <div class="examples">hot, dog, go, home</div>
+                        </div>
+                    </div>
+                    <ul>
+                        <li><code>/ɔː/</code> = langer "o" Laut (Mund offen und rund, wie "o" in "Tor")</li>
+                        <li><strong>al/all</strong>: all, ball, call, wall, walk, talk, small</li>
+                        <li><strong>or</strong>: sport, short, horse, morning, born</li>
+                        <li><strong>oor/our/ore</strong>: door, floor, four, your, more, before</li>
+                        <li><strong>aw</strong>: draw, saw, law</li>
+                        <li><strong>ar</strong> (nach w): war, warm, water</li>
+                        <li><strong>ought/aught</strong>: bought, thought, caught, daughter</li>
+                        <li>Achtung: <code>/ɒ/</code> (kurzes o) klingt ähnlich: hot, dog, stop</li>
                     </ul>`,
                 's-sounds': `<div class="sound-comparison" style="grid-template-columns: repeat(3, 1fr);">
                         <div class="sound-box">
@@ -906,15 +1029,6 @@
             document.getElementById('grammar-tip').classList.toggle('collapsed');
         }
 
-        function shuffleArray(array) {
-            const shuffled = [...array];
-            for (let i = shuffled.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-            }
-            return shuffled;
-        }
-
         function getQuestions() {
             if (currentCategory === 'all') {
                 return questions.all;
@@ -931,16 +1045,14 @@
 
         function nextQuestion() {
             const allQuestions = getQuestions();
-
-            let available = allQuestions.filter(q => !answeredQuestions.includes(JSON.stringify(q)));
+            let available = allQuestions.filter(q => !correctlyAnswered.has(JSON.stringify(q)));
 
             if (available.length === 0) {
-                answeredQuestions = [];
-                available = allQuestions;
+                showCompletion(allQuestions.length, score);
+                return;
             }
 
             currentQuestion = available[Math.floor(Math.random() * available.length)];
-            answeredQuestions.push(JSON.stringify(currentQuestion));
 
             displayQuestion();
 
@@ -977,6 +1089,64 @@
 
                 // Auto-play the word
                 setTimeout(() => speakWord(currentQuestion.word), 300);
+
+            } else if (currentQuestion.type === 'aw-identify') {
+                typeEl.textContent = 'Hat dieses Wort den /ɔː/ Laut?';
+                questionEl.innerHTML = `Hör dir das Wort an und entscheide:`;
+
+                inputArea.innerHTML = `
+                    <div class="word-display">
+                        ${currentQuestion.word}
+                        <button class="sound-btn" onclick="speakWord('${currentQuestion.word}')" title="Anhören">🔊</button>
+                    </div>
+                    <p style="text-align: center; color: #666; margin-bottom: 15px;">(${currentQuestion.german})</p>
+                    <div class="answer-options" style="flex-direction: row; gap: 15px;">
+                        <button class="option-btn" data-answer="yes" onclick="selectAnswer('yes')" style="flex: 1;">
+                            Ja, /ɔː/ 👍
+                        </button>
+                        <button class="option-btn" data-answer="no" onclick="selectAnswer('no')" style="flex: 1;">
+                            Nein, kein /ɔː/ 👎
+                        </button>
+                    </div>
+                `;
+
+                setTimeout(() => speakWord(currentQuestion.word), 300);
+
+            } else if (currentQuestion.type === 'aw-compare') {
+                typeEl.textContent = 'Welches Wort hat /ɔː/?';
+                questionEl.innerHTML = `Welches dieser Wörter hat den langen /ɔː/ Laut?`;
+
+                const wordsWithIndex = currentQuestion.words.map((word, i) => ({ word, originalIndex: i }));
+                const shuffledWords = shuffleArray(wordsWithIndex);
+
+                inputArea.innerHTML = `
+                    <div class="answer-options" style="flex-direction: row; gap: 15px;">
+                        ${shuffledWords.map((item) => `
+                            <button class="option-btn" data-original-index="${item.originalIndex}" onclick="selectOption(this)" style="flex: 1;">
+                                ${item.word}
+                                <button class="sound-btn" onclick="event.stopPropagation(); speakWord('${item.word}')" style="margin-left: 10px; width: 35px; height: 35px; font-size: 1rem;">🔊</button>
+                            </button>
+                        `).join('')}
+                    </div>
+                `;
+
+            } else if (currentQuestion.type === 'aw-group') {
+                typeEl.textContent = 'Welche Wörter haben /ɔː/?';
+                questionEl.innerHTML = `Wähle ALLE Wörter mit dem langen /ɔː/ Laut:`;
+
+                const wordsWithIndex = currentQuestion.words.map((word, i) => ({ word, originalIndex: i }));
+                const shuffledWords = shuffleArray(wordsWithIndex);
+
+                inputArea.innerHTML = `
+                    <div class="answer-options" style="flex-direction: row; flex-wrap: wrap; gap: 10px;">
+                        ${shuffledWords.map((item) => `
+                            <button class="option-btn" data-original-index="${item.originalIndex}" onclick="toggleOption(this)" style="flex: 1 1 45%; min-width: 120px;">
+                                ${item.word}
+                                <button class="sound-btn" onclick="event.stopPropagation(); speakWord('${item.word}')" style="margin-left: 10px; width: 35px; height: 35px; font-size: 1rem;">🔊</button>
+                            </button>
+                        `).join('')}
+                    </div>
+                `;
 
             } else if (currentQuestion.type === 'compare') {
                 typeEl.textContent = 'Welches Wort hat /uː/?';
@@ -1173,6 +1343,77 @@
                     btn.disabled = true;
                 });
 
+            } else if (currentQuestion.type === 'aw-identify') {
+                const selected = document.querySelector('.option-btn.selected');
+                if (!selected) {
+                    showFeedback(false, 'Bitte wähle eine Antwort!');
+                    return;
+                }
+                const userAnswer = selected.dataset.answer === 'yes';
+                isCorrect = userAnswer === currentQuestion.isLongAw;
+
+                correctAnswer = currentQuestion.isLongAw
+                    ? `Ja! "${currentQuestion.word}" ${currentQuestion.phonetic} hat /ɔː/`
+                    : `Nein! "${currentQuestion.word}" ${currentQuestion.phonetic} hat ${currentQuestion.actualSound || 'kein /ɔː/'}`;
+
+                document.querySelectorAll('.option-btn').forEach(btn => {
+                    const isYes = btn.dataset.answer === 'yes';
+                    if (isYes === currentQuestion.isLongAw) {
+                        btn.classList.add('correct');
+                    } else if (btn.classList.contains('selected')) {
+                        btn.classList.add('wrong');
+                    }
+                    btn.disabled = true;
+                });
+
+            } else if (currentQuestion.type === 'aw-compare') {
+                const selected = document.querySelector('.option-btn.selected');
+                if (!selected) {
+                    showFeedback(false, 'Bitte wähle eine Antwort!');
+                    return;
+                }
+                const userAnswer = parseInt(selected.dataset.originalIndex);
+                isCorrect = userAnswer === currentQuestion.correct;
+                correctAnswer = `"${currentQuestion.words[currentQuestion.correct]}" hat den /ɔː/ Laut`;
+
+                document.querySelectorAll('.option-btn').forEach(btn => {
+                    const idx = parseInt(btn.dataset.originalIndex);
+                    if (idx === currentQuestion.correct) {
+                        btn.classList.add('correct');
+                    } else if (btn.classList.contains('selected') && !isCorrect) {
+                        btn.classList.add('wrong');
+                    }
+                    btn.disabled = true;
+                });
+
+            } else if (currentQuestion.type === 'aw-group') {
+                const selected = Array.from(document.querySelectorAll('.option-btn.selected'))
+                    .map(btn => parseInt(btn.dataset.originalIndex));
+
+                if (selected.length === 0) {
+                    showFeedback(false, 'Bitte wähle mindestens ein Wort!');
+                    return;
+                }
+
+                const correctSet = new Set(currentQuestion.correctIndices);
+                const selectedSet = new Set(selected);
+
+                isCorrect = correctSet.size === selectedSet.size &&
+                    [...correctSet].every(i => selectedSet.has(i));
+
+                const correctWords = currentQuestion.correctIndices.map(i => currentQuestion.words[i]);
+                correctAnswer = `Die Wörter mit /ɔː/ sind: ${correctWords.join(', ')}`;
+
+                document.querySelectorAll('.option-btn').forEach(btn => {
+                    const idx = parseInt(btn.dataset.originalIndex);
+                    if (currentQuestion.correctIndices.includes(idx)) {
+                        btn.classList.add('correct');
+                    } else if (btn.classList.contains('selected')) {
+                        btn.classList.add('wrong');
+                    }
+                    btn.disabled = true;
+                });
+
             } else if (currentQuestion.type === 'compare') {
                 const selected = document.querySelector('.option-btn.selected');
                 if (!selected) {
@@ -1286,6 +1527,7 @@
             if (isCorrect) {
                 score.correct++;
                 streak++;
+                correctlyAnswered.add(JSON.stringify(currentQuestion));
                 showFeedback(true, 'Super! Das ist richtig!');
                 if (streak > 0 && streak % 5 === 0) {
                     celebrate();
@@ -1301,11 +1543,20 @@
             }
 
             score.total++;
-            updateScore();
+            updateScore(score, streak, correctlyAnswered, getQuestions);
 
             document.getElementById('btn-check').style.display = 'none';
-            document.getElementById('btn-next').style.display = 'block';
             document.getElementById('btn-skip').style.display = 'none';
+
+            // Check if all questions in category are complete
+            const allQuestions = getQuestions();
+            const remaining = allQuestions.filter(q => !correctlyAnswered.has(JSON.stringify(q)));
+            if (remaining.length === 0) {
+                document.getElementById('btn-next').style.display = 'none';
+                setTimeout(() => showCompletion(allQuestions.length, score), 800);
+            } else {
+                document.getElementById('btn-next').style.display = 'block';
+            }
         }
 
         function skipQuestion() {
@@ -1315,11 +1566,20 @@
                 correctAnswer = currentQuestion.isLongU
                     ? `"${currentQuestion.word}" HAT den /uː/ Laut`
                     : `"${currentQuestion.word}" hat KEINEN /uː/ Laut`;
+            } else if (currentQuestion.type === 'aw-identify') {
+                correctAnswer = currentQuestion.isLongAw
+                    ? `"${currentQuestion.word}" HAT den /ɔː/ Laut`
+                    : `"${currentQuestion.word}" hat KEINEN /ɔː/ Laut`;
             } else if (currentQuestion.type === 'compare') {
                 correctAnswer = `"${currentQuestion.words[currentQuestion.correct]}" hat /uː/`;
+            } else if (currentQuestion.type === 'aw-compare') {
+                correctAnswer = `"${currentQuestion.words[currentQuestion.correct]}" hat /ɔː/`;
             } else if (currentQuestion.type === 'group') {
                 const correctWords = currentQuestion.correctIndices.map(i => currentQuestion.words[i]);
                 correctAnswer = `${correctWords.join(', ')} haben /uː/`;
+            } else if (currentQuestion.type === 'aw-group') {
+                const correctWords = currentQuestion.correctIndices.map(i => currentQuestion.words[i]);
+                correctAnswer = `${correctWords.join(', ')} haben /ɔː/`;
             } else if (currentQuestion.type === 's-identify') {
                 correctAnswer = `"${currentQuestion.word}" hat den ${currentQuestion.correctSound} Laut`;
             } else if (currentQuestion.type === 'column-sort') {
@@ -1331,7 +1591,7 @@
             showFeedback(false, `Übersprungen. ${correctAnswer}<br><br>Tipp: ${currentQuestion.hint || ''}`);
 
             streak = 0;
-            updateScore();
+            updateScore(score, streak, correctlyAnswered, getQuestions);
 
             document.getElementById('btn-check').style.display = 'none';
             document.getElementById('btn-next').style.display = 'block';
@@ -1341,38 +1601,6 @@
             document.querySelectorAll('.option-btn').forEach(btn => btn.disabled = true);
             document.querySelectorAll('.draggable-word').forEach(w => w.onclick = null);
             document.querySelectorAll('.sort-column').forEach(c => c.onclick = null);
-        }
-
-        function showFeedback(correct, message) {
-            const feedback = document.getElementById('feedback');
-            feedback.className = 'feedback show ' + (correct ? 'correct' : 'wrong');
-            feedback.innerHTML = message;
-        }
-
-        function updateScore() {
-            document.getElementById('correct-score').textContent = score.correct;
-            document.getElementById('wrong-score').textContent = score.wrong;
-            document.getElementById('total-questions').textContent = score.total;
-
-            const progress = score.total > 0 ? (score.correct / score.total * 100) : 0;
-            document.getElementById('progress-fill').style.width = progress + '%';
-
-            const streakEl = document.getElementById('streak');
-            if (streak >= 3) {
-                streakEl.textContent = `🔥 ${streak} richtig in Folge!`;
-            } else {
-                streakEl.textContent = '';
-            }
-        }
-
-        function celebrate() {
-            const emojis = ['🎉', '⭐', '🏆', '💪', '🌟'];
-            const emoji = emojis[Math.floor(Math.random() * emojis.length)];
-            const celebration = document.createElement('div');
-            celebration.className = 'celebration';
-            celebration.textContent = emoji;
-            document.body.appendChild(celebration);
-            setTimeout(() => celebration.remove(), 500);
         }
 
         // Start with first question

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Can / Can't Practice</title>
+    <title>Capitalization Rules</title>
     <style>
         * {
             box-sizing: border-box;
@@ -13,7 +13,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
             min-height: 100vh;
             padding: 20px;
         }
@@ -84,9 +84,9 @@
 
         .category-btn {
             padding: 10px 20px;
-            border: 2px solid #667eea;
+            border: 2px solid #c0392b;
             background: white;
-            color: #667eea;
+            color: #c0392b;
             border-radius: 25px;
             cursor: pointer;
             font-size: 1rem;
@@ -94,7 +94,7 @@
         }
 
         .category-btn:hover, .category-btn.active {
-            background: #667eea;
+            background: #c0392b;
             color: white;
         }
 
@@ -124,7 +124,7 @@
         }
 
         .german-text {
-            color: #667eea;
+            color: #c0392b;
             font-weight: 600;
         }
 
@@ -145,7 +145,7 @@
 
         .answer-input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #c0392b;
         }
 
         .answer-options {
@@ -167,13 +167,13 @@
         }
 
         .option-btn:hover {
-            border-color: #667eea;
-            background: #f8f9ff;
+            border-color: #c0392b;
+            background: #fdf2f2;
         }
 
         .option-btn.selected {
-            border-color: #667eea;
-            background: #667eea;
+            border-color: #c0392b;
+            background: #c0392b;
             color: white;
         }
 
@@ -205,12 +205,12 @@
         }
 
         .btn-check {
-            background: #667eea;
+            background: #c0392b;
             color: white;
         }
 
         .btn-check:hover {
-            background: #5a6fd6;
+            background: #a93226;
         }
 
         .btn-next {
@@ -272,6 +272,19 @@
             font-size: 0.95rem;
         }
 
+        .incorrect-sentence {
+            background: #f8f9fa;
+            border: 2px solid #c0392b;
+            border-radius: 10px;
+            padding: 15px 20px;
+            font-size: 1.3rem;
+            color: #c0392b;
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-align: center;
+            letter-spacing: 0.3px;
+        }
+
         .progress-bar {
             width: 100%;
             height: 8px;
@@ -283,7 +296,7 @@
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #667eea, #764ba2);
+            background: linear-gradient(90deg, #c0392b, #e74c3c);
             border-radius: 4px;
             transition: width 0.5s ease;
         }
@@ -296,7 +309,7 @@
         }
 
         .grammar-tip {
-            background: linear-gradient(135deg, #f8f9ff 0%, #e9ecef 100%);
+            background: linear-gradient(135deg, #fdf2f2 0%, #e9ecef 100%);
             border-radius: 15px;
             margin-bottom: 20px;
             overflow: hidden;
@@ -316,7 +329,7 @@
         }
 
         .grammar-tip h3 {
-            color: #667eea;
+            color: #c0392b;
             margin: 0;
         }
 
@@ -358,7 +371,7 @@
 <body>
     <div class="container">
         <header>
-            <h1>Can / Can't Practice</h1>
+            <h1>Capitalization Rules</h1>
             <div class="score-board">
                 <div class="score-item correct">
                     <span>Richtig</span>
@@ -379,32 +392,29 @@
             <h2>Kategorie wählen:</h2>
             <div class="category-buttons">
                 <button class="category-btn active" data-category="all">Alle</button>
-                <button class="category-btn" data-category="statements">Aussagen</button>
-                <button class="category-btn" data-category="questions">Fragen</button>
-                <button class="category-btn" data-category="answers">Antworten</button>
-                <button class="category-btn" data-category="negation">Verneinung</button>
-                <button class="category-btn" data-category="word-order">Wortstellung</button>
+                <button class="category-btn" data-category="basics">Grundregeln</button>
+                <button class="category-btn" data-category="days-months">Tage & Monate</button>
+                <button class="category-btn" data-category="places-countries">Orte & Länder</button>
+                <button class="category-btn" data-category="nationalities">Nationalitäten & Sprachen</button>
             </div>
         </div>
 
         <div class="grammar-tip" id="grammar-tip">
             <div class="grammar-tip-header" onclick="toggleGrammarTip()">
                 <h3>Grammatik-Tipp</h3>
-                <span class="grammar-tip-toggle">▼</span>
+                <span class="grammar-tip-toggle">&#9660;</span>
             </div>
             <div class="grammar-tip-content" id="grammar-tip-content">
                 <ul>
-                    <li><code>can</code> = können (Fähigkeit/Möglichkeit)</li>
-                    <li><code>can't</code> / <code>cannot</code> = nicht können</li>
-                    <li>Frage: <code>Can</code> + Person + Verb? (Can you swim?)</li>
-                    <li>Antwort: Yes, I can. / No, I can't.</li>
-                    <li>Wortstellung: Person + <code>can</code> + Verb (I can play)</li>
+                    <li>Im Englischen schreibt man <strong>nicht</strong> alle Nomen groß &ndash; nur bestimmte Wörter!</li>
+                    <li>Immer groß: <code>I</code> (ich), Satzanfang, Namen, Tage, Monate, Länder, Nationalitäten</li>
+                    <li>Im Deutschen: alle Nomen groß. Im Englischen: nur Eigennamen und besondere Wörter!</li>
                 </ul>
             </div>
         </div>
 
         <div class="quiz-card" id="quiz-card">
-            <div class="question-type" id="question-type">Übersetze ins Englische</div>
+            <div class="question-type" id="question-type">Großschreibung</div>
             <div class="question" id="question">Klicke auf "Nächste Frage" um zu starten!</div>
 
             <div id="input-area">
@@ -429,8 +439,8 @@
     <script src="common.js"></script>
     <script>
         initCommon({
-            accentColor1: '#667eea',
-            accentColor2: '#764ba2',
+            accentColor1: '#c0392b',
+            accentColor2: '#e74c3c',
             onRestart: function() {
                 correctlyAnswered = new Set();
                 score = { correct: 0, wrong: 0, total: 0 };
@@ -442,63 +452,57 @@
 
         // Question database
         const questions = {
-            statements: [
-                // German to English - Statements
-                { type: 'translate', from: 'de', german: 'Ich kann schwimmen.', english: 'I can swim.', hint: 'Person + can + Verb' },
-                { type: 'translate', from: 'de', german: 'Sie kann gut singen.', english: 'She can sing well.', hint: 'well = gut (kommt am Ende)' },
-                { type: 'translate', from: 'de', german: 'Wir können Englisch sprechen.', english: 'We can speak English.', hint: 'Person + can + Verb + Objekt' },
-                { type: 'translate', from: 'de', german: 'Er kann schnell laufen.', english: 'He can run fast.', hint: 'fast = schnell' },
-                { type: 'translate', from: 'de', german: 'Sie können Gitarre spielen.', english: 'They can play the guitar.', hint: 'Instrumente mit "the"!' },
-                { type: 'translate', from: 'de', german: 'Mein Bruder kann kochen.', english: 'My brother can cook.', hint: 'My brother + can + Verb' },
-                // English to German - Statements
-                { type: 'translate', from: 'en', german: 'Ich kann Fahrrad fahren.', english: 'I can ride a bike.', hint: 'ride a bike = Fahrrad fahren' },
-                { type: 'translate', from: 'en', german: 'Sie kann tanzen.', english: 'She can dance.', hint: 'dance = tanzen' },
-                { type: 'translate', from: 'en', german: 'Der Hund kann Tricks machen.', english: 'The dog can do tricks.', hint: 'do tricks = Tricks machen' },
+            basics: [
+                { type: 'choice', question: 'Welcher Satz ist richtig?', options: ['I am happy.', 'i am happy.', 'i Am happy.', 'i am Happy.'], correct: 0, hint: '"I" (ich) wird im Englischen IMMER großgeschrieben.' },
+                { type: 'choice', question: 'Welches Wort wird im Englischen IMMER großgeschrieben?', options: ['I (ich)', 'my (mein)', 'he (er)', 'we (wir)'], correct: 0, hint: 'Nur "I" wird immer großgeschrieben, nicht andere Pronomen.' },
+                { type: 'choice', question: 'Welcher Satz ist richtig?', options: ['My name is Tom.', 'My name is tom.', 'My Name is Tom.', 'my name is Tom.'], correct: 0, hint: 'Namen werden großgeschrieben. "name" ist kein Eigenname.' },
+                { type: 'choice', question: 'Welcher Satz ist richtig?', options: ['Can I help you?', 'Can i help you?', 'can I help you?', 'can i help you?'], correct: 0, hint: 'Satzanfang und "I" werden großgeschrieben.' },
+                { type: 'fill', sentence: '___ am ten years old.', answer: 'I', caseSensitive: true, hint: '"I" (ich) wird im Englischen immer großgeschrieben.' },
+                { type: 'fill', sentence: 'Yes, ___ can swim very well.', answer: 'I', caseSensitive: true, hint: '"I" wird auch mitten im Satz großgeschrieben.' },
+                { type: 'correct', incorrect: 'i am ten years old.', correct: 'I am ten years old.', hint: '"I" und Satzanfang werden großgeschrieben.' },
+                { type: 'correct', incorrect: 'can i help you?', correct: 'Can I help you?', hint: 'Satzanfang und "I" werden großgeschrieben.' },
+                { type: 'correct', incorrect: 'my name is tom.', correct: 'My name is Tom.', hint: 'Satzanfang und Namen werden großgeschrieben.' },
+                { type: 'correct', incorrect: 'yes, i can swim very well.', correct: 'Yes, I can swim very well.', hint: 'Satzanfang und "I" werden großgeschrieben.' },
+                { type: 'correct', incorrect: 'my friend anna plays tennis.', correct: 'My friend Anna plays tennis.', hint: 'Satzanfang und Namen groß, aber "friend" und "tennis" klein.' },
             ],
-            questions: [
-                // Question formation
-                { type: 'translate', from: 'de', german: 'Kannst du schwimmen?', english: 'Can you swim?', hint: 'Frage: Can + Person + Verb?' },
-                { type: 'translate', from: 'de', german: 'Kann sie Klavier spielen?', english: 'Can she play the piano?', hint: 'Instrumente mit "the"!' },
-                { type: 'translate', from: 'de', german: 'Können wir hier parken?', english: 'Can we park here?', hint: 'here = hier' },
-                { type: 'translate', from: 'de', german: 'Kann er Deutsch sprechen?', english: 'Can he speak German?', hint: 'Sprachen ohne Artikel' },
-                { type: 'translate', from: 'en', german: 'Kannst du mir helfen?', english: 'Can you help me?', hint: 'help me = mir helfen' },
-                { type: 'translate', from: 'en', german: 'Kann ich das Fenster öffnen?', english: 'Can I open the window?', hint: 'open = öffnen' },
-                // Multiple choice for question formation
-                { type: 'choice', question: 'Wie fragt man "Kannst du kochen?"', options: ['Can you cook?', 'You can cook?', 'Do you can cook?', 'Can cook you?'], correct: 0, hint: 'Frage: Can + Person + Verb?' },
-                { type: 'choice', question: 'Wähle die richtige Frage für "Kann er laufen?"', options: ['Can he run?', 'He can run?', 'Does he can run?', 'Can run he?'], correct: 0, hint: 'Bei Fragen steht "can" VOR der Person' },
+            'days-months': [
+                { type: 'choice', question: 'Welche Schreibweise ist richtig?', options: ['Monday', 'monday', 'MONDAY', 'monDay'], correct: 0, hint: 'Wochentage werden im Englischen immer großgeschrieben.' },
+                { type: 'choice', question: 'Welche Schreibweise ist richtig?', options: ['January', 'january', 'JANUARY', 'janUary'], correct: 0, hint: 'Monate werden im Englischen immer großgeschrieben.' },
+                { type: 'choice', question: 'Welcher Satz ist richtig?', options: ['We have English on Tuesday.', 'We have english on tuesday.', 'We have English on tuesday.', 'We have english on Tuesday.'], correct: 0, hint: 'Wochentage und Sprachen werden großgeschrieben.' },
+                { type: 'correct', incorrect: 'my birthday is in march.', correct: 'My birthday is in March.', hint: 'Satzanfang und Monate werden großgeschrieben.' },
+                { type: 'correct', incorrect: 'we have english on tuesday.', correct: 'We have English on Tuesday.', hint: 'Satzanfang, Sprachen und Wochentage werden großgeschrieben.' },
+                { type: 'correct', incorrect: 'school starts in september.', correct: 'School starts in September.', hint: 'Satzanfang und Monate werden großgeschrieben.' },
+                { type: 'correct', incorrect: 'we have PE on wednesday.', correct: 'We have PE on Wednesday.', hint: 'Satzanfang und Wochentage werden großgeschrieben.' },
+                { type: 'correct', incorrect: 'in june we have summer holidays.', correct: 'In June we have summer holidays.', hint: 'Satzanfang und Monate groß, aber "summer holidays" klein.' },
+                { type: 'correct', incorrect: 'i like monday and friday.', correct: 'I like Monday and Friday.', hint: '"I" und Wochentage werden großgeschrieben.' },
+                { type: 'correct', incorrect: 'on saturday i play football.', correct: 'On Saturday I play football.', hint: 'Satzanfang, Wochentage und "I" werden großgeschrieben.' },
             ],
-            answers: [
-                // Short answers
-                { type: 'choice', question: 'Can you swim? - Yes, ...', options: ['I can', 'I can swim', 'I do', 'I am'], correct: 0, hint: 'Kurze Antwort: Yes, + Person + can' },
-                { type: 'choice', question: 'Can she dance? - No, ...', options: ["she can't", "she can not dance", "she doesn't", "she isn't"], correct: 0, hint: "Kurze Antwort: No, + Person + can't" },
-                { type: 'choice', question: 'Can they play football? - Yes, ...', options: ['they can', 'they can play', 'they do', 'they are'], correct: 0, hint: 'Kurze Antwort ohne Verb am Ende!' },
-                { type: 'translate', from: 'de', german: 'Ja, ich kann.', english: 'Yes, I can.', hint: 'Kurze Antwort' },
-                { type: 'translate', from: 'de', german: 'Nein, sie kann nicht.', english: "No, she can't.", hint: "can't für Verneinung" },
-                { type: 'translate', from: 'de', german: 'Ja, wir können.', english: 'Yes, we can.', hint: 'Kurze Antwort' },
-                { type: 'fill', sentence: 'Can he swim? - No, he ___.', answer: "can't", hint: 'Verneinung von can' },
-                { type: 'fill', sentence: 'Can you help me? - Yes, I ___.', answer: 'can', hint: 'Bejahende kurze Antwort' },
+            'places-countries': [
+                { type: 'choice', question: 'Welche Schreibweise ist richtig?', options: ['London', 'london', 'LONDON', 'lonDon'], correct: 0, hint: 'Städtenamen werden immer großgeschrieben.' },
+                { type: 'choice', question: 'Welche Schreibweise ist richtig?', options: ['Germany', 'germany', 'GERMANY', 'gerMany'], correct: 0, hint: 'Ländernamen werden immer großgeschrieben.' },
+                { type: 'choice', question: 'Welcher Satz ist richtig?', options: ['She lives in Paris.', 'She lives in paris.', 'She Lives in Paris.', 'she lives in Paris.'], correct: 0, hint: 'Städtenamen sind immer großgeschrieben.' },
+                { type: 'choice', question: 'Welcher Satz ist richtig?', options: ['We went to the United States.', 'We went to the united states.', 'We went to the United states.', 'We Went To The United States.'], correct: 0, hint: 'Ländernamen werden großgeschrieben.' },
+                { type: 'correct', incorrect: 'she lives in paris.', correct: 'She lives in Paris.', hint: 'Satzanfang und Städtenamen werden großgeschrieben.' },
+                { type: 'correct', incorrect: 'i come from germany.', correct: 'I come from Germany.', hint: '"I" und Ländernamen werden großgeschrieben.' },
+                { type: 'correct', incorrect: 'berlin is the capital of germany.', correct: 'Berlin is the capital of Germany.', hint: 'Satzanfang, Städte- und Ländernamen werden großgeschrieben.' },
+                { type: 'correct', incorrect: 'my uncle lives in new york.', correct: 'My uncle lives in New York.', hint: 'Satzanfang und Städtenamen groß. "uncle" ist kein Eigenname.' },
+                { type: 'correct', incorrect: 'they are going to spain for holiday.', correct: 'They are going to Spain for holiday.', hint: 'Satzanfang und Ländernamen werden großgeschrieben.' },
+                { type: 'correct', incorrect: 'london is a big city in england.', correct: 'London is a big city in England.', hint: 'Satzanfang, Städte- und Ländernamen werden großgeschrieben.' },
+                { type: 'correct', incorrect: 'paris is the capital of france.', correct: 'Paris is the capital of France.', hint: 'Satzanfang, Städte- und Ländernamen werden großgeschrieben.' },
+                { type: 'correct', incorrect: 'we flew to italy last summer.', correct: 'We flew to Italy last summer.', hint: 'Satzanfang und Ländernamen groß, aber "summer" klein.' },
             ],
-            negation: [
-                // Can't / Cannot
-                { type: 'translate', from: 'de', german: 'Ich kann nicht schwimmen.', english: "I can't swim.", altEnglish: 'I cannot swim.', hint: "can't = cannot = nicht können" },
-                { type: 'translate', from: 'de', german: 'Sie kann nicht kochen.', english: "She can't cook.", altEnglish: 'She cannot cook.', hint: 'Person + can\'t + Verb' },
-                { type: 'translate', from: 'de', german: 'Wir können heute nicht kommen.', english: "We can't come today.", hint: 'today = heute' },
-                { type: 'translate', from: 'de', german: 'Er kann das nicht verstehen.', english: "He can't understand that.", hint: 'understand = verstehen' },
-                { type: 'translate', from: 'en', german: 'Ich kann nicht singen.', english: "I can't sing.", hint: 'sing = singen' },
-                { type: 'translate', from: 'en', german: 'Sie können nicht bleiben.', english: "They can't stay.", hint: 'stay = bleiben' },
-                { type: 'choice', question: "Wähle die richtige Verneinung: I ___ swim.", options: ["can't", "don't can", "not can", "can not to"], correct: 0, hint: "can + not = can't oder cannot" },
-                { type: 'fill', sentence: 'She ___ play tennis. (nicht können)', answer: "can't", hint: 'Verneinung' },
-            ],
-            'word-order': [
-                // Word order exercises
-                { type: 'order', words: ['I', 'can', 'swim', 'well'], correct: 'I can swim well.', hint: 'Person + can + Verb + Adverb' },
-                { type: 'order', words: ['Can', 'you', 'help', 'me', '?'], correct: 'Can you help me?', hint: 'Frage: Can + Person + Verb + Objekt?' },
-                { type: 'order', words: ['She', "can't", 'come', 'today'], correct: "She can't come today.", hint: "Person + can't + Verb + Zeit" },
-                { type: 'order', words: ['Can', 'he', 'play', 'the', 'guitar', '?'], correct: 'Can he play the guitar?', hint: 'Instrumente mit "the"' },
-                { type: 'order', words: ['We', 'can', 'speak', 'English'], correct: 'We can speak English.', hint: 'Person + can + Verb + Sprache' },
-                { type: 'order', words: ['My', 'sister', 'can', 'dance'], correct: 'My sister can dance.', hint: 'Subjekt + can + Verb' },
-                { type: 'choice', question: 'Richtige Wortstellung?', options: ['He can run fast.', 'He can fast run.', 'Can he fast run.', 'Fast he can run.'], correct: 0, hint: 'Adverb am Ende!' },
-                { type: 'choice', question: 'Richtige Wortstellung für eine Frage?', options: ['Can they swim?', 'They can swim?', 'Swim can they?', 'Can swim they?'], correct: 0, hint: 'Frage: Can + Person + Verb?' },
+            nationalities: [
+                { type: 'choice', question: 'Welche Schreibweise ist richtig?', options: ['English', 'english', 'ENGLISH', 'engLish'], correct: 0, hint: 'Sprachen werden im Englischen immer großgeschrieben.' },
+                { type: 'choice', question: 'Welcher Satz ist richtig?', options: ['She speaks French.', 'She speaks french.', 'She Speaks French.', 'she speaks French.'], correct: 0, hint: 'Sprachen werden immer großgeschrieben: French' },
+                { type: 'choice', question: 'Welcher Satz ist richtig?', options: ['He is German.', 'He is german.', 'He Is German.', 'he is German.'], correct: 0, hint: 'Nationalitäten werden im Englischen großgeschrieben.' },
+                { type: 'choice', question: 'Was ist der Unterschied zwischen Deutsch und Englisch bei Adjektiven der Nationalität?', options: ['Im Englischen groß, im Deutschen klein', 'Im Deutschen groß, im Englischen klein', 'In beiden Sprachen groß', 'In beiden Sprachen klein'], correct: 0, hint: 'Deutsche Adjektive: klein (deutsch, englisch). Englische Adjektive: groß (German, English).' },
+                { type: 'correct', incorrect: 'she speaks french.', correct: 'She speaks French.', hint: 'Satzanfang und Sprachen werden großgeschrieben.' },
+                { type: 'correct', incorrect: 'he is german.', correct: 'He is German.', hint: 'Satzanfang und Nationalitäten werden großgeschrieben.' },
+                { type: 'correct', incorrect: 'we learn english at school.', correct: 'We learn English at school.', hint: 'Satzanfang und Sprachen werden großgeschrieben.' },
+                { type: 'correct', incorrect: 'my teacher is american.', correct: 'My teacher is American.', hint: 'Satzanfang und Nationalitäten werden großgeschrieben.' },
+                { type: 'correct', incorrect: 'do you speak spanish?', correct: 'Do you speak Spanish?', hint: 'Satzanfang und Sprachen werden großgeschrieben.' },
+                { type: 'correct', incorrect: 'we learn english and french.', correct: 'We learn English and French.', hint: 'Satzanfang und Sprachen werden großgeschrieben.' },
+                { type: 'correct', incorrect: 'the british museum is in london.', correct: 'The British Museum is in London.', hint: 'Satzanfang, Nationalitäten und Eigennamen werden großgeschrieben.' },
             ]
         };
 
@@ -527,36 +531,32 @@
         function updateGrammarTip() {
             const tips = {
                 all: `<ul>
-                        <li><code>can</code> = können (Fähigkeit/Möglichkeit)</li>
-                        <li><code>can't</code> / <code>cannot</code> = nicht können</li>
-                        <li>Frage: <code>Can</code> + Person + Verb?</li>
-                        <li>Antwort: Yes, I can. / No, I can't.</li>
+                        <li>Im Englischen schreibt man <strong>nicht</strong> alle Nomen groß &ndash; nur bestimmte Wörter!</li>
+                        <li>Immer groß: <code>I</code> (ich), Satzanfang, Namen, Tage, Monate, Länder, Nationalitäten, Sprachen</li>
+                        <li>Im Deutschen: alle Nomen groß. Im Englischen: nur Eigennamen und besondere Wörter!</li>
                     </ul>`,
-                statements: `<ul>
-                        <li>Wortstellung: Person + <code>can</code> + Verb</li>
-                        <li>Beispiel: I <code>can</code> swim.</li>
-                        <li>Kein "to" nach can! (I can swim, NICHT: I can to swim)</li>
+                basics: `<ul>
+                        <li><code>I</code> (ich) wird <strong>immer</strong> großgeschrieben, auch mitten im Satz.</li>
+                        <li>Der <strong>Satzanfang</strong> wird immer großgeschrieben.</li>
+                        <li><strong>Eigennamen</strong> (Namen von Personen) werden großgeschrieben: <code>Tom</code>, <code>Lisa</code>, <code>Anna</code></li>
+                        <li>Achtung: "my friend" ist kein Eigenname &rarr; klein!</li>
                     </ul>`,
-                questions: `<ul>
-                        <li>Wortstellung: <code>Can</code> + Person + Verb?</li>
-                        <li>Beispiel: <code>Can</code> you swim?</li>
-                        <li>Kein "do/does" nötig!</li>
+                'days-months': `<ul>
+                        <li><strong>Wochentage</strong> werden immer großgeschrieben: <code>Monday</code>, <code>Tuesday</code>, <code>Wednesday</code> ...</li>
+                        <li><strong>Monate</strong> werden immer großgeschrieben: <code>January</code>, <code>February</code>, <code>March</code> ...</li>
+                        <li>Aber: Jahreszeiten werden <strong>nicht</strong> großgeschrieben: <code>summer</code>, <code>winter</code></li>
                     </ul>`,
-                answers: `<ul>
-                        <li>Ja: Yes, + Person + <code>can</code>.</li>
-                        <li>Nein: No, + Person + <code>can't</code>.</li>
-                        <li>Das Verb wird NICHT wiederholt!</li>
+                'places-countries': `<ul>
+                        <li><strong>Städte</strong> werden immer großgeschrieben: <code>London</code>, <code>Paris</code>, <code>Berlin</code></li>
+                        <li><strong>Länder</strong> werden immer großgeschrieben: <code>Germany</code>, <code>France</code>, <code>Spain</code></li>
+                        <li><strong>Kontinente</strong> werden immer großgeschrieben: <code>Europe</code>, <code>Africa</code>, <code>Asia</code></li>
+                        <li>Achtung: "city", "country", "capital" sind keine Eigennamen &rarr; klein!</li>
                     </ul>`,
-                negation: `<ul>
-                        <li><code>can't</code> = <code>cannot</code> (zusammen!)</li>
-                        <li>Wortstellung: Person + <code>can't</code> + Verb</li>
-                        <li>Beispiel: I <code>can't</code> swim.</li>
-                    </ul>`,
-                'word-order': `<ul>
-                        <li>Aussage: Person + can + Verb + Rest</li>
-                        <li>Frage: Can + Person + Verb + Rest?</li>
-                        <li>Verneinung: Person + can't + Verb + Rest</li>
-                        <li>Adverbien (well, fast) am Ende!</li>
+                nationalities: `<ul>
+                        <li><strong>Sprachen</strong> werden immer großgeschrieben: <code>English</code>, <code>French</code>, <code>German</code></li>
+                        <li><strong>Nationalitäten</strong> werden immer großgeschrieben: <code>British</code>, <code>American</code>, <code>German</code></li>
+                        <li>Auf Deutsch klein: "englisch", "französisch". Auf Englisch groß: <code>English</code>, <code>French</code>!</li>
+                        <li>Das ist ein wichtiger Unterschied zwischen Deutsch und Englisch!</li>
                     </ul>`
             };
             document.getElementById('grammar-tip-content').innerHTML = tips[currentCategory];
@@ -593,15 +593,11 @@
             const questionEl = document.getElementById('question');
             const typeEl = document.getElementById('question-type');
 
-            if (currentQuestion.type === 'translate') {
-                if (currentQuestion.from === 'de') {
-                    typeEl.textContent = 'Übersetze ins Englische';
-                    questionEl.innerHTML = `<span class="german-text">${currentQuestion.german}</span>`;
-                } else {
-                    typeEl.textContent = 'Übersetze ins Deutsche';
-                    questionEl.innerHTML = `<span class="english-text">${currentQuestion.english}</span>`;
-                }
-                inputArea.innerHTML = `<input type="text" class="answer-input" id="answer-input" placeholder="Deine Übersetzung..." autocomplete="off">`;
+            if (currentQuestion.type === 'correct') {
+                typeEl.textContent = 'Satz korrigieren';
+                questionEl.innerHTML = 'Schreibe den Satz mit der richtigen Großschreibung:';
+                inputArea.innerHTML = `<div class="incorrect-sentence">${currentQuestion.incorrect}</div>
+                    <input type="text" class="answer-input" id="answer-input" placeholder="Satz mit richtiger Großschreibung..." autocomplete="off">`;
                 document.getElementById('answer-input').addEventListener('keypress', (e) => {
                     if (e.key === 'Enter') checkAnswer();
                 });
@@ -609,7 +605,6 @@
             } else if (currentQuestion.type === 'choice') {
                 typeEl.textContent = 'Multiple Choice';
                 questionEl.textContent = currentQuestion.question;
-                // Shuffle options while tracking correct answer
                 const optionsWithIndex = currentQuestion.options.map((opt, i) => ({ text: opt, originalIndex: i }));
                 const shuffledOptions = shuffleArray(optionsWithIndex);
                 let optionsHtml = '<div class="answer-options">';
@@ -620,26 +615,12 @@
                 inputArea.innerHTML = optionsHtml;
             } else if (currentQuestion.type === 'fill') {
                 typeEl.textContent = 'Lückentext';
-                questionEl.innerHTML = currentQuestion.sentence.replace('___', '<span style="border-bottom: 2px solid #667eea; padding: 0 20px;">___</span>');
+                questionEl.innerHTML = currentQuestion.sentence.replace('___', '<span style="border-bottom: 2px solid #c0392b; padding: 0 20px;">___</span>');
                 inputArea.innerHTML = `<input type="text" class="answer-input" id="answer-input" placeholder="Fülle die Lücke..." autocomplete="off">`;
                 document.getElementById('answer-input').addEventListener('keypress', (e) => {
                     if (e.key === 'Enter') checkAnswer();
                 });
                 document.getElementById('answer-input').focus();
-            } else if (currentQuestion.type === 'order') {
-                typeEl.textContent = 'Wörter ordnen';
-                questionEl.textContent = 'Bringe die Wörter in die richtige Reihenfolge:';
-                const shuffled = shuffleArray(currentQuestion.words);
-                let wordsHtml = '<div class="answer-options" style="flex-direction: row; flex-wrap: wrap;">';
-                shuffled.forEach((word, i) => {
-                    wordsHtml += `<button class="option-btn" style="flex: 0 0 auto;" onclick="addWord(this)">${word}</button>`;
-                });
-                wordsHtml += '</div>';
-                wordsHtml += '<input type="text" class="answer-input" id="answer-input" placeholder="Klicke auf die Wörter oder tippe..." autocomplete="off">';
-                inputArea.innerHTML = wordsHtml;
-                document.getElementById('answer-input').addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') checkAnswer();
-                });
             }
         }
 
@@ -648,16 +629,12 @@
             btn.classList.add('selected');
         }
 
-        function addWord(btn) {
-            const input = document.getElementById('answer-input');
-            const word = btn.textContent;
-            if (input.value) {
-                input.value += ' ' + word;
-            } else {
-                input.value = word;
-            }
-            btn.style.opacity = '0.5';
-            btn.disabled = true;
+        function normalizeCaseSensitive(str) {
+            return str
+                .replace(/[.,!?]/g, '')
+                .replace(/\s+/g, ' ')
+                .replace(/[\u2019]/g, "'")
+                .trim();
         }
 
         function checkAnswer() {
@@ -665,18 +642,10 @@
             let userAnswer = '';
             let correctAnswer = '';
 
-            if (currentQuestion.type === 'translate') {
+            if (currentQuestion.type === 'correct') {
                 userAnswer = document.getElementById('answer-input').value;
-                if (currentQuestion.from === 'de') {
-                    correctAnswer = currentQuestion.english;
-                    isCorrect = normalizeAnswer(userAnswer) === normalizeAnswer(currentQuestion.english);
-                    if (!isCorrect && currentQuestion.altEnglish) {
-                        isCorrect = normalizeAnswer(userAnswer) === normalizeAnswer(currentQuestion.altEnglish);
-                    }
-                } else {
-                    correctAnswer = currentQuestion.german;
-                    isCorrect = normalizeAnswer(userAnswer) === normalizeAnswer(currentQuestion.german);
-                }
+                correctAnswer = currentQuestion.correct;
+                isCorrect = normalizeCaseSensitive(userAnswer) === normalizeCaseSensitive(currentQuestion.correct);
             } else if (currentQuestion.type === 'choice') {
                 const selected = document.querySelector('.option-btn.selected');
                 if (!selected) {
@@ -687,7 +656,6 @@
                 correctAnswer = currentQuestion.options[currentQuestion.correct];
                 isCorrect = userAnswer === currentQuestion.correct;
 
-                // Show correct/wrong on buttons
                 document.querySelectorAll('.option-btn').forEach(btn => {
                     const idx = parseInt(btn.dataset.originalIndex);
                     if (idx === currentQuestion.correct) {
@@ -700,14 +668,11 @@
             } else if (currentQuestion.type === 'fill') {
                 userAnswer = document.getElementById('answer-input').value;
                 correctAnswer = currentQuestion.answer;
-                isCorrect = normalizeAnswer(userAnswer) === normalizeAnswer(currentQuestion.answer);
-            } else if (currentQuestion.type === 'order') {
-                userAnswer = document.getElementById('answer-input').value;
-                correctAnswer = currentQuestion.correct;
-                // Allow with or without final punctuation
-                const normalizedUser = normalizeAnswer(userAnswer);
-                const normalizedCorrect = normalizeAnswer(currentQuestion.correct);
-                isCorrect = normalizedUser === normalizedCorrect;
+                if (currentQuestion.caseSensitive) {
+                    isCorrect = normalizeCaseSensitive(userAnswer) === normalizeCaseSensitive(currentQuestion.answer);
+                } else {
+                    isCorrect = normalizeAnswer(userAnswer) === normalizeAnswer(currentQuestion.answer);
+                }
             }
 
             if (isCorrect) {
@@ -737,7 +702,6 @@
             const input = document.getElementById('answer-input');
             if (input) input.disabled = true;
 
-            // Check if all questions in category are complete
             const allQuestions = getQuestions();
             const remaining = allQuestions.filter(q => !correctlyAnswered.has(JSON.stringify(q)));
             if (remaining.length === 0) {
@@ -750,14 +714,12 @@
 
         function skipQuestion() {
             let correctAnswer = '';
-            if (currentQuestion.type === 'translate') {
-                correctAnswer = currentQuestion.from === 'de' ? currentQuestion.english : currentQuestion.german;
+            if (currentQuestion.type === 'correct') {
+                correctAnswer = currentQuestion.correct;
             } else if (currentQuestion.type === 'choice') {
                 correctAnswer = currentQuestion.options[currentQuestion.correct];
             } else if (currentQuestion.type === 'fill') {
                 correctAnswer = currentQuestion.answer;
-            } else if (currentQuestion.type === 'order') {
-                correctAnswer = currentQuestion.correct;
             }
 
             showFeedback(false, `Übersprungen. Die Antwort wäre: <strong>${correctAnswer}</strong><br><br>Tipp: ${currentQuestion.hint || 'Keine Tipps verfügbar'}`);

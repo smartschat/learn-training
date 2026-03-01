@@ -283,23 +283,6 @@
             font-weight: bold;
         }
 
-        .celebration {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 4rem;
-            animation: pop 0.5s ease;
-            pointer-events: none;
-            z-index: 1000;
-        }
-
-        @keyframes pop {
-            0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
-            50% { transform: translate(-50%, -50%) scale(1.2); }
-            100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
-        }
-
         .grammar-tip {
             background: linear-gradient(135deg, #fff5f6 0%, #e9ecef 100%);
             border-radius: 15px;
@@ -507,7 +490,20 @@
         </div>
     </div>
 
+    <script src="common.js"></script>
     <script>
+        initCommon({
+            accentColor1: '#f5576c',
+            accentColor2: '#f093fb',
+            onRestart: function() {
+                correctlyAnswered = new Set();
+                score = { correct: 0, wrong: 0, total: 0 };
+                streak = 0;
+                updateScore(score, streak, correctlyAnswered, getQuestions);
+                nextQuestion();
+            }
+        });
+
         // Question database
         const questions = {
             basic: [
@@ -659,7 +655,7 @@
         let currentCategory = 'all';
         let score = { correct: 0, wrong: 0, total: 0 };
         let streak = 0;
-        let answeredQuestions = [];
+        let correctlyAnswered = new Set();
 
         // Category button handling
         document.querySelectorAll('.category-btn').forEach(btn => {
@@ -667,7 +663,7 @@
                 document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 currentCategory = btn.dataset.category;
-                answeredQuestions = [];
+                correctlyAnswered = new Set();
                 updateGrammarTip();
                 nextQuestion();
             });
@@ -738,15 +734,6 @@
             document.getElementById('grammar-tip').classList.toggle('collapsed');
         }
 
-        function shuffleArray(array) {
-            const shuffled = [...array];
-            for (let i = shuffled.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-            }
-            return shuffled;
-        }
-
         function getQuestions() {
             if (currentCategory === 'all') {
                 return Object.values(questions).flat();
@@ -756,16 +743,14 @@
 
         function nextQuestion() {
             const allQuestions = getQuestions();
-
-            let available = allQuestions.filter(q => !answeredQuestions.includes(JSON.stringify(q)));
+            let available = allQuestions.filter(q => !correctlyAnswered.has(JSON.stringify(q)));
 
             if (available.length === 0) {
-                answeredQuestions = [];
-                available = allQuestions;
+                showCompletion(allQuestions.length, score);
+                return;
             }
 
             currentQuestion = available[Math.floor(Math.random() * available.length)];
-            answeredQuestions.push(JSON.stringify(currentQuestion));
 
             displayQuestion();
 
@@ -851,13 +836,6 @@
             btn.classList.add('selected');
         }
 
-        function normalizeAnswer(str) {
-            return str.toLowerCase()
-                .replace(/[.,!?]/g, '')
-                .replace(/\s+/g, ' ')
-                .trim();
-        }
-
         function checkAnswer() {
             let isCorrect = false;
             let userAnswer = '';
@@ -931,6 +909,7 @@
             if (isCorrect) {
                 score.correct++;
                 streak++;
+                correctlyAnswered.add(JSON.stringify(currentQuestion));
                 showFeedback(true, 'Super! Das ist richtig!');
                 if (streak > 0 && streak % 5 === 0) {
                     celebrate();
@@ -948,14 +927,23 @@
             }
 
             score.total++;
-            updateScore();
+            updateScore(score, streak, correctlyAnswered, getQuestions);
 
             document.getElementById('btn-check').style.display = 'none';
-            document.getElementById('btn-next').style.display = 'block';
             document.getElementById('btn-skip').style.display = 'none';
 
             const input = document.getElementById('answer-input');
             if (input) input.disabled = true;
+
+            // Check if all questions in category are complete
+            const allQuestions = getQuestions();
+            const remaining = allQuestions.filter(q => !correctlyAnswered.has(JSON.stringify(q)));
+            if (remaining.length === 0) {
+                document.getElementById('btn-next').style.display = 'none';
+                setTimeout(() => showCompletion(allQuestions.length, score), 800);
+            } else {
+                document.getElementById('btn-next').style.display = 'block';
+            }
         }
 
         function skipQuestion() {
@@ -982,7 +970,7 @@
             showFeedback(false, `Übersprungen. Die Antwort wäre: <strong>${correctAnswer}</strong><br><br>Tipp: ${currentQuestion.hint || 'Keine Tipps verfügbar'}`);
 
             streak = 0;
-            updateScore();
+            updateScore(score, streak, correctlyAnswered, getQuestions);
 
             document.getElementById('btn-check').style.display = 'none';
             document.getElementById('btn-next').style.display = 'block';
@@ -990,38 +978,6 @@
 
             const input = document.getElementById('answer-input');
             if (input) input.disabled = true;
-        }
-
-        function showFeedback(correct, message) {
-            const feedback = document.getElementById('feedback');
-            feedback.className = 'feedback show ' + (correct ? 'correct' : 'wrong');
-            feedback.innerHTML = message;
-        }
-
-        function updateScore() {
-            document.getElementById('correct-score').textContent = score.correct;
-            document.getElementById('wrong-score').textContent = score.wrong;
-            document.getElementById('total-questions').textContent = score.total;
-
-            const progress = score.total > 0 ? (score.correct / score.total * 100) : 0;
-            document.getElementById('progress-fill').style.width = progress + '%';
-
-            const streakEl = document.getElementById('streak');
-            if (streak >= 3) {
-                streakEl.textContent = `🔥 ${streak} richtig in Folge!`;
-            } else {
-                streakEl.textContent = '';
-            }
-        }
-
-        function celebrate() {
-            const emojis = ['🎉', '⭐', '🏆', '💪', '🌟'];
-            const emoji = emojis[Math.floor(Math.random() * emojis.length)];
-            const celebration = document.createElement('div');
-            celebration.className = 'celebration';
-            celebration.textContent = emoji;
-            document.body.appendChild(celebration);
-            setTimeout(() => celebration.remove(), 500);
         }
 
         // Start with first question

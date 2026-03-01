@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Can / Can't Practice</title>
+    <title>Adverbs of Frequency</title>
     <style>
         * {
             box-sizing: border-box;
@@ -13,7 +13,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #e67e22 0%, #f39c12 100%);
             min-height: 100vh;
             padding: 20px;
         }
@@ -84,9 +84,9 @@
 
         .category-btn {
             padding: 10px 20px;
-            border: 2px solid #667eea;
+            border: 2px solid #e67e22;
             background: white;
-            color: #667eea;
+            color: #e67e22;
             border-radius: 25px;
             cursor: pointer;
             font-size: 1rem;
@@ -94,7 +94,7 @@
         }
 
         .category-btn:hover, .category-btn.active {
-            background: #667eea;
+            background: #e67e22;
             color: white;
         }
 
@@ -124,7 +124,7 @@
         }
 
         .german-text {
-            color: #667eea;
+            color: #e67e22;
             font-weight: 600;
         }
 
@@ -145,7 +145,7 @@
 
         .answer-input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #e67e22;
         }
 
         .answer-options {
@@ -167,13 +167,13 @@
         }
 
         .option-btn:hover {
-            border-color: #667eea;
-            background: #f8f9ff;
+            border-color: #e67e22;
+            background: #fef9f4;
         }
 
         .option-btn.selected {
-            border-color: #667eea;
-            background: #667eea;
+            border-color: #e67e22;
+            background: #e67e22;
             color: white;
         }
 
@@ -205,12 +205,12 @@
         }
 
         .btn-check {
-            background: #667eea;
+            background: #e67e22;
             color: white;
         }
 
         .btn-check:hover {
-            background: #5a6fd6;
+            background: #d35400;
         }
 
         .btn-next {
@@ -283,7 +283,7 @@
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #667eea, #764ba2);
+            background: linear-gradient(90deg, #e67e22, #f39c12);
             border-radius: 4px;
             transition: width 0.5s ease;
         }
@@ -296,7 +296,7 @@
         }
 
         .grammar-tip {
-            background: linear-gradient(135deg, #f8f9ff 0%, #e9ecef 100%);
+            background: linear-gradient(135deg, #fef9f4 0%, #e9ecef 100%);
             border-radius: 15px;
             margin-bottom: 20px;
             overflow: hidden;
@@ -316,7 +316,7 @@
         }
 
         .grammar-tip h3 {
-            color: #667eea;
+            color: #e67e22;
             margin: 0;
         }
 
@@ -358,7 +358,7 @@
 <body>
     <div class="container">
         <header>
-            <h1>Can / Can't Practice</h1>
+            <h1>Adverbs of Frequency</h1>
             <div class="score-board">
                 <div class="score-item correct">
                     <span>Richtig</span>
@@ -379,32 +379,29 @@
             <h2>Kategorie wählen:</h2>
             <div class="category-buttons">
                 <button class="category-btn active" data-category="all">Alle</button>
-                <button class="category-btn" data-category="statements">Aussagen</button>
-                <button class="category-btn" data-category="questions">Fragen</button>
-                <button class="category-btn" data-category="answers">Antworten</button>
-                <button class="category-btn" data-category="negation">Verneinung</button>
+                <button class="category-btn" data-category="meaning">Bedeutung</button>
                 <button class="category-btn" data-category="word-order">Wortstellung</button>
+                <button class="category-btn" data-category="with-be">Mit "be"</button>
+                <button class="category-btn" data-category="sentences">Sätze bilden</button>
             </div>
         </div>
 
         <div class="grammar-tip" id="grammar-tip">
             <div class="grammar-tip-header" onclick="toggleGrammarTip()">
                 <h3>Grammatik-Tipp</h3>
-                <span class="grammar-tip-toggle">▼</span>
+                <span class="grammar-tip-toggle">&#9660;</span>
             </div>
             <div class="grammar-tip-content" id="grammar-tip-content">
                 <ul>
-                    <li><code>can</code> = können (Fähigkeit/Möglichkeit)</li>
-                    <li><code>can't</code> / <code>cannot</code> = nicht können</li>
-                    <li>Frage: <code>Can</code> + Person + Verb? (Can you swim?)</li>
-                    <li>Antwort: Yes, I can. / No, I can't.</li>
-                    <li>Wortstellung: Person + <code>can</code> + Verb (I can play)</li>
+                    <li><code>never</code> (0%) &ndash; <code>sometimes</code> &ndash; <code>often</code> &ndash; <code>usually</code> &ndash; <code>always</code> (100%)</li>
+                    <li>Regel 1: Subject + <code>adverb</code> + Verb (I <code>always</code> eat breakfast.)</li>
+                    <li>Regel 2: Subject + be + <code>adverb</code> (She <code>is</code> always happy.)</li>
                 </ul>
             </div>
         </div>
 
         <div class="quiz-card" id="quiz-card">
-            <div class="question-type" id="question-type">Übersetze ins Englische</div>
+            <div class="question-type" id="question-type">Bedeutung</div>
             <div class="question" id="question">Klicke auf "Nächste Frage" um zu starten!</div>
 
             <div id="input-area">
@@ -429,8 +426,8 @@
     <script src="common.js"></script>
     <script>
         initCommon({
-            accentColor1: '#667eea',
-            accentColor2: '#764ba2',
+            accentColor1: '#e67e22',
+            accentColor2: '#f39c12',
             onRestart: function() {
                 correctlyAnswered = new Set();
                 score = { correct: 0, wrong: 0, total: 0 };
@@ -442,63 +439,59 @@
 
         // Question database
         const questions = {
-            statements: [
-                // German to English - Statements
-                { type: 'translate', from: 'de', german: 'Ich kann schwimmen.', english: 'I can swim.', hint: 'Person + can + Verb' },
-                { type: 'translate', from: 'de', german: 'Sie kann gut singen.', english: 'She can sing well.', hint: 'well = gut (kommt am Ende)' },
-                { type: 'translate', from: 'de', german: 'Wir können Englisch sprechen.', english: 'We can speak English.', hint: 'Person + can + Verb + Objekt' },
-                { type: 'translate', from: 'de', german: 'Er kann schnell laufen.', english: 'He can run fast.', hint: 'fast = schnell' },
-                { type: 'translate', from: 'de', german: 'Sie können Gitarre spielen.', english: 'They can play the guitar.', hint: 'Instrumente mit "the"!' },
-                { type: 'translate', from: 'de', german: 'Mein Bruder kann kochen.', english: 'My brother can cook.', hint: 'My brother + can + Verb' },
-                // English to German - Statements
-                { type: 'translate', from: 'en', german: 'Ich kann Fahrrad fahren.', english: 'I can ride a bike.', hint: 'ride a bike = Fahrrad fahren' },
-                { type: 'translate', from: 'en', german: 'Sie kann tanzen.', english: 'She can dance.', hint: 'dance = tanzen' },
-                { type: 'translate', from: 'en', german: 'Der Hund kann Tricks machen.', english: 'The dog can do tricks.', hint: 'do tricks = Tricks machen' },
-            ],
-            questions: [
-                // Question formation
-                { type: 'translate', from: 'de', german: 'Kannst du schwimmen?', english: 'Can you swim?', hint: 'Frage: Can + Person + Verb?' },
-                { type: 'translate', from: 'de', german: 'Kann sie Klavier spielen?', english: 'Can she play the piano?', hint: 'Instrumente mit "the"!' },
-                { type: 'translate', from: 'de', german: 'Können wir hier parken?', english: 'Can we park here?', hint: 'here = hier' },
-                { type: 'translate', from: 'de', german: 'Kann er Deutsch sprechen?', english: 'Can he speak German?', hint: 'Sprachen ohne Artikel' },
-                { type: 'translate', from: 'en', german: 'Kannst du mir helfen?', english: 'Can you help me?', hint: 'help me = mir helfen' },
-                { type: 'translate', from: 'en', german: 'Kann ich das Fenster öffnen?', english: 'Can I open the window?', hint: 'open = öffnen' },
-                // Multiple choice for question formation
-                { type: 'choice', question: 'Wie fragt man "Kannst du kochen?"', options: ['Can you cook?', 'You can cook?', 'Do you can cook?', 'Can cook you?'], correct: 0, hint: 'Frage: Can + Person + Verb?' },
-                { type: 'choice', question: 'Wähle die richtige Frage für "Kann er laufen?"', options: ['Can he run?', 'He can run?', 'Does he can run?', 'Can run he?'], correct: 0, hint: 'Bei Fragen steht "can" VOR der Person' },
-            ],
-            answers: [
-                // Short answers
-                { type: 'choice', question: 'Can you swim? - Yes, ...', options: ['I can', 'I can swim', 'I do', 'I am'], correct: 0, hint: 'Kurze Antwort: Yes, + Person + can' },
-                { type: 'choice', question: 'Can she dance? - No, ...', options: ["she can't", "she can not dance", "she doesn't", "she isn't"], correct: 0, hint: "Kurze Antwort: No, + Person + can't" },
-                { type: 'choice', question: 'Can they play football? - Yes, ...', options: ['they can', 'they can play', 'they do', 'they are'], correct: 0, hint: 'Kurze Antwort ohne Verb am Ende!' },
-                { type: 'translate', from: 'de', german: 'Ja, ich kann.', english: 'Yes, I can.', hint: 'Kurze Antwort' },
-                { type: 'translate', from: 'de', german: 'Nein, sie kann nicht.', english: "No, she can't.", hint: "can't für Verneinung" },
-                { type: 'translate', from: 'de', german: 'Ja, wir können.', english: 'Yes, we can.', hint: 'Kurze Antwort' },
-                { type: 'fill', sentence: 'Can he swim? - No, he ___.', answer: "can't", hint: 'Verneinung von can' },
-                { type: 'fill', sentence: 'Can you help me? - Yes, I ___.', answer: 'can', hint: 'Bejahende kurze Antwort' },
-            ],
-            negation: [
-                // Can't / Cannot
-                { type: 'translate', from: 'de', german: 'Ich kann nicht schwimmen.', english: "I can't swim.", altEnglish: 'I cannot swim.', hint: "can't = cannot = nicht können" },
-                { type: 'translate', from: 'de', german: 'Sie kann nicht kochen.', english: "She can't cook.", altEnglish: 'She cannot cook.', hint: 'Person + can\'t + Verb' },
-                { type: 'translate', from: 'de', german: 'Wir können heute nicht kommen.', english: "We can't come today.", hint: 'today = heute' },
-                { type: 'translate', from: 'de', german: 'Er kann das nicht verstehen.', english: "He can't understand that.", hint: 'understand = verstehen' },
-                { type: 'translate', from: 'en', german: 'Ich kann nicht singen.', english: "I can't sing.", hint: 'sing = singen' },
-                { type: 'translate', from: 'en', german: 'Sie können nicht bleiben.', english: "They can't stay.", hint: 'stay = bleiben' },
-                { type: 'choice', question: "Wähle die richtige Verneinung: I ___ swim.", options: ["can't", "don't can", "not can", "can not to"], correct: 0, hint: "can + not = can't oder cannot" },
-                { type: 'fill', sentence: 'She ___ play tennis. (nicht können)', answer: "can't", hint: 'Verneinung' },
+            meaning: [
+                { type: 'choice', question: 'Was bedeutet "always"?', options: ['immer', 'manchmal', 'nie', 'oft'], correct: 0, hint: 'always = 100% der Zeit' },
+                { type: 'choice', question: 'Was bedeutet "never"?', options: ['nie', 'immer', 'gewöhnlich', 'manchmal'], correct: 0, hint: 'never = 0% der Zeit' },
+                { type: 'choice', question: 'Was bedeutet "sometimes"?', options: ['manchmal', 'immer', 'nie', 'gewöhnlich'], correct: 0, hint: 'sometimes = ungefähr 50%' },
+                { type: 'choice', question: 'Was bedeutet "usually"?', options: ['gewöhnlich', 'nie', 'manchmal', 'oft'], correct: 0, hint: 'usually = meistens, ca. 80%' },
+                { type: 'choice', question: 'Was bedeutet "often"?', options: ['oft', 'nie', 'immer', 'manchmal'], correct: 0, hint: 'often = häufig, ca. 70%' },
+                { type: 'choice', question: 'Welches Adverb bedeutet "manchmal"?', options: ['sometimes', 'always', 'never', 'usually'], correct: 0, hint: 'manchmal = ca. 50% der Zeit' },
+                { type: 'choice', question: 'Welches Adverb ist häufiger: "often" oder "sometimes"?', options: ['often', 'sometimes', 'beide gleich', 'keines davon'], correct: 0, hint: 'often (70%) > sometimes (50%)' },
+                { type: 'choice', question: 'Welches Adverb ist häufiger: "usually" oder "often"?', options: ['usually', 'often', 'beide gleich', 'keines davon'], correct: 0, hint: 'usually (80%) > often (70%)' },
+                { type: 'fill', sentence: 'I ___ go to school on Sundays. (0% — nie)', answer: 'never', hint: 'never = nie = 0%' },
+                { type: 'fill', sentence: 'She ___ brushes her teeth in the morning. (100%)', answer: 'always', hint: 'always = immer = 100%' },
             ],
             'word-order': [
-                // Word order exercises
-                { type: 'order', words: ['I', 'can', 'swim', 'well'], correct: 'I can swim well.', hint: 'Person + can + Verb + Adverb' },
-                { type: 'order', words: ['Can', 'you', 'help', 'me', '?'], correct: 'Can you help me?', hint: 'Frage: Can + Person + Verb + Objekt?' },
-                { type: 'order', words: ['She', "can't", 'come', 'today'], correct: "She can't come today.", hint: "Person + can't + Verb + Zeit" },
-                { type: 'order', words: ['Can', 'he', 'play', 'the', 'guitar', '?'], correct: 'Can he play the guitar?', hint: 'Instrumente mit "the"' },
-                { type: 'order', words: ['We', 'can', 'speak', 'English'], correct: 'We can speak English.', hint: 'Person + can + Verb + Sprache' },
-                { type: 'order', words: ['My', 'sister', 'can', 'dance'], correct: 'My sister can dance.', hint: 'Subjekt + can + Verb' },
-                { type: 'choice', question: 'Richtige Wortstellung?', options: ['He can run fast.', 'He can fast run.', 'Can he fast run.', 'Fast he can run.'], correct: 0, hint: 'Adverb am Ende!' },
-                { type: 'choice', question: 'Richtige Wortstellung für eine Frage?', options: ['Can they swim?', 'They can swim?', 'Swim can they?', 'Can swim they?'], correct: 0, hint: 'Frage: Can + Person + Verb?' },
+                { type: 'order', words: ['I', 'always', 'eat', 'breakfast'], correct: 'I always eat breakfast.', hint: 'Subject + Adverb + Verb + Rest' },
+                { type: 'order', words: ['She', 'often', 'plays', 'tennis'], correct: 'She often plays tennis.', hint: 'Subject + Adverb + Verb + Rest' },
+                { type: 'order', words: ['We', 'usually', 'go', 'to', 'school', 'by', 'bus'], correct: 'We usually go to school by bus.', hint: 'Subject + Adverb + Verb + Rest' },
+                { type: 'order', words: ['He', 'never', 'drinks', 'coffee'], correct: 'He never drinks coffee.', hint: 'Subject + Adverb + Verb + Rest' },
+                { type: 'order', words: ['They', 'sometimes', 'watch', 'TV', 'after', 'dinner'], correct: 'They sometimes watch TV after dinner.', hint: 'Subject + Adverb + Verb + Rest' },
+                { type: 'choice', question: 'Wo steht "often" im Satz? "She ___ plays tennis."', options: ['vor "plays" — She often plays tennis.', 'nach "plays" — She plays often tennis.', 'am Ende — She plays tennis often.', 'am Anfang — Often she plays tennis.'], correct: 0, hint: 'Adverb steht VOR dem Verb' },
+                { type: 'choice', question: 'Welcher Satz ist richtig?', options: ['I always do my homework.', 'I do always my homework.', 'Always I do my homework.', 'I do my always homework.'], correct: 0, hint: 'Subject + Adverb + Verb' },
+                { type: 'choice', question: 'Welcher Satz ist richtig?', options: ['They never eat fish.', 'They eat never fish.', 'Never they eat fish.', 'They eat fish never.'], correct: 0, hint: 'Subject + Adverb + Verb' },
+                { type: 'fill', sentence: 'He ___ drinks coffee. (gewöhnlich)', answer: 'usually', hint: 'gewöhnlich = usually, steht VOR dem Verb' },
+                { type: 'fill', sentence: 'We ___ play football on Fridays. (oft)', answer: 'often', hint: 'oft = often, steht VOR dem Verb' },
+                { type: 'translate', from: 'de', german: 'Ich spiele oft Fußball.', english: 'I often play football.', hint: 'Subject + Adverb + Verb + Rest' },
+                { type: 'translate', from: 'de', german: 'Sie macht immer ihre Hausaufgaben.', english: 'She always does her homework.', hint: 'she + always + does (3. Person!)' },
+            ],
+            'with-be': [
+                { type: 'order', words: ['She', 'is', 'always', 'late'], correct: 'She is always late.', hint: 'Subject + be + Adverb + Rest' },
+                { type: 'order', words: ['He', 'is', 'never', 'at', 'home'], correct: 'He is never at home.', hint: 'Subject + be + Adverb + Rest' },
+                { type: 'order', words: ['They', 'are', 'usually', 'happy'], correct: 'They are usually happy.', hint: 'Subject + be + Adverb + Adjektiv' },
+                { type: 'order', words: ['I', 'am', 'always', 'hungry', 'after', 'school'], correct: 'I am always hungry after school.', hint: 'Subject + be + Adverb + Rest' },
+                { type: 'order', words: ['We', 'are', 'sometimes', 'tired'], correct: 'We are sometimes tired.', hint: 'Subject + be + Adverb + Adjektiv' },
+                { type: 'choice', question: 'Welcher Satz ist richtig?', options: ['She is always happy.', 'She always is happy.', 'She happy is always.', 'Always she is happy.'], correct: 0, hint: 'Bei "be": Subject + be + Adverb' },
+                { type: 'choice', question: 'Welcher Satz ist richtig?', options: ['He is often tired.', 'He often is tired.', 'He tired is often.', 'Often he is tired.'], correct: 0, hint: 'Bei "be": Subject + be + Adverb' },
+                { type: 'choice', question: 'Welcher Satz ist richtig?', options: ['The bus is never on time.', 'The bus never is on time.', 'Never the bus is on time.', 'The bus is on time never.'], correct: 0, hint: 'Bei "be": Subject + be + Adverb' },
+                { type: 'translate', from: 'de', german: 'Er ist nie zu Hause.', english: 'He is never at home.', hint: 'Subject + is + never + Rest' },
+                { type: 'translate', from: 'de', german: 'Sie ist immer freundlich.', english: 'She is always friendly.', hint: 'Subject + is + always + Adjektiv' },
+                { type: 'fill', sentence: 'They ___ ___ happy. (sind immer)', answer: 'are always', hint: 'be + Adverb: are + always' },
+                { type: 'fill', sentence: 'I ___ ___ late for school. (bin nie)', answer: 'am never', hint: 'be + Adverb: am + never' },
+            ],
+            sentences: [
+                { type: 'translate', from: 'de', german: 'Ich trinke immer Milch zum Frühstück.', english: 'I always drink milk for breakfast.', hint: 'Subject + Adverb + Verb + Rest' },
+                { type: 'translate', from: 'de', german: 'Wir gehen manchmal ins Kino.', english: 'We sometimes go to the cinema.', hint: 'Subject + Adverb + Verb + Rest' },
+                { type: 'translate', from: 'de', german: 'Er vergisst oft seine Bücher.', english: 'He often forgets his books.', hint: 'Subject + Adverb + Verb (3. Person -s!)' },
+                { type: 'translate', from: 'de', german: 'Sie sind gewöhnlich pünktlich.', english: 'They are usually on time.', hint: 'be-Satz: Subject + are + Adverb + Rest' },
+                { type: 'translate', from: 'en', german: 'Ich lese oft Bücher.', english: 'I often read books.', hint: 'oft = often' },
+                { type: 'translate', from: 'en', german: 'Sie ist nie müde.', english: 'She is never tired.', hint: 'be-Satz: is + never' },
+                { type: 'order', words: ['My', 'dad', 'always', 'reads', 'the', 'newspaper'], correct: 'My dad always reads the newspaper.', hint: 'Subject + Adverb + Verb + Rest' },
+                { type: 'order', words: ['The', 'weather', 'is', 'often', 'cold', 'in', 'winter'], correct: 'The weather is often cold in winter.', hint: 'be-Satz: Subject + is + Adverb + Rest' },
+                { type: 'fill', sentence: 'My mum ___ cooks dinner. (immer)', answer: 'always', hint: 'immer = always, VOR dem Verb' },
+                { type: 'fill', sentence: 'The children are ___ noisy. (manchmal)', answer: 'sometimes', hint: 'be-Satz: are + Adverb' },
+                { type: 'choice', question: 'Wähle den richtigen Satz:', options: ['She usually walks to school.', 'She walks usually to school.', 'Usually she walks to school.', 'She walks to school usually.'], correct: 0, hint: 'Subject + Adverb + Verb + Rest' },
+                { type: 'choice', question: 'Wähle den richtigen Satz:', options: ['The test is always difficult.', 'The test always is difficult.', 'Always the test is difficult.', 'The test difficult is always.'], correct: 0, hint: 'be-Satz: Subject + is + Adverb + Adjektiv' },
             ]
         };
 
@@ -527,36 +520,35 @@
         function updateGrammarTip() {
             const tips = {
                 all: `<ul>
-                        <li><code>can</code> = können (Fähigkeit/Möglichkeit)</li>
-                        <li><code>can't</code> / <code>cannot</code> = nicht können</li>
-                        <li>Frage: <code>Can</code> + Person + Verb?</li>
-                        <li>Antwort: Yes, I can. / No, I can't.</li>
+                        <li><code>never</code> (0%) &ndash; <code>sometimes</code> (50%) &ndash; <code>often</code> (70%) &ndash; <code>usually</code> (80%) &ndash; <code>always</code> (100%)</li>
+                        <li>Regel 1: Subject + <code>Adverb</code> + Verb (I <code>always</code> eat breakfast.)</li>
+                        <li>Regel 2: Subject + be + <code>Adverb</code> (She is <code>always</code> happy.)</li>
                     </ul>`,
-                statements: `<ul>
-                        <li>Wortstellung: Person + <code>can</code> + Verb</li>
-                        <li>Beispiel: I <code>can</code> swim.</li>
-                        <li>Kein "to" nach can! (I can swim, NICHT: I can to swim)</li>
-                    </ul>`,
-                questions: `<ul>
-                        <li>Wortstellung: <code>Can</code> + Person + Verb?</li>
-                        <li>Beispiel: <code>Can</code> you swim?</li>
-                        <li>Kein "do/does" nötig!</li>
-                    </ul>`,
-                answers: `<ul>
-                        <li>Ja: Yes, + Person + <code>can</code>.</li>
-                        <li>Nein: No, + Person + <code>can't</code>.</li>
-                        <li>Das Verb wird NICHT wiederholt!</li>
-                    </ul>`,
-                negation: `<ul>
-                        <li><code>can't</code> = <code>cannot</code> (zusammen!)</li>
-                        <li>Wortstellung: Person + <code>can't</code> + Verb</li>
-                        <li>Beispiel: I <code>can't</code> swim.</li>
+                meaning: `<ul>
+                        <li><code>never</code> = nie (0%)</li>
+                        <li><code>sometimes</code> = manchmal (ca. 50%)</li>
+                        <li><code>often</code> = oft (ca. 70%)</li>
+                        <li><code>usually</code> = gewöhnlich/meistens (ca. 80%)</li>
+                        <li><code>always</code> = immer (100%)</li>
                     </ul>`,
                 'word-order': `<ul>
-                        <li>Aussage: Person + can + Verb + Rest</li>
-                        <li>Frage: Can + Person + Verb + Rest?</li>
-                        <li>Verneinung: Person + can't + Verb + Rest</li>
-                        <li>Adverbien (well, fast) am Ende!</li>
+                        <li>Das Adverb steht <strong>vor</strong> dem Verb:</li>
+                        <li>Subject + <code>Adverb</code> + Verb + Rest</li>
+                        <li>Beispiel: I <code>always</code> eat breakfast.</li>
+                        <li>Beispiel: She <code>never</code> drinks coffee.</li>
+                    </ul>`,
+                'with-be': `<ul>
+                        <li>Bei <code>be</code> (am/is/are) steht das Adverb <strong>nach</strong> dem Verb:</li>
+                        <li>Subject + be + <code>Adverb</code> + Rest</li>
+                        <li>Beispiel: She is <code>always</code> happy.</li>
+                        <li>Beispiel: He is <code>never</code> at home.</li>
+                        <li>Vergleich: I <code>always</code> eat. vs. I am <code>always</code> hungry.</li>
+                    </ul>`,
+                sentences: `<ul>
+                        <li>Regel 1: Subject + <code>Adverb</code> + Verb (I <code>often</code> read books.)</li>
+                        <li>Regel 2: Subject + be + <code>Adverb</code> (She is <code>usually</code> nice.)</li>
+                        <li>Merke: Normales Verb &rarr; Adverb <strong>vor</strong> dem Verb</li>
+                        <li>Merke: "be" &rarr; Adverb <strong>nach</strong> dem Verb</li>
                     </ul>`
             };
             document.getElementById('grammar-tip-content').innerHTML = tips[currentCategory];
@@ -609,7 +601,6 @@
             } else if (currentQuestion.type === 'choice') {
                 typeEl.textContent = 'Multiple Choice';
                 questionEl.textContent = currentQuestion.question;
-                // Shuffle options while tracking correct answer
                 const optionsWithIndex = currentQuestion.options.map((opt, i) => ({ text: opt, originalIndex: i }));
                 const shuffledOptions = shuffleArray(optionsWithIndex);
                 let optionsHtml = '<div class="answer-options">';
@@ -620,7 +611,7 @@
                 inputArea.innerHTML = optionsHtml;
             } else if (currentQuestion.type === 'fill') {
                 typeEl.textContent = 'Lückentext';
-                questionEl.innerHTML = currentQuestion.sentence.replace('___', '<span style="border-bottom: 2px solid #667eea; padding: 0 20px;">___</span>');
+                questionEl.innerHTML = currentQuestion.sentence.replace('___', '<span style="border-bottom: 2px solid #e67e22; padding: 0 20px;">___</span>');
                 inputArea.innerHTML = `<input type="text" class="answer-input" id="answer-input" placeholder="Fülle die Lücke..." autocomplete="off">`;
                 document.getElementById('answer-input').addEventListener('keypress', (e) => {
                     if (e.key === 'Enter') checkAnswer();
@@ -676,6 +667,9 @@
                 } else {
                     correctAnswer = currentQuestion.german;
                     isCorrect = normalizeAnswer(userAnswer) === normalizeAnswer(currentQuestion.german);
+                    if (!isCorrect && currentQuestion.altGerman) {
+                        isCorrect = normalizeAnswer(userAnswer) === normalizeAnswer(currentQuestion.altGerman);
+                    }
                 }
             } else if (currentQuestion.type === 'choice') {
                 const selected = document.querySelector('.option-btn.selected');
@@ -687,7 +681,6 @@
                 correctAnswer = currentQuestion.options[currentQuestion.correct];
                 isCorrect = userAnswer === currentQuestion.correct;
 
-                // Show correct/wrong on buttons
                 document.querySelectorAll('.option-btn').forEach(btn => {
                     const idx = parseInt(btn.dataset.originalIndex);
                     if (idx === currentQuestion.correct) {
@@ -704,7 +697,6 @@
             } else if (currentQuestion.type === 'order') {
                 userAnswer = document.getElementById('answer-input').value;
                 correctAnswer = currentQuestion.correct;
-                // Allow with or without final punctuation
                 const normalizedUser = normalizeAnswer(userAnswer);
                 const normalizedCorrect = normalizeAnswer(currentQuestion.correct);
                 isCorrect = normalizedUser === normalizedCorrect;
@@ -737,7 +729,6 @@
             const input = document.getElementById('answer-input');
             if (input) input.disabled = true;
 
-            // Check if all questions in category are complete
             const allQuestions = getQuestions();
             const remaining = allQuestions.filter(q => !correctlyAnswered.has(JSON.stringify(q)));
             if (remaining.length === 0) {
