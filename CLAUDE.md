@@ -16,7 +16,7 @@ Open any HTML file directly in a browser to test. No build or install steps.
 - `can-cant.html` - Modal verbs (can/can't)
 - `possessive-s.html` - Possessive forms
 - `simple-present.html` - Present tense conjugation
-- `pronunciation.html` - Audio pronunciation (/uː/ sounds, /ɔː/ sounds, s-sounds) using Web Speech API
+- `pronunciation.html` - Pronunciation practice (/uː/ sounds, /ɔː/ sounds, s-sounds)
 - `questions.html` - Questions in Simple Present (Do/Does, question words, short answers)
 - `adverbs.html` - Adverbs of frequency (never, sometimes, often, usually, always) with word order rules
 - `capitalization.html` - Capitalization rules (pronoun "I", names, days, months, countries, nationalities/languages)

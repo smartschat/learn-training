@@ -23,7 +23,7 @@ Interactive learning app for 5th grade students at German Gymnasium. Built as si
 - Score tracking with streak counter
 - Collapsible grammar tips for each category
 - Celebration animations for streaks
-- Audio pronunciation using Web Speech API
+- Phonetic transcriptions for pronunciation practice
 
 ## Usage
 

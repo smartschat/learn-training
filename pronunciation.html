@@ -140,28 +140,6 @@
             font-family: 'Lucida Sans Unicode', 'Arial Unicode MS', sans-serif;
         }
 
-        .sound-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 50px;
-            height: 50px;
-            background: #4facfe;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 1.5rem;
-            margin-left: 15px;
-            transition: all 0.3s;
-            vertical-align: middle;
-        }
-
-        .sound-btn:hover {
-            background: #3d8bd4;
-            transform: scale(1.1);
-        }
-
         .answer-options {
             display: flex;
             flex-direction: column;
@@ -557,7 +535,7 @@
         </div>
 
         <div class="quiz-card" id="quiz-card">
-            <div class="question-type" id="question-type">Welchen Laut hörst du?</div>
+            <div class="question-type" id="question-type">Welchen Laut hat das Wort?</div>
             <div class="question" id="question">Klicke auf "Nächste Frage" um zu starten!</div>
 
             <div id="input-area">
@@ -1036,13 +1014,6 @@
             return questions[currentCategory] || [];
         }
 
-        function speakWord(word) {
-            const utterance = new SpeechSynthesisUtterance(word);
-            utterance.lang = 'en-GB';
-            utterance.rate = 0.8;
-            speechSynthesis.speak(utterance);
-        }
-
         function nextQuestion() {
             const allQuestions = getQuestions();
             let available = allQuestions.filter(q => !correctlyAnswered.has(JSON.stringify(q)));
@@ -1069,12 +1040,11 @@
 
             if (currentQuestion.type === 'identify') {
                 typeEl.textContent = 'Hat dieses Wort den /uː/ Laut?';
-                questionEl.innerHTML = `Hör dir das Wort an und entscheide:`;
+                questionEl.innerHTML = `Hat dieses Wort den langen /uː/ Laut?`;
 
                 inputArea.innerHTML = `
                     <div class="word-display">
                         ${currentQuestion.word}
-                        <button class="sound-btn" onclick="speakWord('${currentQuestion.word}')" title="Anhören">🔊</button>
                     </div>
                     <p style="text-align: center; color: #666; margin-bottom: 15px;">(${currentQuestion.german})</p>
                     <div class="answer-options" style="flex-direction: row; gap: 15px;">
@@ -1087,17 +1057,13 @@
                     </div>
                 `;
 
-                // Auto-play the word
-                setTimeout(() => speakWord(currentQuestion.word), 300);
-
             } else if (currentQuestion.type === 'aw-identify') {
                 typeEl.textContent = 'Hat dieses Wort den /ɔː/ Laut?';
-                questionEl.innerHTML = `Hör dir das Wort an und entscheide:`;
+                questionEl.innerHTML = `Hat dieses Wort den langen /ɔː/ Laut?`;
 
                 inputArea.innerHTML = `
                     <div class="word-display">
                         ${currentQuestion.word}
-                        <button class="sound-btn" onclick="speakWord('${currentQuestion.word}')" title="Anhören">🔊</button>
                     </div>
                     <p style="text-align: center; color: #666; margin-bottom: 15px;">(${currentQuestion.german})</p>
                     <div class="answer-options" style="flex-direction: row; gap: 15px;">
@@ -1109,8 +1075,6 @@
                         </button>
                     </div>
                 `;
-
-                setTimeout(() => speakWord(currentQuestion.word), 300);
 
             } else if (currentQuestion.type === 'aw-compare') {
                 typeEl.textContent = 'Welches Wort hat /ɔː/?';
@@ -1124,7 +1088,6 @@
                         ${shuffledWords.map((item) => `
                             <button class="option-btn" data-original-index="${item.originalIndex}" onclick="selectOption(this)" style="flex: 1;">
                                 ${item.word}
-                                <button class="sound-btn" onclick="event.stopPropagation(); speakWord('${item.word}')" style="margin-left: 10px; width: 35px; height: 35px; font-size: 1rem;">🔊</button>
                             </button>
                         `).join('')}
                     </div>
@@ -1142,7 +1105,6 @@
                         ${shuffledWords.map((item) => `
                             <button class="option-btn" data-original-index="${item.originalIndex}" onclick="toggleOption(this)" style="flex: 1 1 45%; min-width: 120px;">
                                 ${item.word}
-                                <button class="sound-btn" onclick="event.stopPropagation(); speakWord('${item.word}')" style="margin-left: 10px; width: 35px; height: 35px; font-size: 1rem;">🔊</button>
                             </button>
                         `).join('')}
                     </div>
@@ -1161,7 +1123,6 @@
                         ${shuffledWords.map((item) => `
                             <button class="option-btn" data-original-index="${item.originalIndex}" onclick="selectOption(this)" style="flex: 1;">
                                 ${item.word}
-                                <button class="sound-btn" onclick="event.stopPropagation(); speakWord('${item.word}')" style="margin-left: 10px; width: 35px; height: 35px; font-size: 1rem;">🔊</button>
                             </button>
                         `).join('')}
                     </div>
@@ -1180,20 +1141,18 @@
                         ${shuffledWords.map((item) => `
                             <button class="option-btn" data-original-index="${item.originalIndex}" onclick="toggleOption(this)" style="flex: 1 1 45%; min-width: 120px;">
                                 ${item.word}
-                                <button class="sound-btn" onclick="event.stopPropagation(); speakWord('${item.word}')" style="margin-left: 10px; width: 35px; height: 35px; font-size: 1rem;">🔊</button>
                             </button>
                         `).join('')}
                     </div>
                 `;
 
             } else if (currentQuestion.type === 's-identify') {
-                typeEl.textContent = 'Welchen S-Laut hörst du?';
+                typeEl.textContent = 'Welcher S-Laut?';
                 questionEl.innerHTML = `Wie wird das <strong>-s</strong> in diesem Wort ausgesprochen?`;
 
                 inputArea.innerHTML = `
                     <div class="word-display">
                         ${currentQuestion.word}
-                        <button class="sound-btn" onclick="speakWord('${currentQuestion.word}')" title="Anhören">🔊</button>
                     </div>
                     <p style="text-align: center; color: #666; margin-bottom: 15px;">(${currentQuestion.german})</p>
                     <div class="answer-options" style="flex-direction: row; gap: 10px;">
@@ -1209,8 +1168,6 @@
                     </div>
                 `;
 
-                setTimeout(() => speakWord(currentQuestion.word), 300);
-
             } else if (currentQuestion.type === 'column-sort') {
                 typeEl.textContent = 'Wörter sortieren';
                 questionEl.innerHTML = `Sortiere die Wörter in die richtige Spalte nach ihrem S-Laut:`;
@@ -1223,7 +1180,6 @@
                             ${shuffledWords.map(word => `
                                 <div class="draggable-word" data-word="${word}" onclick="selectWordForColumn(this)">
                                     ${word}
-                                    <button class="sound-btn" onclick="event.stopPropagation(); speakWord('${word}')" style="margin-left: 8px; width: 30px; height: 30px; font-size: 0.9rem;">🔊</button>
                                 </div>
                             `).join('')}
                         </div>
