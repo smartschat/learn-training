@@ -23,6 +23,7 @@ Open any HTML file directly in a browser to test. No build or install steps.
 - `club-writing.html` - Freeform writing about school clubs with LLM-generated scenarios and LLM grading (OpenAI API)
 - `config.example.js` - Template for OpenAI API key configuration
 - `config.js` - (gitignored) Actual API key file, copied from config.example.js
+- `wortarten.html` - German grammar: Wortarten (parts of speech) and Satzglieder (sentence constituents)
 
 ## Architecture
 
@@ -30,7 +31,7 @@ Each module follows the same self-contained pattern:
 
 1. **HTML + common.js** with embedded CSS and module-specific JavaScript; shared functions in `common.js`
 2. **Question database** as JavaScript object with categories (e.g., `questions.statements`, `questions.negation`)
-3. **Question types**: `translate` (German↔English), `choice` (multiple choice), `fill` (fill-in-blank), `order` (word ordering), `identify`/`s-identify` (sound identification), `column-sort` (drag words into columns)
+3. **Question types**: `translate` (German↔English), `choice` (multiple choice), `fill` (fill-in-blank), `order` (word ordering), `identify`/`s-identify` (sound identification), `column-sort` (drag words into columns), `word-tag` (assign Wortart to each word), `find-all` (find all words of a type), `span-bracket` (assign Satzglieder to word groups)
 4. **State management**: `currentQuestion`, `currentCategory`, `score`, `streak`, `correctlyAnswered` (Set)
 5. **Core functions**: `nextQuestion()`, `displayQuestion()`, `checkAnswer()` (module-specific); `normalizeAnswer()`, `showFeedback()`, `shuffleArray()`, `celebrate()`, `updateScore()`, `showCompletion()` (from common.js)
 6. **Completion modal**: When all questions in a category are answered correctly, a "Geschafft!" modal appears. Configured per module via `initCommon()` with accent colors and restart callback.

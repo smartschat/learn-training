@@ -1,0 +1,1705 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wortarten & Satzglieder</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 750px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .score-board {
+            background: white;
+            border-radius: 15px;
+            padding: 15px 25px;
+            display: inline-flex;
+            gap: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .score-item {
+            text-align: center;
+        }
+
+        .score-item span {
+            display: block;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .score-item strong {
+            font-size: 1.5rem;
+            color: #333;
+        }
+
+        .correct strong { color: #28a745; }
+        .wrong strong { color: #dc3545; }
+
+        .category-select {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .category-select h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .category-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .category-btn {
+            padding: 10px 20px;
+            border: 2px solid #6c5ce7;
+            background: white;
+            color: #6c5ce7;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .category-btn:hover, .category-btn.active {
+            background: #6c5ce7;
+            color: white;
+        }
+
+        .quiz-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+
+        .question-type {
+            display: inline-block;
+            background: #e9ecef;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .question {
+            font-size: 1.3rem;
+            color: #333;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        /* Word display area */
+        .word-area {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            min-height: 60px;
+            align-items: flex-start;
+        }
+
+        .word-pill {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px 16px;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.2s;
+            user-select: none;
+            position: relative;
+        }
+
+        .word-pill:hover {
+            border-color: #6c5ce7;
+            background: #f8f5ff;
+        }
+
+        .word-pill.selected {
+            border-color: #6c5ce7;
+            background: #ede9ff;
+        }
+
+        .word-pill.tagged {
+            color: white;
+            border-color: transparent;
+        }
+
+        .word-pill .word-label {
+            font-size: 0.65rem;
+            font-weight: bold;
+            margin-top: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .word-pill.correct-word {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+
+        .word-pill.wrong-word {
+            border-color: #dc3545;
+            background: #f8d7da;
+        }
+
+        .word-pill.missed-word {
+            border-color: #ffc107;
+            background: #fff3cd;
+        }
+
+        /* Span bracket colors for Satzglieder */
+        .word-pill.span-assigned {
+            color: white;
+            border-color: transparent;
+        }
+
+        .word-pill .span-label {
+            font-size: 0.6rem;
+            font-weight: bold;
+            margin-top: 3px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        /* Palette */
+        .palette {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .palette-btn {
+            padding: 8px 14px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .palette-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .palette-btn.active {
+            color: white;
+            border-color: transparent;
+            transform: scale(1.08);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .palette-hint {
+            font-size: 0.85rem;
+            color: #888;
+            margin-bottom: 12px;
+            font-style: italic;
+        }
+
+        /* Span-bracket: assigned spans summary */
+        .assigned-spans-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+            min-height: 30px;
+        }
+
+        .assigned-span-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            color: white;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .assigned-span-chip:hover {
+            opacity: 0.85;
+            transform: scale(1.03);
+        }
+
+        .assigned-span-chip .chip-remove {
+            font-size: 1rem;
+            font-weight: bold;
+            opacity: 0.8;
+        }
+
+        /* Dropdown for Satzglied selection */
+        .satzglied-dropdown-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: fadeIn 0.15s ease;
+        }
+
+        .satzglied-dropdown {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            max-width: 350px;
+            width: 90%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            animation: slideUp 0.2s ease;
+        }
+
+        .satzglied-dropdown h4 {
+            color: #333;
+            margin-bottom: 5px;
+            font-size: 1rem;
+        }
+
+        .satzglied-dropdown .dropdown-selected-words {
+            color: #6c5ce7;
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+
+        .satzglied-dropdown-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .satzglied-dropdown-btn {
+            padding: 12px 16px;
+            border: 2px solid #e9ecef;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            text-align: left;
+            transition: all 0.2s;
+        }
+
+        .satzglied-dropdown-btn:hover {
+            border-color: #6c5ce7;
+            background: #f8f5ff;
+        }
+
+        .satzglied-dropdown-cancel {
+            margin-top: 12px;
+            padding: 10px;
+            border: none;
+            background: #e9ecef;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            width: 100%;
+            color: #666;
+            transition: background 0.2s;
+        }
+
+        .satzglied-dropdown-cancel:hover {
+            background: #ddd;
+        }
+
+        /* Multiple choice */
+        .answer-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .option-btn {
+            padding: 15px 20px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            text-align: left;
+            transition: all 0.3s;
+        }
+
+        .option-btn:hover {
+            border-color: #6c5ce7;
+            background: #f8f5ff;
+        }
+
+        .option-btn.selected {
+            border-color: #6c5ce7;
+            background: #6c5ce7;
+            color: white;
+        }
+
+        .option-btn.correct {
+            border-color: #28a745;
+            background: #28a745;
+            color: white;
+        }
+
+        .option-btn.wrong {
+            border-color: #dc3545;
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-check {
+            background: #6c5ce7;
+            color: white;
+        }
+
+        .btn-check:hover {
+            background: #5b4bd5;
+        }
+
+        .btn-next {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-next:hover {
+            background: #218838;
+        }
+
+        .btn-skip {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-skip:hover {
+            background: #5a6268;
+        }
+
+        .feedback {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .feedback.wrong {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #6c5ce7, #a29bfe);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .streak {
+            text-align: center;
+            margin-top: 10px;
+            color: #ffc107;
+            font-weight: bold;
+        }
+
+        .grammar-tip {
+            background: linear-gradient(135deg, #f8f5ff 0%, #e9ecef 100%);
+            border-radius: 15px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .grammar-tip-header {
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+        }
+
+        .grammar-tip-header:hover {
+            background: rgba(0,0,0,0.03);
+        }
+
+        .grammar-tip h3 {
+            color: #6c5ce7;
+            margin: 0;
+        }
+
+        .grammar-tip-toggle {
+            font-size: 1.2rem;
+            transition: transform 0.3s;
+        }
+
+        .grammar-tip.collapsed .grammar-tip-toggle {
+            transform: rotate(-90deg);
+        }
+
+        .grammar-tip-content {
+            padding: 0 20px 20px 20px;
+            transition: all 0.3s ease;
+        }
+
+        .grammar-tip.collapsed .grammar-tip-content {
+            display: none;
+        }
+
+        .grammar-tip ul {
+            margin-left: 20px;
+            color: #555;
+        }
+
+        .grammar-tip li {
+            margin-bottom: 5px;
+        }
+
+        .grammar-tip code {
+            background: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #6c5ce7;
+        }
+
+        /* Legend for colors */
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        /* Solution display */
+        .solution-spans {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .solution-span {
+            padding: 4px 10px;
+            border-radius: 6px;
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        .solution-span .solution-label {
+            font-size: 0.7rem;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Wortarten & Satzglieder</h1>
+            <div class="score-board">
+                <div class="score-item correct">
+                    <span>Richtig</span>
+                    <strong id="correct-score">0</strong>
+                </div>
+                <div class="score-item wrong">
+                    <span>Falsch</span>
+                    <strong id="wrong-score">0</strong>
+                </div>
+                <div class="score-item">
+                    <span>Fragen</span>
+                    <strong id="total-questions">0</strong>
+                </div>
+            </div>
+        </header>
+
+        <div class="category-select">
+            <h2>Kategorie wählen:</h2>
+            <div class="category-buttons">
+                <button class="category-btn active" data-category="all">Alle</button>
+                <button class="category-btn" data-category="wortarten">Wortarten</button>
+                <button class="category-btn" data-category="satzglieder">Satzglieder</button>
+            </div>
+        </div>
+
+        <div class="grammar-tip" id="grammar-tip">
+            <div class="grammar-tip-header" onclick="toggleGrammarTip()">
+                <h3>Grammatik-Tipp</h3>
+                <span class="grammar-tip-toggle">&#9660;</span>
+            </div>
+            <div class="grammar-tip-content" id="grammar-tip-content">
+                <ul>
+                    <li><code>Nomen</code>: Namenwörter (Tisch, Hund, Freude)</li>
+                    <li><code>Verb</code>: Tunwörter (laufen, schreiben, sein)</li>
+                    <li><code>Adjektiv</code>: Wiewörter (groß, schön, klug)</li>
+                    <li><code>Artikel</code>: Begleiter (der, die, das, ein, eine)</li>
+                    <li><code>Pronomen</code>: Fürwörter (ich, er, sie, mein)</li>
+                    <li><code>Präposition</code>: Verhältniswörter (in, auf, über, mit)</li>
+                    <li><code>Adverb</code>: Umstandswörter (heute, gerne, dort)</li>
+                    <li><code>Konjunktion</code>: Bindewörter (und, oder, weil, aber)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="quiz-card" id="quiz-card">
+            <div class="question-type" id="question-type">Wortarten bestimmen</div>
+            <div class="question" id="question">Klicke auf eine Kategorie, um zu starten!</div>
+
+            <div id="input-area">
+                <!-- Dynamic content -->
+            </div>
+
+            <div class="feedback" id="feedback"></div>
+
+            <div class="btn-row">
+                <button class="btn btn-skip" id="btn-skip" onclick="skipQuestion()">Überspringen</button>
+                <button class="btn btn-check" id="btn-check" onclick="checkAnswer()">Prüfen</button>
+                <button class="btn btn-next" id="btn-next" onclick="nextQuestion()" style="display: none;">Nächste Frage</button>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+            </div>
+            <div class="streak" id="streak"></div>
+        </div>
+    </div>
+
+    <script src="common.js"></script>
+    <script>
+        initCommon({
+            accentColor1: '#6c5ce7',
+            accentColor2: '#a29bfe',
+            onRestart: function() {
+                correctlyAnswered = new Set();
+                score = { correct: 0, wrong: 0, total: 0 };
+                streak = 0;
+                updateScore(score, streak, correctlyAnswered, getQuestions);
+                nextQuestion();
+            }
+        });
+
+        // --- Color maps ---
+        const wortartColors = {
+            'Nomen': '#3498db',
+            'Verb': '#e74c3c',
+            'Adjektiv': '#27ae60',
+            'Adverb': '#f39c12',
+            'Pronomen': '#9b59b6',
+            'Präposition': '#1abc9c',
+            'Artikel': '#7f8c8d',
+            'Konjunktion': '#e91e63'
+        };
+
+        const satzgliedColors = {
+            'Subjekt': '#3498db',
+            'Prädikat': '#e74c3c',
+            'Akkusativobjekt': '#27ae60',
+            'Dativobjekt': '#2980b9',
+            'Genitivobjekt': '#16a085',
+            'Adverbiale Bestimmung': '#f39c12',
+            'Prädikativ': '#9b59b6'
+        };
+
+        const satzgliedAbbrev = {
+            'Subjekt': 'Subj.',
+            'Prädikat': 'Präd.',
+            'Akkusativobjekt': 'Akk.obj.',
+            'Dativobjekt': 'Dat.obj.',
+            'Genitivobjekt': 'Gen.obj.',
+            'Adverbiale Bestimmung': 'Adv. Best.',
+            'Prädikativ': 'Prädik.'
+        };
+
+        // --- Question database ---
+        const questions = {
+            wortarten: [
+                // Word-tag: tag every word
+                {
+                    type: 'word-tag',
+                    sentence: 'Die Katze schläft auf dem Sofa.',
+                    words: [
+                        { word: 'Die', wortart: 'Artikel' },
+                        { word: 'Katze', wortart: 'Nomen' },
+                        { word: 'schläft', wortart: 'Verb' },
+                        { word: 'auf', wortart: 'Präposition' },
+                        { word: 'dem', wortart: 'Artikel' },
+                        { word: 'Sofa.', wortart: 'Nomen' }
+                    ]
+                },
+                {
+                    type: 'word-tag',
+                    sentence: 'Der kleine Hund bellt laut.',
+                    words: [
+                        { word: 'Der', wortart: 'Artikel' },
+                        { word: 'kleine', wortart: 'Adjektiv' },
+                        { word: 'Hund', wortart: 'Nomen' },
+                        { word: 'bellt', wortart: 'Verb' },
+                        { word: 'laut.', wortart: 'Adverb' }
+                    ]
+                },
+                {
+                    type: 'word-tag',
+                    sentence: 'Sie liest ein spannendes Buch.',
+                    words: [
+                        { word: 'Sie', wortart: 'Pronomen' },
+                        { word: 'liest', wortart: 'Verb' },
+                        { word: 'ein', wortart: 'Artikel' },
+                        { word: 'spannendes', wortart: 'Adjektiv' },
+                        { word: 'Buch.', wortart: 'Nomen' }
+                    ]
+                },
+                {
+                    type: 'word-tag',
+                    sentence: 'Wir gehen morgen in den Park.',
+                    words: [
+                        { word: 'Wir', wortart: 'Pronomen' },
+                        { word: 'gehen', wortart: 'Verb' },
+                        { word: 'morgen', wortart: 'Adverb' },
+                        { word: 'in', wortart: 'Präposition' },
+                        { word: 'den', wortart: 'Artikel' },
+                        { word: 'Park.', wortart: 'Nomen' }
+                    ]
+                },
+                {
+                    type: 'word-tag',
+                    sentence: 'Anna und Tom spielen gerne Fußball.',
+                    words: [
+                        { word: 'Anna', wortart: 'Nomen' },
+                        { word: 'und', wortart: 'Konjunktion' },
+                        { word: 'Tom', wortart: 'Nomen' },
+                        { word: 'spielen', wortart: 'Verb' },
+                        { word: 'gerne', wortart: 'Adverb' },
+                        { word: 'Fußball.', wortart: 'Nomen' }
+                    ]
+                },
+                {
+                    type: 'word-tag',
+                    sentence: 'Er fährt schnell mit dem Fahrrad.',
+                    words: [
+                        { word: 'Er', wortart: 'Pronomen' },
+                        { word: 'fährt', wortart: 'Verb' },
+                        { word: 'schnell', wortart: 'Adverb' },
+                        { word: 'mit', wortart: 'Präposition' },
+                        { word: 'dem', wortart: 'Artikel' },
+                        { word: 'Fahrrad.', wortart: 'Nomen' }
+                    ]
+                },
+                {
+                    type: 'word-tag',
+                    sentence: 'Das alte Haus steht neben der Kirche.',
+                    words: [
+                        { word: 'Das', wortart: 'Artikel' },
+                        { word: 'alte', wortart: 'Adjektiv' },
+                        { word: 'Haus', wortart: 'Nomen' },
+                        { word: 'steht', wortart: 'Verb' },
+                        { word: 'neben', wortart: 'Präposition' },
+                        { word: 'der', wortart: 'Artikel' },
+                        { word: 'Kirche.', wortart: 'Nomen' }
+                    ]
+                },
+                {
+                    type: 'word-tag',
+                    sentence: 'Ich esse gerne frische Äpfel.',
+                    words: [
+                        { word: 'Ich', wortart: 'Pronomen' },
+                        { word: 'esse', wortart: 'Verb' },
+                        { word: 'gerne', wortart: 'Adverb' },
+                        { word: 'frische', wortart: 'Adjektiv' },
+                        { word: 'Äpfel.', wortart: 'Nomen' }
+                    ]
+                },
+                // Find-all questions
+                {
+                    type: 'find-all',
+                    instruction: 'Finde alle Nomen!',
+                    target: 'Nomen',
+                    sentence: 'Die Lehrerin gibt dem Schüler ein Buch.',
+                    words: ['Die', 'Lehrerin', 'gibt', 'dem', 'Schüler', 'ein', 'Buch.'],
+                    correctIndices: [1, 4, 6]
+                },
+                {
+                    type: 'find-all',
+                    instruction: 'Finde alle Verben!',
+                    target: 'Verb',
+                    sentence: 'Tom liest und seine Schwester malt ein Bild.',
+                    words: ['Tom', 'liest', 'und', 'seine', 'Schwester', 'malt', 'ein', 'Bild.'],
+                    correctIndices: [1, 5]
+                },
+                {
+                    type: 'find-all',
+                    instruction: 'Finde alle Adjektive!',
+                    target: 'Adjektiv',
+                    sentence: 'Das große rote Auto fährt über die schmale Straße.',
+                    words: ['Das', 'große', 'rote', 'Auto', 'fährt', 'über', 'die', 'schmale', 'Straße.'],
+                    correctIndices: [1, 2, 7]
+                },
+                {
+                    type: 'find-all',
+                    instruction: 'Finde alle Pronomen!',
+                    target: 'Pronomen',
+                    sentence: 'Er gibt ihr das Buch und sie liest es.',
+                    words: ['Er', 'gibt', 'ihr', 'das', 'Buch', 'und', 'sie', 'liest', 'es.'],
+                    correctIndices: [0, 2, 6, 8]
+                },
+                {
+                    type: 'find-all',
+                    instruction: 'Finde alle Präpositionen!',
+                    target: 'Präposition',
+                    sentence: 'Der Ball liegt unter dem Tisch neben der Tür.',
+                    words: ['Der', 'Ball', 'liegt', 'unter', 'dem', 'Tisch', 'neben', 'der', 'Tür.'],
+                    correctIndices: [3, 6]
+                },
+                {
+                    type: 'find-all',
+                    instruction: 'Finde alle Nomen!',
+                    target: 'Nomen',
+                    sentence: 'Meine Schwester spielt mit dem Hund im Garten.',
+                    words: ['Meine', 'Schwester', 'spielt', 'mit', 'dem', 'Hund', 'im', 'Garten.'],
+                    correctIndices: [1, 5, 7]
+                },
+                // Choice questions
+                {
+                    type: 'choice',
+                    question: 'Welche Wortart ist "schnell" in: "Der Hund läuft schnell."?',
+                    options: ['Adjektiv', 'Adverb', 'Verb', 'Nomen'],
+                    correct: 1,
+                    hint: '"schnell" beschreibt hier, WIE der Hund läuft — es bestimmt das Verb näher, also ist es ein Adverb.'
+                },
+                {
+                    type: 'choice',
+                    question: 'Welche Wortart ist "mit" in: "Ich spiele mit meinem Freund."?',
+                    options: ['Konjunktion', 'Adverb', 'Präposition', 'Artikel'],
+                    correct: 2,
+                    hint: '"mit" zeigt ein Verhältnis an und steht vor einem Nomen — es ist eine Präposition.'
+                },
+                {
+                    type: 'choice',
+                    question: 'Welche Wortart ist "und" in: "Anna und Tom lachen."?',
+                    options: ['Präposition', 'Pronomen', 'Adverb', 'Konjunktion'],
+                    correct: 3,
+                    hint: '"und" verbindet zwei Wörter oder Satzteile — es ist eine Konjunktion (Bindewort).'
+                },
+                {
+                    type: 'choice',
+                    question: 'Welche Wortart ist "seine" in: "Er nimmt seine Tasche."?',
+                    options: ['Artikel', 'Pronomen', 'Adjektiv', 'Nomen'],
+                    correct: 1,
+                    hint: '"seine" steht für den Besitz und ersetzt/begleitet ein Nomen — es ist ein Possessivpronomen.'
+                },
+                {
+                    type: 'choice',
+                    question: 'Welche Wortart ist "schön" in: "Das schöne Haus steht am See."?',
+                    options: ['Adverb', 'Nomen', 'Adjektiv', 'Verb'],
+                    correct: 2,
+                    hint: '"schön/schöne" beschreibt das Nomen "Haus" näher — es ist ein Adjektiv (Wiewort).'
+                },
+                {
+                    type: 'choice',
+                    question: 'Welche Wortart ist "dort" in: "Dort steht ein Baum."?',
+                    options: ['Präposition', 'Nomen', 'Pronomen', 'Adverb'],
+                    correct: 3,
+                    hint: '"dort" gibt den Ort an und bestimmt das Verb näher — es ist ein Adverb.'
+                },
+            ],
+            satzglieder: [
+                // Span-bracket questions
+                {
+                    type: 'span-bracket',
+                    sentence: 'Die Katze schläft auf dem Sofa.',
+                    words: ['Die', 'Katze', 'schläft', 'auf', 'dem', 'Sofa.'],
+                    satzglieder: [
+                        { indices: [0, 1], type: 'Subjekt' },
+                        { indices: [2], type: 'Prädikat' },
+                        { indices: [3, 4, 5], type: 'Adverbiale Bestimmung' }
+                    ]
+                },
+                {
+                    type: 'span-bracket',
+                    sentence: 'Der Lehrer gibt dem Schüler ein Buch.',
+                    words: ['Der', 'Lehrer', 'gibt', 'dem', 'Schüler', 'ein', 'Buch.'],
+                    satzglieder: [
+                        { indices: [0, 1], type: 'Subjekt' },
+                        { indices: [2], type: 'Prädikat' },
+                        { indices: [3, 4], type: 'Dativobjekt' },
+                        { indices: [5, 6], type: 'Akkusativobjekt' }
+                    ]
+                },
+                {
+                    type: 'span-bracket',
+                    sentence: 'Meine Schwester ist sehr müde.',
+                    words: ['Meine', 'Schwester', 'ist', 'sehr', 'müde.'],
+                    satzglieder: [
+                        { indices: [0, 1], type: 'Subjekt' },
+                        { indices: [2], type: 'Prädikat' },
+                        { indices: [3, 4], type: 'Prädikativ' }
+                    ]
+                },
+                {
+                    type: 'span-bracket',
+                    sentence: 'Der Junge spielt im Garten Fußball.',
+                    words: ['Der', 'Junge', 'spielt', 'im', 'Garten', 'Fußball.'],
+                    satzglieder: [
+                        { indices: [0, 1], type: 'Subjekt' },
+                        { indices: [2], type: 'Prädikat' },
+                        { indices: [3, 4], type: 'Adverbiale Bestimmung' },
+                        { indices: [5], type: 'Akkusativobjekt' }
+                    ]
+                },
+                {
+                    type: 'span-bracket',
+                    sentence: 'Am Montag besucht Lisa ihre Oma.',
+                    words: ['Am', 'Montag', 'besucht', 'Lisa', 'ihre', 'Oma.'],
+                    satzglieder: [
+                        { indices: [0, 1], type: 'Adverbiale Bestimmung' },
+                        { indices: [2], type: 'Prädikat' },
+                        { indices: [3], type: 'Subjekt' },
+                        { indices: [4, 5], type: 'Akkusativobjekt' }
+                    ]
+                },
+                {
+                    type: 'span-bracket',
+                    sentence: 'Die Suppe schmeckt sehr lecker.',
+                    words: ['Die', 'Suppe', 'schmeckt', 'sehr', 'lecker.'],
+                    satzglieder: [
+                        { indices: [0, 1], type: 'Subjekt' },
+                        { indices: [2], type: 'Prädikat' },
+                        { indices: [3, 4], type: 'Prädikativ' }
+                    ]
+                },
+                {
+                    type: 'span-bracket',
+                    sentence: 'Er hilft seinem Freund bei den Hausaufgaben.',
+                    words: ['Er', 'hilft', 'seinem', 'Freund', 'bei', 'den', 'Hausaufgaben.'],
+                    satzglieder: [
+                        { indices: [0], type: 'Subjekt' },
+                        { indices: [1], type: 'Prädikat' },
+                        { indices: [2, 3], type: 'Dativobjekt' },
+                        { indices: [4, 5, 6], type: 'Adverbiale Bestimmung' }
+                    ]
+                },
+                {
+                    type: 'span-bracket',
+                    sentence: 'Das Kind wird Ärztin.',
+                    words: ['Das', 'Kind', 'wird', 'Ärztin.'],
+                    satzglieder: [
+                        { indices: [0, 1], type: 'Subjekt' },
+                        { indices: [2], type: 'Prädikat' },
+                        { indices: [3], type: 'Prädikativ' }
+                    ]
+                },
+                {
+                    type: 'span-bracket',
+                    sentence: 'Die Kinder danken der Lehrerin.',
+                    words: ['Die', 'Kinder', 'danken', 'der', 'Lehrerin.'],
+                    satzglieder: [
+                        { indices: [0, 1], type: 'Subjekt' },
+                        { indices: [2], type: 'Prädikat' },
+                        { indices: [3, 4], type: 'Dativobjekt' }
+                    ]
+                },
+                {
+                    type: 'span-bracket',
+                    sentence: 'Wir gedenken der Toten.',
+                    words: ['Wir', 'gedenken', 'der', 'Toten.'],
+                    satzglieder: [
+                        { indices: [0], type: 'Subjekt' },
+                        { indices: [1], type: 'Prädikat' },
+                        { indices: [2, 3], type: 'Genitivobjekt' }
+                    ]
+                },
+                {
+                    type: 'span-bracket',
+                    sentence: 'Der Richter beschuldigt den Mann des Diebstahls.',
+                    words: ['Der', 'Richter', 'beschuldigt', 'den', 'Mann', 'des', 'Diebstahls.'],
+                    satzglieder: [
+                        { indices: [0, 1], type: 'Subjekt' },
+                        { indices: [2], type: 'Prädikat' },
+                        { indices: [3, 4], type: 'Akkusativobjekt' },
+                        { indices: [5, 6], type: 'Genitivobjekt' }
+                    ]
+                },
+                // Choice questions for Satzglieder
+                {
+                    type: 'choice',
+                    question: 'Was ist "die Katze" in: "Die Katze schläft auf dem Sofa."?',
+                    options: ['Prädikat', 'Subjekt', 'Akkusativobjekt', 'Adverbiale Bestimmung'],
+                    correct: 1,
+                    hint: 'Frage: WER schläft? → Die Katze = Subjekt'
+                },
+                {
+                    type: 'choice',
+                    question: 'Was ist "auf dem Sofa" in: "Die Katze schläft auf dem Sofa."?',
+                    options: ['Subjekt', 'Akkusativobjekt', 'Prädikativ', 'Adverbiale Bestimmung'],
+                    correct: 3,
+                    hint: 'Frage: WO schläft die Katze? → auf dem Sofa = Adverbiale Bestimmung (Ort)'
+                },
+                {
+                    type: 'choice',
+                    question: 'Was ist "ein Buch" in: "Der Lehrer gibt dem Schüler ein Buch."?',
+                    options: ['Subjekt', 'Dativobjekt', 'Akkusativobjekt', 'Prädikativ'],
+                    correct: 2,
+                    hint: 'Frage: WEN oder WAS gibt der Lehrer? → ein Buch = Akkusativobjekt'
+                },
+                {
+                    type: 'choice',
+                    question: 'Was ist "dem Schüler" in: "Der Lehrer gibt dem Schüler ein Buch."?',
+                    options: ['Subjekt', 'Akkusativobjekt', 'Dativobjekt', 'Adverbiale Bestimmung'],
+                    correct: 2,
+                    hint: 'Frage: WEM gibt der Lehrer ein Buch? → dem Schüler = Dativobjekt'
+                },
+                {
+                    type: 'choice',
+                    question: 'Was ist "sehr müde" in: "Meine Schwester ist sehr müde."?',
+                    options: ['Akkusativobjekt', 'Adverbiale Bestimmung', 'Subjekt', 'Prädikativ'],
+                    correct: 3,
+                    hint: 'Nach "sein/werden/bleiben" steht oft ein Prädikativ. Es sagt etwas über das Subjekt aus.'
+                },
+                {
+                    type: 'choice',
+                    question: 'Was ist "der Toten" in: "Wir gedenken der Toten."?',
+                    options: ['Dativobjekt', 'Genitivobjekt', 'Subjekt', 'Adverbiale Bestimmung'],
+                    correct: 1,
+                    hint: 'Frage: WESSEN gedenken wir? → der Toten = Genitivobjekt (Verb "gedenken" verlangt den Genitiv)'
+                },
+            ]
+        };
+
+        // --- State ---
+        let currentQuestion = null;
+        let currentCategory = 'all';
+        let score = { correct: 0, wrong: 0, total: 0 };
+        let streak = 0;
+        let correctlyAnswered = new Set();
+
+        // Word-tag state
+        let taggedWords = {};  // index -> wortart string
+        let activeWortart = null;
+
+        // Span-bracket state
+        let spanSelections = [];  // array of { indices: Set, type: string }
+        let currentSpanIndices = new Set();
+
+        // Find-all state
+        let selectedFindAll = new Set();
+
+        // --- Category handling ---
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentCategory = btn.dataset.category;
+                correctlyAnswered = new Set();
+                updateGrammarTip();
+                nextQuestion();
+            });
+        });
+
+        function toggleGrammarTip() {
+            document.getElementById('grammar-tip').classList.toggle('collapsed');
+        }
+
+        function updateGrammarTip() {
+            const tips = {
+                all: `<ul>
+                    <li><strong>Wortarten:</strong> Nomen, Verb, Adjektiv, Adverb, Pronomen, Präposition, Artikel, Konjunktion</li>
+                    <li><strong>Satzglieder:</strong> Subjekt (Wer?), Prädikat (Was tut?), Objekt (Wen/Wem/Wessen?), Adverbiale Bestimmung (Wo/Wann/Wie?), Prädikativ (nach sein/werden/bleiben)</li>
+                </ul>`,
+                wortarten: `<ul>
+                    <li><code>Nomen</code>: Namenwörter — großgeschrieben (Tisch, Hund, Freude)</li>
+                    <li><code>Verb</code>: Tunwörter — was jemand tut (laufen, schreiben, sein)</li>
+                    <li><code>Adjektiv</code>: Wiewörter — beschreiben Nomen (groß, schön, klug)</li>
+                    <li><code>Artikel</code>: Begleiter — stehen vor Nomen (der, die, das, ein, eine)</li>
+                    <li><code>Pronomen</code>: Fürwörter — ersetzen Nomen (ich, er, sie, mein, ihr)</li>
+                    <li><code>Präposition</code>: Verhältniswörter (in, auf, über, mit, neben)</li>
+                    <li><code>Adverb</code>: Umstandswörter (heute, gerne, dort, morgen)</li>
+                    <li><code>Konjunktion</code>: Bindewörter (und, oder, weil, aber, denn)</li>
+                </ul>`,
+                satzglieder: `<ul>
+                    <li><code>Subjekt</code>: WER oder WAS? — Der <u>Hund</u> bellt.</li>
+                    <li><code>Prädikat</code>: Was TUT das Subjekt? — Der Hund <u>bellt</u>.</li>
+                    <li><code>Akkusativobjekt</code>: WEN oder WAS? — Ich sehe <u>den Hund</u>.</li>
+                    <li><code>Dativobjekt</code>: WEM? — Ich helfe <u>dem Mann</u>.</li>
+                    <li><code>Genitivobjekt</code>: WESSEN? — Wir gedenken <u>der Toten</u>.</li>
+                    <li><code>Adverbiale Bestimmung</code>: WO? WANN? WIE? WARUM? — Er spielt <u>im Garten</u>.</li>
+                    <li><code>Prädikativ</code>: nach sein/werden/bleiben — Sie ist <u>müde</u>.</li>
+                </ul>`
+            };
+            document.getElementById('grammar-tip-content').innerHTML = tips[currentCategory];
+        }
+
+        function getQuestions() {
+            if (currentCategory === 'all') {
+                return Object.values(questions).flat();
+            }
+            return questions[currentCategory] || [];
+        }
+
+        // --- Main flow ---
+        function nextQuestion() {
+            const allQuestions = getQuestions();
+            let available = allQuestions.filter(q => !correctlyAnswered.has(JSON.stringify(q)));
+
+            if (available.length === 0) {
+                showCompletion(allQuestions.length, score);
+                return;
+            }
+
+            currentQuestion = available[Math.floor(Math.random() * available.length)];
+
+            // Reset states
+            taggedWords = {};
+            activeWortart = null;
+            spanSelections = [];
+            currentSpanIndices = new Set();
+            selectedFindAll = new Set();
+
+            displayQuestion();
+
+            document.getElementById('feedback').classList.remove('show');
+            document.getElementById('btn-check').style.display = 'block';
+            document.getElementById('btn-next').style.display = 'none';
+            document.getElementById('btn-skip').style.display = 'block';
+        }
+
+        function displayQuestion() {
+            const inputArea = document.getElementById('input-area');
+            const questionEl = document.getElementById('question');
+            const typeEl = document.getElementById('question-type');
+
+            if (currentQuestion.type === 'word-tag') {
+                typeEl.textContent = 'Wortarten bestimmen';
+                questionEl.textContent = 'Bestimme die Wortart jedes Wortes:';
+                inputArea.innerHTML = buildWordTagUI();
+            } else if (currentQuestion.type === 'find-all') {
+                typeEl.textContent = 'Wortarten finden';
+                questionEl.textContent = currentQuestion.instruction;
+                inputArea.innerHTML = buildFindAllUI();
+            } else if (currentQuestion.type === 'span-bracket') {
+                typeEl.textContent = 'Satzglieder bestimmen';
+                questionEl.textContent = 'Markiere zusammengehörige Wörter und bestimme das Satzglied:';
+                inputArea.innerHTML = buildSpanBracketUI();
+            } else if (currentQuestion.type === 'choice') {
+                typeEl.textContent = 'Multiple Choice';
+                questionEl.textContent = currentQuestion.question;
+                const optionsWithIndex = currentQuestion.options.map((opt, i) => ({ text: opt, originalIndex: i }));
+                const shuffledOptions = shuffleArray(optionsWithIndex);
+                let html = '<div class="answer-options">';
+                shuffledOptions.forEach(opt => {
+                    html += `<button class="option-btn" data-original-index="${opt.originalIndex}" onclick="selectOption(this)">${opt.text}</button>`;
+                });
+                html += '</div>';
+                inputArea.innerHTML = html;
+            }
+        }
+
+        // --- Word-tag UI ---
+        function buildWordTagUI() {
+            let html = '<div class="word-area" id="word-area">';
+            currentQuestion.words.forEach((w, i) => {
+                html += `<div class="word-pill" data-index="${i}" onclick="tagWord(${i})">${w.word}</div>`;
+            });
+            html += '</div>';
+
+            html += '<div class="palette-hint">Wähle eine Wortart, dann klicke auf die Wörter:</div>';
+            html += '<div class="palette" id="wortart-palette">';
+            const usedWortarten = [...new Set(currentQuestion.words.map(w => w.wortart))];
+            for (const wa of usedWortarten) {
+                const color = wortartColors[wa] || '#666';
+                html += `<button class="palette-btn" data-wortart="${wa}" style="border-color: ${color}; color: ${color};" onclick="selectWortart(this, '${wa}')">${wa}</button>`;
+            }
+            html += '</div>';
+            return html;
+        }
+
+        function selectWortart(btn, wortart) {
+            document.querySelectorAll('#wortart-palette .palette-btn').forEach(b => {
+                b.classList.remove('active');
+                const wa = b.dataset.wortart;
+                const color = wortartColors[wa] || '#666';
+                b.style.background = 'white';
+                b.style.color = color;
+            });
+            btn.classList.add('active');
+            const color = wortartColors[wortart] || '#666';
+            btn.style.background = color;
+            btn.style.color = 'white';
+            activeWortart = wortart;
+        }
+
+        function tagWord(index) {
+            if (!activeWortart) return;
+
+            const pill = document.querySelector(`.word-pill[data-index="${index}"]`);
+            if (!pill) return;
+
+            // If already tagged with same wortart, remove tag
+            if (taggedWords[index] === activeWortart) {
+                delete taggedWords[index];
+                pill.classList.remove('tagged');
+                pill.style.background = '';
+                pill.style.borderColor = '';
+                pill.style.color = '';
+                // Remove label
+                const label = pill.querySelector('.word-label');
+                if (label) label.remove();
+                return;
+            }
+
+            // Assign wortart
+            taggedWords[index] = activeWortart;
+            const color = wortartColors[activeWortart] || '#666';
+            pill.classList.add('tagged');
+            pill.style.background = color;
+            pill.style.borderColor = color;
+            pill.style.color = 'white';
+
+            // Add or update label
+            let label = pill.querySelector('.word-label');
+            if (!label) {
+                label = document.createElement('span');
+                label.className = 'word-label';
+                pill.appendChild(label);
+            }
+            label.textContent = activeWortart;
+        }
+
+        // --- Find-all UI ---
+        function buildFindAllUI() {
+            let html = '<div class="word-area" id="word-area">';
+            currentQuestion.words.forEach((w, i) => {
+                html += `<div class="word-pill" data-index="${i}" onclick="toggleFindAll(${i})">${w}</div>`;
+            });
+            html += '</div>';
+            const color = wortartColors[currentQuestion.target] || '#6c5ce7';
+            html += `<div class="palette-hint">Tippe alle <strong style="color:${color}">${currentQuestion.target}</strong> an!</div>`;
+            return html;
+        }
+
+        function toggleFindAll(index) {
+            const pill = document.querySelector(`.word-pill[data-index="${index}"]`);
+            if (!pill) return;
+
+            if (selectedFindAll.has(index)) {
+                selectedFindAll.delete(index);
+                pill.classList.remove('selected');
+            } else {
+                selectedFindAll.add(index);
+                pill.classList.add('selected');
+            }
+        }
+
+        // --- Span-bracket UI ---
+        // New approach: user clicks words to select a span, then a dropdown
+        // with ALL Satzglied types appears — no hints about which ones are needed.
+
+        const allSatzglieder = [
+            'Subjekt', 'Prädikat', 'Akkusativobjekt', 'Dativobjekt',
+            'Genitivobjekt', 'Adverbiale Bestimmung', 'Prädikativ'
+        ];
+
+        function buildSpanBracketUI() {
+            let html = '<div class="word-area" id="word-area">';
+            currentQuestion.words.forEach((w, i) => {
+                html += `<div class="word-pill" data-index="${i}" onclick="spanClickWord(${i})">${w}</div>`;
+            });
+            html += '</div>';
+
+            html += '<div class="palette-hint">Klicke zusammengehörige Wörter an, dann bestimme das Satzglied.</div>';
+
+            // Button to confirm word selection and open dropdown
+            html += '<button class="btn btn-check" id="btn-assign" onclick="openSatzgliedDropdown()" style="margin-bottom: 15px; display: none;">Satzglied zuordnen</button>';
+
+            // Area showing already-assigned spans as chips
+            html += '<div class="assigned-spans-list" id="assigned-spans-list"></div>';
+
+            return html;
+        }
+
+        function spanClickWord(index) {
+            const pill = document.querySelector(`.word-pill[data-index="${index}"]`);
+            if (!pill) return;
+
+            // If word is already assigned to a committed span, clicking removes that span
+            const existingSpanIdx = spanSelections.findIndex(s => s.indices.has(index));
+            if (existingSpanIdx !== -1) {
+                spanSelections.splice(existingSpanIdx, 1);
+                renderSpanUI();
+                return;
+            }
+
+            // Toggle selection for pending span
+            if (currentSpanIndices.has(index)) {
+                currentSpanIndices.delete(index);
+            } else {
+                currentSpanIndices.add(index);
+            }
+
+            renderSpanUI();
+        }
+
+        function openSatzgliedDropdown() {
+            if (currentSpanIndices.size === 0) return;
+
+            // Build the selected words text
+            const sortedIndices = [...currentSpanIndices].sort((a, b) => a - b);
+            const selectedText = sortedIndices.map(i => currentQuestion.words[i]).join(' ');
+
+            // Create overlay with dropdown
+            const overlay = document.createElement('div');
+            overlay.className = 'satzglied-dropdown-overlay';
+            overlay.innerHTML = `
+                <div class="satzglied-dropdown">
+                    <h4>Welches Satzglied ist:</h4>
+                    <div class="dropdown-selected-words">${selectedText}</div>
+                    <div class="satzglied-dropdown-options">
+                        ${allSatzglieder.map(sg =>
+                            `<button class="satzglied-dropdown-btn" onclick="assignSatzglied('${sg}')">${sg}</button>`
+                        ).join('')}
+                    </div>
+                    <button class="satzglied-dropdown-cancel" onclick="closeSatzgliedDropdown()">Abbrechen</button>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+        }
+
+        function closeSatzgliedDropdown() {
+            const overlay = document.querySelector('.satzglied-dropdown-overlay');
+            if (overlay) overlay.remove();
+        }
+
+        function assignSatzglied(type) {
+            closeSatzgliedDropdown();
+
+            // Commit the current selection as a span
+            const indices = new Set(currentSpanIndices);
+            spanSelections.push({ indices, type });
+            currentSpanIndices = new Set();
+
+            renderSpanUI();
+        }
+
+        function removeSpan(spanIndex) {
+            spanSelections.splice(spanIndex, 1);
+            renderSpanUI();
+        }
+
+        function renderSpanUI() {
+            const pills = document.querySelectorAll('#word-area .word-pill');
+
+            // Reset all pills
+            pills.forEach((pill, i) => {
+                pill.classList.remove('span-assigned', 'selected');
+                pill.style.background = '';
+                pill.style.borderColor = '';
+                pill.style.color = '';
+                const oldLabel = pill.querySelector('.span-label');
+                if (oldLabel) oldLabel.remove();
+            });
+
+            // Show committed spans
+            spanSelections.forEach((span, spanIdx) => {
+                const color = satzgliedColors[span.type] || '#666';
+                const abbrev = satzgliedAbbrev[span.type] || span.type;
+                for (const idx of span.indices) {
+                    const pill = document.querySelector(`.word-pill[data-index="${idx}"]`);
+                    if (pill) {
+                        pill.classList.add('span-assigned');
+                        pill.style.background = color;
+                        pill.style.borderColor = color;
+                        pill.style.color = 'white';
+                        const label = document.createElement('span');
+                        label.className = 'span-label';
+                        label.textContent = abbrev;
+                        pill.appendChild(label);
+                    }
+                }
+            });
+
+            // Show pending selection
+            for (const idx of currentSpanIndices) {
+                const pill = document.querySelector(`.word-pill[data-index="${idx}"]`);
+                if (pill && !pill.classList.contains('span-assigned')) {
+                    pill.classList.add('selected');
+                }
+            }
+
+            // Show/hide assign button
+            const assignBtn = document.getElementById('btn-assign');
+            if (assignBtn) {
+                assignBtn.style.display = currentSpanIndices.size > 0 ? 'block' : 'none';
+            }
+
+            // Render assigned spans as chips
+            const chipArea = document.getElementById('assigned-spans-list');
+            if (chipArea) {
+                chipArea.innerHTML = spanSelections.map((span, i) => {
+                    const color = satzgliedColors[span.type] || '#666';
+                    const sortedIndices = [...span.indices].sort((a, b) => a - b);
+                    const words = sortedIndices.map(idx => currentQuestion.words[idx]).join(' ');
+                    return `<span class="assigned-span-chip" style="background:${color}" onclick="removeSpan(${i})" title="Klicke zum Entfernen">${span.type}: ${words} <span class="chip-remove">&times;</span></span>`;
+                }).join('');
+            }
+        }
+
+        // --- Choice UI ---
+        function selectOption(btn) {
+            document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+        }
+
+        // --- Check answer ---
+        function checkAnswer() {
+            let isCorrect = false;
+
+            if (currentQuestion.type === 'word-tag') {
+                isCorrect = checkWordTag();
+            } else if (currentQuestion.type === 'find-all') {
+                isCorrect = checkFindAll();
+            } else if (currentQuestion.type === 'span-bracket') {
+                isCorrect = checkSpanBracket();
+            } else if (currentQuestion.type === 'choice') {
+                isCorrect = checkChoice();
+            }
+
+            if (isCorrect === null) return; // validation failed, don't score
+
+            if (isCorrect) {
+                score.correct++;
+                streak++;
+                correctlyAnswered.add(JSON.stringify(currentQuestion));
+                showFeedback(true, 'Super! Das ist richtig!');
+                if (streak > 0 && streak % 5 === 0) {
+                    celebrate();
+                }
+            } else {
+                score.wrong++;
+                streak = 0;
+            }
+
+            score.total++;
+            updateScore(score, streak, correctlyAnswered, getQuestions);
+
+            document.getElementById('btn-check').style.display = 'none';
+            document.getElementById('btn-skip').style.display = 'none';
+
+            const allQuestions = getQuestions();
+            const remaining = allQuestions.filter(q => !correctlyAnswered.has(JSON.stringify(q)));
+            if (remaining.length === 0) {
+                document.getElementById('btn-next').style.display = 'none';
+                setTimeout(() => showCompletion(allQuestions.length, score), 800);
+            } else {
+                document.getElementById('btn-next').style.display = 'block';
+            }
+
+            // Disable interactions
+            disableInteractions();
+        }
+
+        function disableInteractions() {
+            document.querySelectorAll('.word-pill').forEach(p => {
+                p.style.pointerEvents = 'none';
+            });
+            document.querySelectorAll('.palette-btn').forEach(p => {
+                p.style.pointerEvents = 'none';
+            });
+            document.querySelectorAll('.option-btn').forEach(p => {
+                p.disabled = true;
+            });
+            document.querySelectorAll('.assigned-span-chip').forEach(p => {
+                p.style.pointerEvents = 'none';
+            });
+            const assignBtn = document.getElementById('btn-assign');
+            if (assignBtn) assignBtn.style.display = 'none';
+        }
+
+        function checkWordTag() {
+            const words = currentQuestion.words;
+
+            // Check if all words are tagged
+            if (Object.keys(taggedWords).length < words.length) {
+                showFeedback(false, 'Bitte bestimme die Wortart für jedes Wort!');
+                return null;
+            }
+
+            let allCorrect = true;
+            let wrongWords = [];
+
+            words.forEach((w, i) => {
+                const pill = document.querySelector(`.word-pill[data-index="${i}"]`);
+                if (taggedWords[i] === w.wortart) {
+                    pill.classList.add('correct-word');
+                    pill.style.borderColor = '#28a745';
+                } else {
+                    allCorrect = false;
+                    pill.classList.add('wrong-word');
+                    pill.style.background = '#f8d7da';
+                    pill.style.borderColor = '#dc3545';
+                    pill.style.color = '#721c24';
+                    wrongWords.push(`"${w.word}" → ${w.wortart} (nicht ${taggedWords[i]})`);
+                }
+            });
+
+            if (!allCorrect) {
+                showFeedback(false, 'Nicht ganz richtig:<br>' + wrongWords.join('<br>'));
+            }
+
+            return allCorrect;
+        }
+
+        function checkFindAll() {
+            const correctSet = new Set(currentQuestion.correctIndices);
+
+            if (selectedFindAll.size === 0) {
+                showFeedback(false, 'Bitte wähle mindestens ein Wort aus!');
+                return null;
+            }
+
+            let allCorrect = true;
+            const pills = document.querySelectorAll('#word-area .word-pill');
+
+            pills.forEach((pill, i) => {
+                const isSelected = selectedFindAll.has(i);
+                const shouldBeSelected = correctSet.has(i);
+
+                if (isSelected && shouldBeSelected) {
+                    pill.classList.add('correct-word');
+                } else if (isSelected && !shouldBeSelected) {
+                    pill.classList.add('wrong-word');
+                    allCorrect = false;
+                } else if (!isSelected && shouldBeSelected) {
+                    pill.classList.add('missed-word');
+                    allCorrect = false;
+                }
+            });
+
+            if (!allCorrect) {
+                const correctWords = currentQuestion.correctIndices.map(i => currentQuestion.words[i]);
+                showFeedback(false, `Die richtigen ${currentQuestion.target} sind: <strong>${correctWords.join(', ')}</strong>`);
+            }
+
+            return allCorrect;
+        }
+
+        function checkSpanBracket() {
+            const expected = currentQuestion.satzglieder;
+
+            // Check if all words are assigned
+            const totalWords = currentQuestion.words.length;
+            const assignedCount = spanSelections.reduce((sum, s) => sum + s.indices.size, 0);
+            if (assignedCount < totalWords) {
+                showFeedback(false, 'Bitte ordne jedes Wort einem Satzglied zu!');
+                return null;
+            }
+
+            let allCorrect = true;
+            let errors = [];
+
+            // Build expected map: index -> satzglied type
+            const expectedMap = {};
+            expected.forEach(sg => {
+                sg.indices.forEach(i => {
+                    expectedMap[i] = sg.type;
+                });
+            });
+
+            // Build user map: index -> satzglied type
+            const userMap = {};
+            spanSelections.forEach(span => {
+                span.indices.forEach(i => {
+                    userMap[i] = span.type;
+                });
+            });
+
+            // Compare
+            for (let i = 0; i < totalWords; i++) {
+                const pill = document.querySelector(`.word-pill[data-index="${i}"]`);
+                if (userMap[i] === expectedMap[i]) {
+                    pill.style.borderColor = '#28a745';
+                    pill.style.boxShadow = '0 0 0 2px #28a745';
+                } else {
+                    allCorrect = false;
+                    pill.style.borderColor = '#dc3545';
+                    pill.style.boxShadow = '0 0 0 2px #dc3545';
+                }
+            }
+
+            if (!allCorrect) {
+                let solutionHtml = 'Richtige Lösung:<br><div class="solution-spans">';
+                expected.forEach(sg => {
+                    const words = sg.indices.map(i => currentQuestion.words[i]).join(' ');
+                    const color = satzgliedColors[sg.type] || '#666';
+                    solutionHtml += `<span class="solution-span" style="background:${color}"><span class="solution-label">${sg.type}:</span> ${words}</span> `;
+                });
+                solutionHtml += '</div>';
+                showFeedback(false, solutionHtml);
+            }
+
+            return allCorrect;
+        }
+
+        function checkChoice() {
+            const selected = document.querySelector('.option-btn.selected');
+            if (!selected) {
+                showFeedback(false, 'Bitte wähle eine Antwort!');
+                return null;
+            }
+
+            const userAnswer = parseInt(selected.dataset.originalIndex);
+            const isCorrect = userAnswer === currentQuestion.correct;
+
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                const idx = parseInt(btn.dataset.originalIndex);
+                if (idx === currentQuestion.correct) {
+                    btn.classList.add('correct');
+                } else if (btn.classList.contains('selected') && !isCorrect) {
+                    btn.classList.add('wrong');
+                }
+                btn.disabled = true;
+            });
+
+            if (!isCorrect) {
+                let message = `Leider falsch. Richtig ist: <strong>${currentQuestion.options[currentQuestion.correct]}</strong>`;
+                if (currentQuestion.hint) {
+                    message += `<br><br>Tipp: ${currentQuestion.hint}`;
+                }
+                showFeedback(false, message);
+            }
+
+            return isCorrect;
+        }
+
+        // --- Skip ---
+        function skipQuestion() {
+            let solutionHtml = '';
+
+            if (currentQuestion.type === 'word-tag') {
+                solutionHtml = 'Lösung:<br>';
+                currentQuestion.words.forEach(w => {
+                    const color = wortartColors[w.wortart] || '#666';
+                    solutionHtml += `<span style="color:${color};font-weight:bold;">${w.word}</span> = ${w.wortart}<br>`;
+                });
+            } else if (currentQuestion.type === 'find-all') {
+                const correctWords = currentQuestion.correctIndices.map(i => currentQuestion.words[i]);
+                solutionHtml = `Die ${currentQuestion.target} sind: <strong>${correctWords.join(', ')}</strong>`;
+            } else if (currentQuestion.type === 'span-bracket') {
+                solutionHtml = 'Lösung:<br><div class="solution-spans">';
+                currentQuestion.satzglieder.forEach(sg => {
+                    const words = sg.indices.map(i => currentQuestion.words[i]).join(' ');
+                    const color = satzgliedColors[sg.type] || '#666';
+                    solutionHtml += `<span class="solution-span" style="background:${color}"><span class="solution-label">${sg.type}:</span> ${words}</span> `;
+                });
+                solutionHtml += '</div>';
+            } else if (currentQuestion.type === 'choice') {
+                solutionHtml = `Richtig ist: <strong>${currentQuestion.options[currentQuestion.correct]}</strong>`;
+                if (currentQuestion.hint) {
+                    solutionHtml += `<br><br>Tipp: ${currentQuestion.hint}`;
+                }
+            }
+
+            showFeedback(false, 'Übersprungen. ' + solutionHtml);
+
+            streak = 0;
+            updateScore(score, streak, correctlyAnswered, getQuestions);
+
+            document.getElementById('btn-check').style.display = 'none';
+            document.getElementById('btn-next').style.display = 'block';
+            document.getElementById('btn-skip').style.display = 'none';
+            disableInteractions();
+        }
+
+        // Start
+        nextQuestion();
+    </script>
+</body>
+</html>
